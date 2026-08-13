@@ -33,3 +33,12 @@
 - [x] Add article sections and visual treatment needed for longer, more readable lessons.
 - [x] Verify representative lessons across all four categories, mobile readability, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Technical Lesson Diagrams
+
+- [x] Define accurate, beginner-friendly Transformer and RAG visual flows.
+- [x] Create deterministic diagram source files and rendered web assets.
+- [x] Upload diagram assets outside the project and reference stable web URLs.
+- [x] Add diagram metadata, captions, and explanatory callouts to relevant lessons.
+- [x] Verify desktop/mobile rendering, accessibility text, and production build.
+- [x] Save a new delivery checkpoint and report the update.

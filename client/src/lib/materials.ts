@@ -19,6 +19,7 @@ export type Material = {
   summary: string;
   analogy: string;
   sections: { heading: string; body: string }[];
+  diagram?: { src: string; alt: string; caption: string; note: string };
   quiz: QuizQuestion[];
 };
 
@@ -210,7 +211,8 @@ export const materials: Material[] = titles.map((item, index) => {
       { question: "Cara belajar yang paling sehat adalah…", options: ["Mencoba, mengecek, lalu memperbaiki", "Takut bertanya", "Menghafal tanpa memahami"], answer: 0, explanation: "Eksperimen kecil dan refleksi membantu konsep menempel lebih lama." },
     ],
   };
-  return { id, title: item.title, category: item.category, level: meta.level, minutes: expandedMinutes[id - 1] ?? item.minutes, emoji: meta.emoji, ...content };
+  const diagram = id === 12 ? { src: "/manus-storage/transformer-belajar-ai_147a79d8.png", alt: "Diagram alur Transformer dari kalimat masuk, tokenisasi, embedding, self-attention, feed forward, hingga jawaban", caption: "Transformer: dari kalimat menjadi jawaban, selangkah demi selangkah", note: "Cara membacanya: model mengubah teks menjadi token, menimbang hubungan antar-token lewat attention, mengolah pola, lalu memilih token berikutnya secara berulang." } : id === 26 ? { src: "/manus-storage/rag-pipeline-belajar-ai_fa3aea09.png", alt: "Diagram RAG Pipeline dari dokumen dan pertanyaan menuju pencarian relevan, LLM, jawaban, dan sumber", caption: "RAG Pipeline: siapkan pengetahuan, cari konteks, lalu jawab", note: "Cara membacanya: dokumen disiapkan lebih dulu di vector database. Saat pertanyaan datang, sistem mencari potongan yang relevan dan memberikannya kepada LLM sebagai konteks." } : undefined;
+  return { id, title: item.title, category: item.category, level: meta.level, minutes: expandedMinutes[id - 1] ?? item.minutes, emoji: meta.emoji, diagram, ...content };
 });
 
 export const categories = ["Semua kategori", ...Object.keys(categoryMeta)];
