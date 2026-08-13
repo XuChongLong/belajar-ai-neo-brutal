@@ -6,7 +6,7 @@ import { materials } from "@/lib/materials";
 type LearningState = {
   completed: number[];
   scores: Record<number, number>;
-  quizAttempts: Record<number, { score: number; total: number; percentage: number; lastAttemptAt: string }>;
+  quizAttempts: Record<string, { score: number; total: number; percentage: number; lastAttemptAt: string }>;
   selectedGoal: string | null;
   current: number;
   streak: number;
@@ -19,7 +19,7 @@ type LearningContextValue = LearningState & {
   markComplete: (id: number) => void;
   markCurrent: (id: number) => void;
   saveScore: (id: number, score: number) => void;
-  saveQuizAttempt: (id: number, score: number, total: number) => void;
+  saveQuizAttempt: (id: number | string, score: number, total: number) => void;
   setSelectedGoal: (goal: string) => void;
   resetProgress: () => void;
 };
@@ -61,7 +61,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     markComplete: (id) => setState((prev) => ({ ...prev, completed: prev.completed.includes(id) ? prev.completed : [...prev.completed, id], current: id })),
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
     saveScore: (id, score) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } })),
-    saveQuizAttempt: (id, score, total) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) }, quizAttempts: { ...prev.quizAttempts, [id]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } } })),
+    saveQuizAttempt: (id, score, total) => setState((prev) => ({ ...prev, scores: typeof id === "number" ? { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } : prev.scores, quizAttempts: { ...prev.quizAttempts, [String(id)]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } } })),
     setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),
     resetProgress: () => setState(initialState),
   }), [state]);

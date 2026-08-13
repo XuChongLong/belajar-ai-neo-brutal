@@ -43,7 +43,7 @@ function goalScore(material: Material, goalId: LearningGoalId | null) {
   return categoryScore + keywordScore;
 }
 
-export function getLearningRecommendations(materials: Material[], completed: number[], attempts: Record<number, QuizAttempt>, goalId: LearningGoalId | null = null): LearningRecommendation[] {
+export function getLearningRecommendations(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null): LearningRecommendation[] {
   const goal = getGoal(goalId);
   const attempted = materials.filter((material) => attempts[material.id]);
   const categoryScores = categoryOrder.map((category) => {
@@ -77,7 +77,7 @@ export function getLearningRecommendations(materials: Material[], completed: num
   return recommendations;
 }
 
-export function getRecommendationSummary(materials: Material[], completed: number[], attempts: Record<number, QuizAttempt>, goalId: LearningGoalId | null = null) {
+export function getRecommendationSummary(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null) {
   const goal = getGoal(goalId);
   const recommendations = getLearningRecommendations(materials, completed, attempts, goalId);
   if (!Object.keys(attempts).length) return { headline: `Siapkan jalur ${goal.label}-mu.`, body: "Selesaikan satu quiz dulu. Setelah itu, rekomendasi akan menggabungkan tujuanmu dengan bagian yang paling butuh perhatian." };
@@ -86,7 +86,7 @@ export function getRecommendationSummary(materials: Material[], completed: numbe
   return { headline: review ? "Jalurmu menemukan satu titik untuk diperkuat." : `Jalur ${goal.label}-mu sudah punya arah berikutnya.`, body: "Rekomendasi ini berubah otomatis saat tujuan atau hasil quiz-mu berubah." };
 }
 
-export function getGoalProgress(materials: Material[], completed: number[], attempts: Record<number, QuizAttempt>, goalId: LearningGoalId | null = null) {
+export function getGoalProgress(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null) {
   const goal = getGoal(goalId);
   const weights = new Map(goal.priorities.map((category, index) => [category, Math.max(0.7, 1.5 - index * 0.2)]));
   const totalWeight = materials.reduce((sum, material) => sum + (weights.get(material.category) ?? 0.7), 0);

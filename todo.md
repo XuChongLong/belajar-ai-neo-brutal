@@ -50,3 +50,11 @@
 - [x] Add Escape and backdrop-close behavior with accessible labels.
 - [x] Verify desktop/mobile readability, zoom limits, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Diagram Micro-Quizzes
+
+- [x] Define one short visual-comprehension quiz for Transformer and RAG diagrams.
+- [x] Add diagram quiz attempts to persisted quiz history without breaking existing lesson scores.
+- [x] Render the micro-quiz immediately below each matching diagram with direct feedback.
+- [x] Verify retry behavior, score updates, responsive layout, and production build.
+- [x] Save a new delivery checkpoint and report the update.

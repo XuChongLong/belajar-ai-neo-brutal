@@ -20,6 +20,7 @@ export type Material = {
   analogy: string;
   sections: { heading: string; body: string }[];
   diagram?: { src: string; alt: string; caption: string; note: string };
+  diagramQuiz?: QuizQuestion;
   quiz: QuizQuestion[];
 };
 
@@ -212,7 +213,8 @@ export const materials: Material[] = titles.map((item, index) => {
     ],
   };
   const diagram = id === 12 ? { src: "/manus-storage/transformer-belajar-ai_147a79d8.png", alt: "Diagram alur Transformer dari kalimat masuk, tokenisasi, embedding, self-attention, feed forward, hingga jawaban", caption: "Transformer: dari kalimat menjadi jawaban, selangkah demi selangkah", note: "Cara membacanya: model mengubah teks menjadi token, menimbang hubungan antar-token lewat attention, mengolah pola, lalu memilih token berikutnya secara berulang." } : id === 26 ? { src: "/manus-storage/rag-pipeline-belajar-ai_fa3aea09.png", alt: "Diagram RAG Pipeline dari dokumen dan pertanyaan menuju pencarian relevan, LLM, jawaban, dan sumber", caption: "RAG Pipeline: siapkan pengetahuan, cari konteks, lalu jawab", note: "Cara membacanya: dokumen disiapkan lebih dulu di vector database. Saat pertanyaan datang, sistem mencari potongan yang relevan dan memberikannya kepada LLM sebagai konteks." } : undefined;
-  return { id, title: item.title, category: item.category, level: meta.level, minutes: expandedMinutes[id - 1] ?? item.minutes, emoji: meta.emoji, diagram, ...content };
+  const diagramQuiz = id === 12 ? { question: "Pada alur Transformer, apa yang terjadi setelah self-attention?", options: ["Pola diolah lebih dalam lewat feed forward", "Dokumen langsung disimpan ke vector database", "Jawaban langsung dikirim tanpa memilih token"], answer: 0, explanation: "Benar. Setelah attention menimbang konteks, feed forward membantu mengolah pola sebelum model memilih token berikutnya." } : id === 26 ? { question: "Pada RAG Pipeline, kapan vector database dipakai?", options: ["Saat mencari potongan konteks yang relevan", "Setelah jawaban selesai tanpa membaca pertanyaan", "Hanya ketika dokumen pertama kali ditulis"], answer: 0, explanation: "Benar. Vector database dicari ketika pertanyaan datang agar sistem bisa mengambil konteks yang paling relevan untuk LLM." } : undefined;
+  return { id, title: item.title, category: item.category, level: meta.level, minutes: expandedMinutes[id - 1] ?? item.minutes, emoji: meta.emoji, diagram, diagramQuiz, ...content };
 });
 
 export const categories = ["Semua kategori", ...Object.keys(categoryMeta)];
