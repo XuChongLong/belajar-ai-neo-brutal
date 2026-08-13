@@ -1,9 +1,11 @@
 // Style reminder: Paper Playground — a tactile workbook shell with a strong navigation rail, ink borders, and playful micro-feedback.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { BookMarked, BookOpen, Flame, Home, Info, LayoutDashboard, Menu, RotateCcw, X } from "lucide-react";
+import { ArrowUpRight, BookMarked, BookOpen, Flame, FolderUp, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, X } from "lucide-react";
 import { useLearning } from "@/contexts/LearningContext";
+import { materials } from "@/lib/materials";
+import { glossaryTerms } from "@/lib/glossary";
 
 const logo = "/manus-storage/belajar-ai-logo_ce2158e2.png";
 
@@ -13,19 +15,32 @@ const navItems = [
   { href: "/progress", label: "Progress", icon: LayoutDashboard },
   { href: "/review", label: "Mode Review", icon: RotateCcw },
   { href: "/glosarium", label: "Glosarium", icon: BookMarked },
+  { href: "/flashcards", label: "Flashcards", icon: Layers3 },
+  { href: "/files", label: "Study Files", icon: FolderUp },
   { href: "/tentang", label: "Tentang", icon: Info },
 ];
 
-type Spark = { id: number; x: number; y: number; glyph: string };
+type Spark = { id: string; x: number; y: number; glyph: string };
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [cursor, setCursor] = useState({ x: -100, y: -100 });
   const trailRef = useRef({ x: -100, y: -100 });
   const [trail, setTrail] = useState({ x: -100, y: -100 });
   const { streak } = useLearning();
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return [];
+    const materialResults = materials.filter((item) => `${item.title} ${item.category} ${item.summary}`.toLowerCase().includes(query)).slice(0, 5).map((item) => ({ type: "MATERI", title: item.title, meta: `${item.category} · ${item.minutes} menit`, href: `/materi/${item.id}` }));
+    const quizResults = materials.flatMap((item) => item.quiz.map((quiz) => ({ item, quiz }))).filter(({ item, quiz }) => `${quiz.question} ${quiz.options.join(" ")} ${item.title}`.toLowerCase().includes(query)).slice(0, 4).map(({ item, quiz }) => ({ type: "QUIZ", title: quiz.question, meta: item.title, href: `/materi/${item.id}` }));
+    const glossaryResults = glossaryTerms.filter((item) => `${item.term} ${item.definition} ${item.category}`.toLowerCase().includes(query)).slice(0, 4).map((item) => ({ type: "GLOSARIUM", title: item.term, meta: item.definition, href: `/materi/${item.materialId}` }));
+    return [...materialResults, ...quizResults, ...glossaryResults].slice(0, 8);
+  }, [searchQuery]);
 
   useEffect(() => {
     const onMove = (event: MouseEvent) => {
@@ -34,7 +49,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setTrail({ ...trailRef.current });
     };
     const onClick = (event: MouseEvent) => {
-      const next = Array.from({ length: 9 }, (_, index) => ({ id: Date.now() + index, x: event.clientX + (Math.random() - 0.5) * 58, y: event.clientY + (Math.random() - 0.5) * 58, glyph: index % 2 ? "•" : "✦" }));
+      const next = Array.from({ length: 9 }, (_, index) => ({ id: crypto.randomUUID(), x: event.clientX + (Math.random() - 0.5) * 58, y: event.clientY + (Math.random() - 0.5) * 58, glyph: index % 2 ? "•" : "✦" }));
       setSparks((prev) => [...prev, ...next]);
       window.setTimeout(() => setSparks((prev) => prev.filter((spark) => !next.some((item) => item.id === spark.id))), 760);
     };
@@ -45,11 +60,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => setMobileOpen(false), [location]);
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => { if ((event.key === "/" || (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey))) && document.activeElement?.tagName !== "INPUT") { event.preventDefault(); setSearchOpen(true); } if (event.key === "Escape") setSearchOpen(false); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  useEffect(() => { if (searchOpen) window.setTimeout(() => searchInputRef.current?.focus(), 0); else setSearchQuery(""); }, [searchOpen]);
+
   return (
     <div className="app-shell">
       <div className="cursor-dot" style={{ left: cursor.x, top: cursor.y }} aria-hidden="true" />
       <div className="cursor-trail" style={{ left: trail.x, top: trail.y }} aria-hidden="true" />
       <div className="spark-layer" aria-hidden="true">{sparks.map((spark) => <span key={spark.id} className="spark" style={{ left: spark.x, top: spark.y }}>{spark.glyph}</span>)}</div>
+      {searchOpen && <div className="global-search-overlay" role="dialog" aria-modal="true" aria-label="Pencarian global" onMouseDown={(event) => { if (event.target === event.currentTarget) setSearchOpen(false); }}><div className="global-search-panel"><div className="global-search-head"><div><span className="eyebrow">CARI DI BELAJAR.AI</span><h2>Temukan langkah berikutnya.</h2></div><button type="button" className="icon-button" onClick={() => setSearchOpen(false)} aria-label="Tutup pencarian"><X size={20} /></button></div><div className="global-search-input"><Search size={19} /><input ref={searchInputRef} value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Cari materi, kuis, atau istilah..." aria-label="Cari materi, kuis, atau istilah" /><kbd>ESC</kbd></div>{searchQuery.trim() ? <div className="global-search-results">{searchResults.length ? searchResults.map((result) => <Link href={result.href} className="global-search-result" key={`${result.type}-${result.title}`} onClick={() => setSearchOpen(false)}><span className="search-result-type">{result.type}</span><div><strong>{result.title}</strong><small>{result.meta}</small></div><ArrowUpRight size={16} /></Link>) : <div className="global-search-empty"><span>⊙</span><p>Belum ada yang cocok. Coba kata yang lebih pendek.</p></div>}</div> : <div className="global-search-hint"><span>TIP CEPAT</span><p>Tekan <kbd>/</kbd> kapan pun untuk membuka pencarian. Cari berdasarkan judul materi, isi quiz, atau istilah glossary.</p></div>}</div></div>}
       <aside className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`} aria-label="Navigasi utama">
         <div className="sidebar-brand">
           <img src={logo} alt="" className="brand-mark" />
@@ -70,8 +94,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <div className="main-column">
-        <div className="desktop-brand-rail"><Link href="/" className="desktop-brand-link"><img src={logo} alt="" /><span>belajar<span>.ai</span></span></Link><span>AI TANPA RIBET <i /> WORKBOOK DIGITAL</span></div>
-        <header className="mobile-header"><button className="icon-button" onClick={() => setMobileOpen(true)} aria-label="Buka menu"><Menu size={22} /></button><Link href="/" className="mobile-brand"><img src={logo} alt="" /> <span>belajar<span>.ai</span></span></Link><Link href="/progress" className="mobile-progress">{streak}<Flame size={15} fill="currentColor" /></Link></header>
+        <div className="desktop-brand-rail"><Link href="/" className="desktop-brand-link"><img src={logo} alt="" /><span>belajar<span>.ai</span></span></Link><button type="button" className="global-search-trigger" onClick={() => setSearchOpen(true)}><Search size={15} /> <span>Cari materi, kuis, istilah...</span><kbd>/</kbd></button><span>AI TANPA RIBET <i /> WORKBOOK DIGITAL</span></div>
+        <header className="mobile-header"><button className="icon-button" onClick={() => setMobileOpen(true)} aria-label="Buka menu"><Menu size={22} /></button><Link href="/" className="mobile-brand"><img src={logo} alt="" /> <span>belajar<span>.ai</span></span></Link><button type="button" className="mobile-search-trigger" onClick={() => setSearchOpen(true)} aria-label="Buka pencarian"><Search size={18} /></button><Link href="/progress" className="mobile-progress">{streak}<Flame size={15} fill="currentColor" /></Link></header>
         <main>{children}</main>
       </div>
     </div>

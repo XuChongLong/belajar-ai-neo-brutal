@@ -85,3 +85,46 @@
 - [x] Surface review, bookmark, and glossary metrics on Progress without cluttering the dashboard.
 - [x] Verify localStorage persistence, empty states, keyboard access, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Flashcards and Global Search
+
+- [x] Define flashcard sources from glossary terms and incorrect quiz answers.
+- [x] Persist flashcard review state and support known/needs-review actions.
+- [x] Build a dedicated flashcard page with flip, next, shuffle, and reset controls.
+- [x] Add global navigation search for materials, quiz topics, and glossary terms.
+- [x] Add keyboard shortcuts and accessible empty states for both features.
+- [x] Verify persistence, responsive layout, search routing, and production build.
+- [x] Save a new delivery checkpoint and report the update.
+
+## Full-Stack File Storage Integration
+
+- [x] Read the full-stack project guide and define the supported file workflow.
+- [x] Upgrade the static project to full-stack with backend, database, auth, and storage scaffolding.
+- [x] Model stored-file metadata and ownership without exposing private file access.
+- [x] Add upload, list, preview/download, and delete flows with validation and clear error states.
+- [x] Connect storage to a useful learning use case, such as personal study notes and reference files.
+- [x] Verify authenticated access, file-size/type handling, responsive UI, TypeScript, and production build.
+- [x] Save a new delivery checkpoint and report required follow-up configuration.
+
+## Duplicate Sparkle Key Fix
+
+- [x] Replace timestamp-only sparkle identifiers with collision-resistant IDs.
+- [x] Verify repeated clicks no longer emit duplicate-key warnings.
+- [x] Run TypeScript checks, tests, and production build.
+- [x] Save a new checkpoint and report the fix.
+
+## Learning Tools End-to-End Verification
+
+- [x] Verify global search opens by keyboard, returns material/quiz/glossary results, and routes correctly.
+- [x] Verify flashcard known/needs-review state persists across page reload.
+
+## Learning Tools Browser Follow-up
+
+- [x] Verify global search opens with the `/` keyboard shortcut.
+- [x] Verify the flashcard “Perlu diulang” action persists after page reload.
+
+## Direct Needs-Review Persistence
+
+- [x] Persist a direct needs-review queue when users select “Perlu diulang”.
+- [x] Prioritize queued cards in Flashcard Lab and retain the queue after reload.
+- [x] Verify the direct action end-to-end, then run tests, TypeScript, and production build.

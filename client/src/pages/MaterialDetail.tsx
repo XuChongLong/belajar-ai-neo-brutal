@@ -36,7 +36,7 @@ export default function MaterialDetail() {
   }, [diagramOpen]);
 
   const chooseAnswer = (questionIndex: number, optionIndex: number) => { if (!submitted) setAnswers((prevAnswers) => ({ ...prevAnswers, [questionIndex]: optionIndex })); };
-  const submitQuiz = () => { setSubmitted(true); saveQuizAttempt(material.id, score, material.quiz.length); toast(score === material.quiz.length ? "Mantap! Quiz kamu sempurna." : `Quiz selesai: ${score}/${material.quiz.length}. Coba ulang kalau mau naik skor!`); };
+  const submitQuiz = () => { const wrongQuestions = material.quiz.flatMap((question, index) => answers[index] === question.answer ? [] : [{ id: `${material.id}-${index}`, question: question.question, answer: question.options[question.answer], explanation: question.explanation, materialId: material.id, materialTitle: material.title }]); setSubmitted(true); saveQuizAttempt(material.id, score, material.quiz.length, wrongQuestions); toast(score === material.quiz.length ? "Mantap! Quiz kamu sempurna." : `Quiz selesai: ${score}/${material.quiz.length}. Coba ulang kalau mau naik skor!`); };
   const finish = () => { markComplete(material.id); markCurrent(next?.id ?? material.id); toast("Materi ditandai selesai. Nice work!"); };
   const submitDiagramQuiz = () => { if (diagramAnswer === null || !material.diagramQuiz) return; setDiagramSubmitted(true); saveQuizAttempt(`${material.id}-diagram`, diagramAnswer === material.diagramQuiz.answer ? 1 : 0, 1); toast(diagramAnswer === material.diagramQuiz.answer ? "Diagram kebaca dengan mantap." : "Belum tepat. Coba lihat lagi arah panahnya."); };
 

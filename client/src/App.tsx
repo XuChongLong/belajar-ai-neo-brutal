@@ -15,9 +15,11 @@ import Progress from "./pages/Progress";
 import About from "./pages/About";
 import Review from "./pages/Review";
 import Glossary from "./pages/Glossary";
-
+import Flashcards from "./pages/Flashcards";
+import StudyFiles from "./pages/StudyFiles";
 
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -26,6 +28,8 @@ function Router() {
       <Route path={"/progress"} component={Progress} />
       <Route path={"/review"} component={Review} />
       <Route path={"/glosarium"} component={Glossary} />
+      <Route path={"/flashcards"} component={Flashcards} />
+      <Route path={"/files"} component={StudyFiles} />
       <Route path={"/tentang"} component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
