@@ -1,16 +1,28 @@
+// Style reminder: Paper Playground — the app shell keeps every route in the same tactile workbook world.
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { LearningProvider } from "./contexts/LearningContext";
+import AppShell from "./components/AppShell";
 import Home from "./pages/Home";
+import Materials from "./pages/Materials";
+import MaterialDetail from "./pages/MaterialDetail";
+import Progress from "./pages/Progress";
+import About from "./pages/About";
 
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/materi"} component={Materials} />
+      <Route path={"/materi/:id"} component={MaterialDetail} />
+      <Route path={"/progress"} component={Progress} />
+      <Route path={"/tentang"} component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -31,8 +43,10 @@ function App() {
         // switchable
       >
         <TooltipProvider>
-          <Toaster />
-          <Router />
+          <LearningProvider>
+            <Toaster position="bottom-right" />
+            <AppShell><Router /></AppShell>
+          </LearningProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
