@@ -12,7 +12,7 @@ export default function MaterialDetail() {
   const [, navigate] = useLocation();
   const id = Number(params?.id) || 1;
   const material = materials.find((item) => item.id === id) ?? materials[0];
-  const { completed, scores, markComplete, markCurrent, saveScore } = useLearning();
+  const { completed, scores, markComplete, markCurrent, saveQuizAttempt } = useLearning();
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,7 +22,7 @@ export default function MaterialDetail() {
   const next = materials.find((item) => item.id === material.id + 1);
 
   const chooseAnswer = (questionIndex: number, optionIndex: number) => { if (!submitted) setAnswers((prevAnswers) => ({ ...prevAnswers, [questionIndex]: optionIndex })); };
-  const submitQuiz = () => { setSubmitted(true); saveScore(material.id, score); toast(score === material.quiz.length ? "Mantap! Quiz kamu sempurna." : `Quiz selesai: ${score}/${material.quiz.length}. Coba ulang kalau mau naik skor!`); };
+  const submitQuiz = () => { setSubmitted(true); saveQuizAttempt(material.id, score, material.quiz.length); toast(score === material.quiz.length ? "Mantap! Quiz kamu sempurna." : `Quiz selesai: ${score}/${material.quiz.length}. Coba ulang kalau mau naik skor!`); };
   const finish = () => { markComplete(material.id); markCurrent(next?.id ?? material.id); toast("Materi ditandai selesai. Nice work!"); };
 
   return <div className="page"><div className="detail-layout page-wrap"><aside className={`lesson-sidebar ${sidebarOpen ? "lesson-sidebar-open" : ""}`}><button className="lesson-mobile-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>Daftar materi <ChevronDown size={17} /></button><div className="lesson-sidebar-inner"><Link href="/materi" className="back-link"><ArrowLeft size={15} /> Kembali ke semua materi</Link><span className="lesson-sidebar-label">KAMU SEDANG DI</span><strong className="lesson-sidebar-title">{material.category}</strong><div className="lesson-list">{materials.filter((item) => item.category === material.category).map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "lesson-active" : ""}><span>{String(item.id).padStart(2, "0")}</span><b>{item.title}</b>{completed.includes(item.id) && <Check size={14} />}</Link>)}</div></div></aside>
