@@ -42,3 +42,11 @@
 - [x] Add diagram metadata, captions, and explanatory callouts to relevant lessons.
 - [x] Verify desktop/mobile rendering, accessibility text, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Diagram Fullscreen Viewer
+
+- [x] Define modal behavior, zoom controls, close actions, and focus expectations.
+- [x] Implement fullscreen diagram viewer for Transformer and RAG assets.
+- [x] Add Escape and backdrop-close behavior with accessible labels.
+- [x] Verify desktop/mobile readability, zoom limits, and production build.
+- [x] Save a new delivery checkpoint and report the update.
