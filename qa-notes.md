@@ -17,3 +17,6 @@
 - 2026-08-13: Quota regression coverage confirmed that the protected endpoint reads the current user-owned aggregate on every request, rejects uploads beyond 25 MB before storage, and that Study Files invalidates the quota cache after successful uploads or removals.
 - 2026-08-13: Final release verification passed: 4 Vitest files / 12 tests, TypeScript check, and production build.
 - 2026-08-13: Browser-level upload-and-delete quota refresh verification was deferred at the user's request before the checkpoint; automated quota, cache-invalidation, and fresh-aggregate coverage remains in place.
+- 2026-08-13: Desktop review of the new route-aware canvas layer covered home, catalogue, lesson, Progress, Flashcards, Study Files, Profile, and About. The low-opacity Paper Playground doodles appeared across page families without blocking content, controls, or navigation.
+- 2026-08-13: Mobile review on home, a lesson, and Profile confirmed the canvas remains behind content, leaves taps unobstructed, and keeps learning copy, form controls, and storage metrics readable at 375 px.
+- 2026-08-13: Final desktop review of Home and Profile confirmed the strengthened canvas layer adds visible notebook stickers, arrows, dots, orbits, and quiet sketch paths across open paper space while preserving the primary reading hierarchy.

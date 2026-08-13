@@ -6,6 +6,7 @@ import { ArrowUpRight, BookMarked, BookOpen, Flame, FolderUp, Home, Info, Layout
 import { useLearning } from "@/contexts/LearningContext";
 import { materials } from "@/lib/materials";
 import { glossaryTerms } from "@/lib/glossary";
+import PageAtmosphereCanvas from "@/components/PageAtmosphereCanvas";
 
 const logo = "/manus-storage/belajar-ai-logo_ce2158e2.png";
 
@@ -97,7 +98,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="main-column">
         <div className="desktop-brand-rail"><Link href="/" className="desktop-brand-link"><img src={logo} alt="" /><span>belajar<span>.ai</span></span></Link><button type="button" className="global-search-trigger" onClick={() => setSearchOpen(true)}><Search size={15} /> <span>Cari materi, kuis, istilah...</span><kbd>/</kbd></button><span>AI TANPA RIBET <i /> WORKBOOK DIGITAL</span></div>
         <header className="mobile-header"><button className="icon-button" onClick={() => setMobileOpen(true)} aria-label="Buka menu"><Menu size={22} /></button><Link href="/" className="mobile-brand"><img src={logo} alt="" /> <span>belajar<span>.ai</span></span></Link><button type="button" className="mobile-search-trigger" onClick={() => setSearchOpen(true)} aria-label="Buka pencarian"><Search size={18} /></button><Link href="/progress" className="mobile-progress">{streak}<Flame size={15} fill="currentColor" /></Link></header>
-        <main>{children}</main>
+        <main><PageAtmosphereCanvas path={location} />{children}</main>
       </div>
     </div>
   );

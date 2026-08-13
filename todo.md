@@ -140,3 +140,12 @@
 - [x] Verify responsive layout, TypeScript, tests, and production build.
 - [ ] Browser-test quota refresh after upload and deletion; deferred at the user's request before this checkpoint.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Canvas Atmosphere Across Pages
+
+- [x] Audit page families and choose readable, non-interactive canvas motifs for each visual context.
+- [x] Build an accessible, low-motion global canvas decoration component with responsive sizing.
+- [x] Integrate varied canvas scenes into home, catalogue, lesson, learning-tool, file, profile, and informational pages.
+- [x] Respect reduced-motion preferences and prevent canvas layers from blocking interaction or focus.
+- [x] Verify desktop/mobile visuals, TypeScript, tests, and production build.
+- [ ] Save a delivery checkpoint and report the visual update.
