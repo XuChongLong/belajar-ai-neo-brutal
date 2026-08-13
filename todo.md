@@ -163,4 +163,18 @@
 - [x] Add an opt-in, dismissible pet popup that can appear consistently on learning pages without blocking content.
 - [x] Add global navigation access and responsive Paper Playground styling for the NPC system.
 - [x] Add automated coverage for evolution rules, then verify desktop/mobile UI, TypeScript, tests, and production build.
-- [ ] Save a delivery checkpoint and report the NPC Pet system.
+- [x] Save a delivery checkpoint and report the NPC Pet system.
+
+## NPC Pet Care, Daily Quest, and Evolution Upgrade
+
+- [x] Define food inventory rules, three daily feeding uses, play actions, special quests, and rewards in clear Indonesian UI copy.
+- [x] Make pet evolution five to fifteen times more challenging with transparent higher XP thresholds.
+- [x] Persist daily reset state, food inventory, feeding count, play interactions, quest progress, and claimed quest rewards.
+- [x] Add daily quests that earn food through meaningful learning missions, then allow food to grant 5 XP per use.
+- [x] Build an interactive NPC care area with feed and play controls, inventory status, action feedback, and daily limits.
+- [x] Build a daily quest board with progress, reward claims, and routing to relevant learning actions.
+- [x] Add level-up and evolution celebration animation with non-blocking particle effects and reduced-motion support.
+- [x] Remove the Byte temporary-asset note from the visible NPC page while retaining the internal follow-up record.
+- [x] Add automated coverage for food limits, reset rules, quest claims, and tougher evolution thresholds.
+- [x] Verify desktop/mobile interactions, TypeScript, tests, and production build.
+- [ ] Save a delivery checkpoint and report the NPC interaction update.

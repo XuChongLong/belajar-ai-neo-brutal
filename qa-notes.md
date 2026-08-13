@@ -25,3 +25,13 @@
 - 2026-08-13: In the interactive browser, enabling “Popup mati” changed the setting to “Popup aktif,” confirming the opt-in preference updates from its default-off state and remains available for the global companion layer.
 - 2026-08-13: With the opt-in setting enabled, Kiko’s compact companion card appeared on a lesson page with stage, level, XP, and dismiss/disable controls, while the lesson content remained visible.
 - 2026-08-13: Completing a previously unfinished lesson in the interactive browser changed the lesson state to complete and increased active pet Kiko from 0 XP to 35 XP, confirming the lesson-completion gamification reward end to end.
+- 2026-08-13: Desktop NPC care review confirmed an uncluttered care zone, food and snack inventory, daily quest cards, stronger 10× evolution thresholds, and the existing collection/evolution hierarchy.
+- 2026-08-13: Mobile NPC care review at 375 px confirmed stacked feed/play controls, readable daily limits, accessible inventory purchase control, one-column quest cards, and an intact vertical evolution guide.
+- 2026-08-13: Interactive verification prepared an unfinished lesson with the NPC popup active to test the lesson-quest-to-food reward loop in the isolated browser state.
+- 2026-08-13: Completing the selected lesson raised Kiko from 35 XP to 70 XP and completed the daily lesson-mission condition in the isolated browser state, confirming that normal learning contributes to the NPC quest economy.
+- 2026-08-13: Returning to the NPC page showed the daily lesson quest at 1/1 with an available “Ambil hadiah” control, while the care inventory correctly still showed no food or snack coins before reward collection.
+- 2026-08-13: Claiming the completed lesson quest changed its state to “Hadiah diambil” and credited 2 snack coins, validating the first half of the quest-to-food reward economy.
+- 2026-08-13: Exchanging one snack coin increased food inventory from 0 to 1 and reduced coins from 2 to 1, validating the quest-reward-to-food conversion before feeding.
+- 2026-08-13: Feeding Kiko consumed the purchased item, raised XP from 70 to 75, and changed the daily meal counter from 0/3 to 1/3, confirming the required +5 XP reward and daily-use tracking.
+- 2026-08-13: The isolated browser was prepared at 595 XP with one food item; the NPC page correctly displayed “5 XP menuju Anak-anak,” ready for the threshold-crossing animation check.
+- 2026-08-13: The threshold feed moved Kiko from 595 XP/Bayi to 600 XP/Anak-anak, updated the active and collection artwork, unlocked the second milestone, and activated the evolution celebration flow with reduced-motion-safe implementation.
