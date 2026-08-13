@@ -13,6 +13,8 @@ import Materials from "./pages/Materials";
 import MaterialDetail from "./pages/MaterialDetail";
 import Progress from "./pages/Progress";
 import About from "./pages/About";
+import Review from "./pages/Review";
+import Glossary from "./pages/Glossary";
 
 
 function Router() {
@@ -22,6 +24,8 @@ function Router() {
       <Route path={"/materi"} component={Materials} />
       <Route path={"/materi/:id"} component={MaterialDetail} />
       <Route path={"/progress"} component={Progress} />
+      <Route path={"/review"} component={Review} />
+      <Route path={"/glosarium"} component={Glossary} />
       <Route path={"/tentang"} component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

@@ -5,6 +5,7 @@ import { materials } from "@/lib/materials";
 
 type LearningState = {
   completed: number[];
+  bookmarks: number[];
   scores: Record<number, number>;
   quizAttempts: Record<string, { score: number; total: number; percentage: number; lastAttemptAt: string }>;
   selectedGoal: string | null;
@@ -15,9 +16,11 @@ type LearningState = {
 
 type LearningContextValue = LearningState & {
   completedCount: number;
+  bookmarkCount: number;
   progressPercent: number;
   markComplete: (id: number) => void;
   markCurrent: (id: number) => void;
+  toggleBookmark: (id: number) => void;
   saveScore: (id: number, score: number) => void;
   saveQuizAttempt: (id: number | string, score: number, total: number) => void;
   setSelectedGoal: (goal: string) => void;
@@ -25,14 +28,14 @@ type LearningContextValue = LearningState & {
 };
 
 const STORAGE_KEY = "belajar-ai-progress-v1";
-const initialState: LearningState = { completed: [], scores: {}, quizAttempts: {}, selectedGoal: null, current: 1, streak: 3, lastVisit: "" };
+const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, selectedGoal: null, current: 1, streak: 3, lastVisit: "" };
 const LearningContext = createContext<LearningContextValue | null>(null);
 
 function readState(): LearningState {
   if (typeof window === "undefined") return initialState;
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as Partial<LearningState> | null;
-    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, selectedGoal: parsed?.selectedGoal ?? null };
+    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], bookmarks: parsed?.bookmarks ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, selectedGoal: parsed?.selectedGoal ?? null };
   } catch {
     return initialState;
   }
@@ -57,9 +60,11 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const value = useMemo<LearningContextValue>(() => ({
     ...state,
     completedCount: state.completed.length,
+    bookmarkCount: state.bookmarks.length,
     progressPercent: Math.round((state.completed.length / materials.length) * 100),
     markComplete: (id) => setState((prev) => ({ ...prev, completed: prev.completed.includes(id) ? prev.completed : [...prev.completed, id], current: id })),
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
+    toggleBookmark: (id) => setState((prev) => ({ ...prev, bookmarks: prev.bookmarks.includes(id) ? prev.bookmarks.filter((bookmark) => bookmark !== id) : [...prev.bookmarks, id] })),
     saveScore: (id, score) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } })),
     saveQuizAttempt: (id, score, total) => setState((prev) => ({ ...prev, scores: typeof id === "number" ? { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } : prev.scores, quizAttempts: { ...prev.quizAttempts, [String(id)]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } } })),
     setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),

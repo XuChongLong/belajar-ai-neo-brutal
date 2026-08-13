@@ -74,3 +74,14 @@
 - [x] Attach diagram metadata and one visual quiz to materials 28 and 29.
 - [x] Verify fullscreen, zoom, feedback, retry, persistence, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Learning Experience Upgrade Pass
+
+- [x] Audit existing learning surfaces and choose high-value, frontend-only improvements.
+- [x] Add persisted bookmarks and bookmark actions to cards and lesson pages.
+- [x] Add a review mode that prioritizes weak quiz results, bookmarked lessons, and unfinished materials.
+- [x] Add a searchable glossary with beginner-friendly AI terms and quick links to related lessons.
+- [x] Add better discovery through continue-learning, next-step, and filter states.
+- [x] Surface review, bookmark, and glossary metrics on Progress without cluttering the dashboard.
+- [x] Verify localStorage persistence, empty states, keyboard access, responsive layout, and production build.
+- [x] Save a new delivery checkpoint and report the update.

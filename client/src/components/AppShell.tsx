@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Info, LayoutDashboard, Menu, X, Flame } from "lucide-react";
+import { BookMarked, BookOpen, Flame, Home, Info, LayoutDashboard, Menu, RotateCcw, X } from "lucide-react";
 import { useLearning } from "@/contexts/LearningContext";
 
 const logo = "/manus-storage/belajar-ai-logo_ce2158e2.png";
@@ -11,6 +11,8 @@ const navItems = [
   { href: "/", label: "Beranda", icon: Home },
   { href: "/materi", label: "Semua Materi", icon: BookOpen },
   { href: "/progress", label: "Progress", icon: LayoutDashboard },
+  { href: "/review", label: "Mode Review", icon: RotateCcw },
+  { href: "/glosarium", label: "Glosarium", icon: BookMarked },
   { href: "/tentang", label: "Tentang", icon: Info },
 ];
 

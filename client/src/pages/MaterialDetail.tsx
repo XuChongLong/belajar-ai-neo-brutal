@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — reading view prioritizes calm paper space, strong article rhythm, and quiz feedback that feels encouraging.
 
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Clock3, Maximize2, Minus, Plus, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Check, ChevronDown, Clock3, Maximize2, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useRoute } from "wouter";
 import { toast } from "sonner";
@@ -12,7 +12,7 @@ export default function MaterialDetail() {
   const [, navigate] = useLocation();
   const id = Number(params?.id) || 1;
   const material = materials.find((item) => item.id === id) ?? materials[0];
-  const { completed, scores, markComplete, markCurrent, saveQuizAttempt } = useLearning();
+  const { completed, scores, bookmarks, markComplete, markCurrent, saveQuizAttempt, toggleBookmark } = useLearning();
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -24,6 +24,7 @@ export default function MaterialDetail() {
   const score = useMemo(() => material.quiz.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0), [answers, material.quiz]);
   const prev = materials.find((item) => item.id === material.id - 1);
   const next = materials.find((item) => item.id === material.id + 1);
+  const isBookmarked = bookmarks.includes(material.id);
 
   useEffect(() => {
     if (!diagramOpen) return;

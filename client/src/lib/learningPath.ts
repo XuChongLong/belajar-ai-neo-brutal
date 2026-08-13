@@ -30,6 +30,12 @@ export type LearningRecommendation = {
   accent: "pink" | "yellow" | "paper";
 };
 
+export type ReviewItem = {
+  material: Material;
+  reason: string;
+  signal: "quiz" | "bookmark" | "next";
+};
+
 const categoryOrder = ["Dasar-Dasar AI", "Large Language Models", "RAG & Teknik Lanjutan", "AI Agents & Tools"];
 
 function getGoal(goalId: LearningGoalId | null) {
@@ -84,6 +90,16 @@ export function getRecommendationSummary(materials: Material[], completed: numbe
   if (!recommendations.length) return { headline: "Semua sinyal terlihat kuat.", body: "Kamu sudah menyelesaikan semua materi yang direkomendasikan. Saatnya mengulang quiz favorit atau memilih topik baru." };
   const review = recommendations.find((item) => item.type === "review");
   return { headline: review ? "Jalurmu menemukan satu titik untuk diperkuat." : `Jalur ${goal.label}-mu sudah punya arah berikutnya.`, body: "Rekomendasi ini berubah otomatis saat tujuan atau hasil quiz-mu berubah." };
+}
+
+export function getReviewQueue(materials: Material[], completed: number[], bookmarks: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null): ReviewItem[] {
+  const items: ReviewItem[] = [];
+  const used = new Set<number>();
+  const weak = materials.filter((material) => attempts[material.id] && attempts[material.id].percentage < 80).sort((a, b) => (attempts[a.id]?.percentage ?? 0) - (attempts[b.id]?.percentage ?? 0));
+  weak.forEach((material) => { if (!used.has(material.id)) { used.add(material.id); items.push({ material, signal: "quiz", reason: `Quiz ${attempts[material.id]?.percentage ?? 0}% · konsep ini masih bisa dipoles.` }); } });
+  materials.filter((material) => bookmarks.includes(material.id)).sort((a, b) => goalScore(b, goalId) - goalScore(a, goalId)).forEach((material) => { if (!used.has(material.id)) { used.add(material.id); items.push({ material, signal: "bookmark", reason: completed.includes(material.id) ? "Bookmark tersimpan · cocok untuk pengulangan cepat." : "Bookmark tersimpan · belum masuk checklist selesai." }); } });
+  materials.filter((material) => !completed.includes(material.id)).sort((a, b) => goalScore(b, goalId) - goalScore(a, goalId)).forEach((material) => { if (!used.has(material.id) && items.length < 6) { used.add(material.id); items.push({ material, signal: "next", reason: "Belum selesai · satu langkah kecil berikutnya." }); } });
+  return items.slice(0, 6);
 }
 
 export function getGoalProgress(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null) {
