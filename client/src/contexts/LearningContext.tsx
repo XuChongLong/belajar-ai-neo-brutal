@@ -7,6 +7,7 @@ type LearningState = {
   completed: number[];
   scores: Record<number, number>;
   quizAttempts: Record<number, { score: number; total: number; percentage: number; lastAttemptAt: string }>;
+  selectedGoal: string | null;
   current: number;
   streak: number;
   lastVisit: string;
@@ -19,18 +20,19 @@ type LearningContextValue = LearningState & {
   markCurrent: (id: number) => void;
   saveScore: (id: number, score: number) => void;
   saveQuizAttempt: (id: number, score: number, total: number) => void;
+  setSelectedGoal: (goal: string) => void;
   resetProgress: () => void;
 };
 
 const STORAGE_KEY = "belajar-ai-progress-v1";
-const initialState: LearningState = { completed: [], scores: {}, quizAttempts: {}, current: 1, streak: 3, lastVisit: "" };
+const initialState: LearningState = { completed: [], scores: {}, quizAttempts: {}, selectedGoal: null, current: 1, streak: 3, lastVisit: "" };
 const LearningContext = createContext<LearningContextValue | null>(null);
 
 function readState(): LearningState {
   if (typeof window === "undefined") return initialState;
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as Partial<LearningState> | null;
-    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {} };
+    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, selectedGoal: parsed?.selectedGoal ?? null };
   } catch {
     return initialState;
   }
@@ -60,6 +62,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
     saveScore: (id, score) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } })),
     saveQuizAttempt: (id, score, total) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) }, quizAttempts: { ...prev.quizAttempts, [id]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } } })),
+    setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),
     resetProgress: () => setState(initialState),
   }), [state]);
 

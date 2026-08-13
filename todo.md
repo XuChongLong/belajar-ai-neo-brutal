@@ -7,3 +7,12 @@
 - [x] Add clear empty-state copy before the user has completed any quiz.
 - [x] Verify quiz submission, localStorage persistence, dashboard rendering, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Goal-based Learning Profile
+
+- [x] Define learning-goal profiles, labels, descriptions, and category priorities.
+- [x] Persist the selected profile in localStorage and expose profile actions through learning state.
+- [x] Add a profile selector to the Progress dashboard with a clear active state.
+- [x] Update recommendation ranking and copy using profile priorities plus quiz performance.
+- [x] Verify profile switching, persistence, recommendation changes, responsive layout, and production build.
+- [x] Save a new delivery checkpoint and report the update.
