@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
+import { addPetXp, initialPetProgress, type PetId, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
   id: string;
@@ -21,6 +22,7 @@ type LearningState = {
   flashcardKnown: string[];
   flashcardReviewQueue: string[];
   selectedGoal: string | null;
+  npc: PetProgress;
   current: number;
   streak: number;
   lastVisit: string;
@@ -38,18 +40,20 @@ type LearningContextValue = LearningState & {
   markFlashcardKnown: (id: string) => void;
   markFlashcardReview: (id: string) => void;
   setSelectedGoal: (goal: string) => void;
+  selectNpcPet: (petId: PetId) => void;
+  setNpcPopupEnabled: (enabled: boolean) => void;
   resetProgress: () => void;
 };
 
 const STORAGE_KEY = "belajar-ai-progress-v1";
-const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, current: 1, streak: 3, lastVisit: "" };
+const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 3, lastVisit: "" };
 const LearningContext = createContext<LearningContextValue | null>(null);
 
 function readState(): LearningState {
   if (typeof window === "undefined") return initialState;
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as Partial<LearningState> | null;
-    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], bookmarks: parsed?.bookmarks ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, wrongQuizQuestions: parsed?.wrongQuizQuestions ?? {}, flashcardKnown: parsed?.flashcardKnown ?? [], flashcardReviewQueue: parsed?.flashcardReviewQueue ?? [], selectedGoal: parsed?.selectedGoal ?? null };
+    return { ...initialState, ...parsed, completed: parsed?.completed ?? [], bookmarks: parsed?.bookmarks ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, wrongQuizQuestions: parsed?.wrongQuizQuestions ?? {}, flashcardKnown: parsed?.flashcardKnown ?? [], flashcardReviewQueue: parsed?.flashcardReviewQueue ?? [], selectedGoal: parsed?.selectedGoal ?? null, npc: { ...initialPetProgress, ...parsed?.npc, xp: { ...initialPetProgress.xp, ...parsed?.npc?.xp }, earnedMilestones: { ...initialPetProgress.earnedMilestones, ...parsed?.npc?.earnedMilestones } } };
   } catch {
     return initialState;
   }
@@ -76,14 +80,16 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     completedCount: state.completed.length,
     bookmarkCount: state.bookmarks.length,
     progressPercent: Math.round((state.completed.length / materials.length) * 100),
-    markComplete: (id) => setState((prev) => ({ ...prev, completed: prev.completed.includes(id) ? prev.completed : [...prev.completed, id], current: id })),
+    markComplete: (id) => setState((prev) => prev.completed.includes(id) ? { ...prev, current: id } : ({ ...prev, completed: [...prev.completed, id], current: id, npc: addPetXp(prev.npc, 35) })),
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
     toggleBookmark: (id) => setState((prev) => ({ ...prev, bookmarks: prev.bookmarks.includes(id) ? prev.bookmarks.filter((bookmark) => bookmark !== id) : [...prev.bookmarks, id] })),
     saveScore: (id, score) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } })),
-    saveQuizAttempt: (id, score, total, wrongQuestions = []) => setState((prev) => ({ ...prev, scores: typeof id === "number" ? { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } : prev.scores, quizAttempts: { ...prev.quizAttempts, [String(id)]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } }, wrongQuizQuestions: wrongQuestions.length ? { ...prev.wrongQuizQuestions, [String(id)]: wrongQuestions } : Object.fromEntries(Object.entries(prev.wrongQuizQuestions).filter(([key]) => key !== String(id))) })),
-    markFlashcardKnown: (id) => setState((prev) => ({ ...prev, flashcardKnown: prev.flashcardKnown.includes(id) ? prev.flashcardKnown : [...prev.flashcardKnown, id], flashcardReviewQueue: prev.flashcardReviewQueue.filter((queuedId) => queuedId !== id) })),
+    saveQuizAttempt: (id, score, total, wrongQuestions = []) => setState((prev) => { const key = String(id); const previousBest = typeof id === "number" ? (prev.scores[id] ?? 0) : (prev.quizAttempts[key]?.score ?? 0); const gainedXp = Math.max(0, score - previousBest) * 8; return { ...prev, scores: typeof id === "number" ? { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } : prev.scores, quizAttempts: { ...prev.quizAttempts, [key]: { score, total, percentage: Math.round((score / Math.max(total, 1)) * 100), lastAttemptAt: new Date().toISOString() } }, wrongQuizQuestions: wrongQuestions.length ? { ...prev.wrongQuizQuestions, [key]: wrongQuestions } : Object.fromEntries(Object.entries(prev.wrongQuizQuestions).filter(([questionKey]) => questionKey !== key)), npc: gainedXp ? addPetXp(prev.npc, gainedXp) : prev.npc }; }),
+    markFlashcardKnown: (id) => setState((prev) => prev.flashcardKnown.includes(id) ? { ...prev, flashcardReviewQueue: prev.flashcardReviewQueue.filter((queuedId) => queuedId !== id) } : ({ ...prev, flashcardKnown: [...prev.flashcardKnown, id], flashcardReviewQueue: prev.flashcardReviewQueue.filter((queuedId) => queuedId !== id), npc: addPetXp(prev.npc, 6) })),
     markFlashcardReview: (id) => setState((prev) => ({ ...prev, flashcardKnown: prev.flashcardKnown.filter((knownId) => knownId !== id), flashcardReviewQueue: prev.flashcardReviewQueue.includes(id) ? prev.flashcardReviewQueue : [id, ...prev.flashcardReviewQueue] })),
     setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),
+    selectNpcPet: (petId) => setState((prev) => ({ ...prev, npc: { ...prev.npc, activePet: petId } })),
+    setNpcPopupEnabled: (enabled) => setState((prev) => ({ ...prev, npc: { ...prev.npc, popupEnabled: enabled } })),
     resetProgress: () => setState(initialState),
   }), [state]);
 

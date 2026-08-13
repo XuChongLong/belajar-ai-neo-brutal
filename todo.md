@@ -148,4 +148,19 @@
 - [x] Integrate varied canvas scenes into home, catalogue, lesson, learning-tool, file, profile, and informational pages.
 - [x] Respect reduced-motion preferences and prevent canvas layers from blocking interaction or focus.
 - [x] Verify desktop/mobile visuals, TypeScript, tests, and production build.
-- [ ] Save a delivery checkpoint and report the visual update.
+- [x] Save a delivery checkpoint and report the visual update.
+
+## NPC Pet Gamification System
+
+- [x] Define four distinct pet identities, a shared evolution curve, XP thresholds, and a clear reward language for learning actions.
+- [x] Create real AI-generated five-stage game assets for cat, dog, and unicorn pets, plus a usable temporary robot reference asset.
+- [ ] Replace the temporary robot fallback with a complete five-stage AI-generated robot evolution set when image-generation quota is available.
+- [x] Upload pet assets as durable web assets and document their visual usage.
+- [x] Extend persisted learning state with active pet, XP, derived stage, earned milestones, and a popup preference that defaults to off.
+- [x] Persist NPC Pet milestone unlock history and surface it in the evolution guide.
+- [x] Award pet XP for meaningful learning actions such as completing lessons and answering quizzes correctly without disrupting existing progress logic.
+- [x] Build a dedicated NPC Pet collection page with selection, evolution display, XP meter, stage guide, and activity rewards.
+- [x] Add an opt-in, dismissible pet popup that can appear consistently on learning pages without blocking content.
+- [x] Add global navigation access and responsive Paper Playground styling for the NPC system.
+- [x] Add automated coverage for evolution rules, then verify desktop/mobile UI, TypeScript, tests, and production build.
+- [ ] Save a delivery checkpoint and report the NPC Pet system.

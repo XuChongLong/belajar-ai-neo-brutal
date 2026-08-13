@@ -18,6 +18,7 @@ import Glossary from "./pages/Glossary";
 import Flashcards from "./pages/Flashcards";
 import StudyFiles from "./pages/StudyFiles";
 import Profile from "./pages/Profile";
+import NpcPets from "./pages/NpcPets";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -32,6 +33,7 @@ function Router() {
       <Route path={"/flashcards"} component={Flashcards} />
       <Route path={"/files"} component={StudyFiles} />
       <Route path={"/profil"} component={Profile} />
+      <Route path={"/npc"} component={NpcPets} />
       <Route path={"/tentang"} component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
