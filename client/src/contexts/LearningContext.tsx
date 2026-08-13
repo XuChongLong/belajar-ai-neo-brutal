@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
-import { buyNpcFood, claimNpcDailyQuest, ensureNpcDaily, feedNpcPet, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity, type DailyQuestId, type PetActionResult, type PetId, type PetProgress } from "@/lib/npcPets";
+import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
   id: string;
@@ -45,6 +45,9 @@ type LearningContextValue = LearningState & {
   feedNpcPet: () => PetActionResult;
   playWithNpcPet: () => PetActionResult;
   buyNpcFood: () => PetActionResult;
+  buyNpcShopItem: (itemId: string) => PetActionResult;
+  equipNpcAccessory: (accessoryId: AccessoryId | null) => PetActionResult;
+  setNpcAudioEnabled: (enabled: boolean) => void;
   claimNpcDailyQuest: (questId: DailyQuestId) => PetActionResult;
   resetProgress: () => void;
 };
@@ -66,6 +69,9 @@ function readState(): LearningState {
         ...parsed?.npc,
         xp: { ...initialPetProgress.xp, ...parsed?.npc?.xp },
         earnedMilestones: { ...initialPetProgress.earnedMilestones, ...parsed?.npc?.earnedMilestones },
+        ownedAccessories: parsed?.npc?.ownedAccessories ?? initialPetProgress.ownedAccessories,
+        equippedAccessory: parsed?.npc?.equippedAccessory ?? initialPetProgress.equippedAccessory,
+        audioEnabled: parsed?.npc?.audioEnabled ?? initialPetProgress.audioEnabled,
         daily: { ...initialPetProgress.daily, ...parsed?.npc?.daily, questProgress: { ...initialPetProgress.daily.questProgress, ...parsed?.npc?.daily?.questProgress }, claimedQuestIds: parsed?.npc?.daily?.claimedQuestIds ?? initialPetProgress.daily.claimedQuestIds },
       },
     };
@@ -118,6 +124,9 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     feedNpcPet: () => { const result = feedNpcPet(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     playWithNpcPet: () => { const result = playWithNpcPet(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     buyNpcFood: () => { const result = buyNpcFood(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
+    buyNpcShopItem: (itemId) => { const result = buyNpcShopItem(state.npc, itemId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
+    equipNpcAccessory: (accessoryId) => { const result = equipNpcAccessory(state.npc, accessoryId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
+    setNpcAudioEnabled: (enabled) => setState((prev) => ({ ...prev, npc: { ...prev.npc, audioEnabled: enabled } })),
     claimNpcDailyQuest: (questId) => { const result = claimNpcDailyQuest(state.npc, questId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     resetProgress: () => setState(initialState),
   }), [state]);

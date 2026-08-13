@@ -1,7 +1,8 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertStoredFile, InsertUser, storedFiles, users } from "../drizzle/schema";
+import { InsertPublicPetProfile, InsertStoredFile, InsertUser, publicPetProfiles, storedFiles, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { rankPublicPetProfiles } from "./petSocial";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -118,4 +119,42 @@ export async function removeStoredFileByUser(id: number, userId: number) {
   if (!db) throw new Error("Database is not available");
   const result = await db.delete(storedFiles).where(and(eq(storedFiles.id, id), eq(storedFiles.userId, userId)));
   return Number(result[0]?.affectedRows ?? 0) > 0;
+}
+
+export async function getPublicPetProfileByUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const result = await db.select().from(publicPetProfiles).where(eq(publicPetProfiles.userId, userId)).limit(1);
+  return result[0];
+}
+
+export async function savePublicPetProfile(profile: InsertPublicPetProfile) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(publicPetProfiles).values(profile).onDuplicateKeyUpdate({
+    set: {
+      isPublic: profile.isPublic,
+      petId: profile.petId,
+      xp: profile.xp,
+      stage: profile.stage,
+      equippedAccessory: profile.equippedAccessory,
+    },
+  });
+  return getPublicPetProfileByUser(profile.userId);
+}
+
+export async function listPublicPetLeaderboard(limit = 20) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const rows = await db.select({
+    userId: publicPetProfiles.userId,
+    isPublic: publicPetProfiles.isPublic,
+    displayName: users.name,
+    petId: publicPetProfiles.petId,
+    xp: publicPetProfiles.xp,
+    stage: publicPetProfiles.stage,
+    equippedAccessory: publicPetProfiles.equippedAccessory,
+    updatedAt: publicPetProfiles.updatedAt,
+  }).from(publicPetProfiles).innerJoin(users, eq(publicPetProfiles.userId, users.id)).where(eq(publicPetProfiles.isPublic, 1)).orderBy(desc(publicPetProfiles.xp), desc(publicPetProfiles.updatedAt)).limit(limit);
+  return rankPublicPetProfiles(rows);
 }

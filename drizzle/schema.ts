@@ -39,3 +39,21 @@ export const storedFiles = mysqlTable("storedFiles", {
 
 export type StoredFile = typeof storedFiles.$inferSelect;
 export type InsertStoredFile = typeof storedFiles.$inferInsert;
+
+/**
+ * An explicit, opt-in snapshot of a user's selected pet for the public leaderboard.
+ * Learning and inventory details remain local to the learner; only these display-safe
+ * fields are shared when `isPublic` is enabled.
+ */
+export const publicPetProfiles = mysqlTable("publicPetProfiles", {
+  userId: int("userId").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  isPublic: int("isPublic").notNull().default(0),
+  petId: varchar("petId", { length: 16 }).notNull(),
+  xp: int("xp").notNull().default(0),
+  stage: varchar("stage", { length: 16 }).notNull(),
+  equippedAccessory: varchar("equippedAccessory", { length: 64 }),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("publicPetProfiles_public_xp_idx").on(table.isPublic, table.xp)]);
+
+export type PublicPetProfile = typeof publicPetProfiles.$inferSelect;
+export type InsertPublicPetProfile = typeof publicPetProfiles.$inferInsert;

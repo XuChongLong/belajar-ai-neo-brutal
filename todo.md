@@ -177,4 +177,20 @@
 - [x] Remove the Byte temporary-asset note from the visible NPC page while retaining the internal follow-up record.
 - [x] Add automated coverage for food limits, reset rules, quest claims, and tougher evolution thresholds.
 - [x] Verify desktop/mobile interactions, TypeScript, tests, and production build.
-- [ ] Save a delivery checkpoint and report the NPC interaction update.
+- [x] Save a delivery checkpoint and report the NPC interaction update.
+
+## NPC Social Leaderboard, Shop, and Audio
+
+- [x] Define a privacy-first public pet profile, leaderboard ranking, opt-in sharing control, and abuse-safe display rules.
+- [x] Add database schema, migration, server helpers, and protected procedures for public pet profiles and leaderboard records.
+- [x] Build an authenticated leaderboard that ranks users by pet evolution and XP without fabricating user entries.
+- [x] Add a quest-coin shop catalogue for foods and cosmetic accessories, with inventory ownership and safe purchase validation.
+- [x] Display owned accessories on the active pet and allow players to equip or remove them.
+- [x] Synchronize existing quest-coin and food inventory actions with the new shop experience without losing persisted local progress.
+- [x] Add opt-in audio controls, interactive feed/play sound effects, and an evolution music cue with graceful browser fallbacks.
+- [x] Add automated coverage for public-profile privacy, rankings, shop validation, inventory, and audio-preference behavior.
+- [x] Add router-level regression coverage proving non-public profiles are excluded and public profiles rank by XP then update time.
+- [x] Add a mixed-record petSocial.leaderboard router-contract test proving hidden profiles are absent and ranking order is preserved.
+- [x] Confirm desktop/mobile interfaces, shop purchases, sound controls, TypeScript, tests, and production build.
+- [ ] Verify authenticated sharing flow in browser; deferred at the user's request before this checkpoint.
+- [ ] Save a delivery checkpoint and report the social NPC Pet update.

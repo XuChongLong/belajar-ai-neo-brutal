@@ -8,6 +8,13 @@
       "when": 1786652613014,
       "tag": "0000_hot_hitman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786659166643,
+      "tag": "0001_smooth_pyro",
+      "breakpoints": true
     }
   ]
 }

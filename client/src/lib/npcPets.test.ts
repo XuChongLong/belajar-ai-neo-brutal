@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DAILY_FEED_LIMIT, addPetXp, buyNpcFood, claimNpcDailyQuest, createDailyNpcState, ensureNpcDaily, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
+import { DAILY_FEED_LIMIT, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
 
 const today = "2026-08-14";
 const freshProgress = () => ({ ...initialPetProgress, daily: createDailyNpcState(today), xp: { cat: 0, dog: 0, unicorn: 0, robot: 0 }, foodInventory: 0, snackCoins: 0, earnedMilestones: { cat: ["bayi"] as const, dog: ["bayi"] as const, unicorn: ["bayi"] as const, robot: ["bayi"] as const } });
@@ -50,5 +50,23 @@ describe("NPC Pet evolution and care", () => {
     const threshold = { ...freshProgress(), foodInventory: 1, xp: { cat: 595, dog: 0, unicorn: 0, robot: 0 } };
     const result = feedNpcPet(threshold, today);
     expect(result).toMatchObject({ ok: true, evolved: true, previousStage: "bayi", stage: "anak" });
+  });
+
+  it("validates shop coins, grants food bundles, and prevents duplicate cosmetics", () => {
+    const stocked = buyNpcShopItem({ ...freshProgress(), snackCoins: 5 }, "bento", today);
+    expect(stocked).toMatchObject({ ok: true, foodAwarded: 4 });
+    expect(stocked.progress).toMatchObject({ snackCoins: 2, foodInventory: 4 });
+    const accessory = buyNpcShopItem({ ...freshProgress(), snackCoins: 5 }, "bow", today);
+    expect(accessory.ok).toBe(true);
+    expect(accessory.progress.ownedAccessories).toContain("bow");
+    expect(buyNpcShopItem(accessory.progress, "bow", today).ok).toBe(false);
+  });
+
+  it("only equips owned accessories and keeps sound enabled by default", () => {
+    const fresh = freshProgress();
+    expect(fresh.audioEnabled).toBe(true);
+    expect(equipNpcAccessory(fresh, "glasses").ok).toBe(false);
+    const owned = { ...fresh, ownedAccessories: ["glasses"] as const };
+    expect(equipNpcAccessory(owned, "glasses")).toMatchObject({ ok: true, progress: { equippedAccessory: "glasses" } });
   });
 });

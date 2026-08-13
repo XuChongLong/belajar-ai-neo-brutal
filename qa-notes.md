@@ -35,3 +35,8 @@
 - 2026-08-13: Feeding Kiko consumed the purchased item, raised XP from 70 to 75, and changed the daily meal counter from 0/3 to 1/3, confirming the required +5 XP reward and daily-use tracking.
 - 2026-08-13: The isolated browser was prepared at 595 XP with one food item; the NPC page correctly displayed “5 XP menuju Anak-anak,” ready for the threshold-crossing animation check.
 - 2026-08-13: The threshold feed moved Kiko from 595 XP/Bayi to 600 XP/Anak-anak, updated the active and collection artwork, unlocked the second milestone, and activated the evolution celebration flow with reduced-motion-safe implementation.
+- 2026-08-13: Desktop social NPC review confirmed six quest-coin shop products, a clear owned-accessory area, a database-backed leaderboard empty state with no fabricated rows, opt-in sharing copy, and dedicated popup/audio controls.
+- 2026-08-13: Mobile social NPC review at 375 px confirmed readable stacked care controls, scroll-safe shop cards, privacy panel, leaderboard empty state, and independently accessible popup and sound preferences.
+- 2026-08-13: In the isolated browser state, purchasing Biskuit Bintang deducted the final snack coin from 1 to 0 and increased food inventory from 0 to 1. The public leaderboard remained empty because no public-profile action was taken.
+- 2026-08-13: Toggling the sound control changed the persisted interface state from “Suara aktif” to “Suara mati” while keeping the care, quest, shop, and leaderboard state intact.
+- 2026-08-13: Authenticated browser verification of publishing then hiding a public pet profile was deferred at the user's request. Privacy, hidden-profile exclusion, and ranking order remain covered by automated tests.

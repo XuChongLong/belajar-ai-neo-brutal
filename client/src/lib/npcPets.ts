@@ -1,6 +1,7 @@
 export const PET_IDS = ["cat", "dog", "unicorn", "robot"] as const;
 export type PetId = (typeof PET_IDS)[number];
 export type PetStage = "bayi" | "anak" | "remaja" | "prima" | "dewasa";
+export type AccessoryId = "bow" | "glasses" | "crown";
 export type DailyQuestId = "lesson" | "quiz" | "flashcard";
 type QuestProgressKey = "lessons" | "quizCorrect" | "flashcards";
 
@@ -19,6 +20,9 @@ export type PetProgress = {
   popupEnabled: boolean;
   foodInventory: number;
   snackCoins: number;
+  ownedAccessories: AccessoryId[];
+  equippedAccessory: AccessoryId | null;
+  audioEnabled: boolean;
   daily: DailyNpcState;
 };
 
@@ -39,6 +43,19 @@ export const DAILY_PLAY_LIMIT = 1;
 export const FEED_XP = 5;
 export const PLAY_XP = 3;
 export const FOOD_COST = 1;
+
+export const accessoryCatalog: Record<AccessoryId, { id: AccessoryId; name: string; description: string; cost: number; symbol: string; color: string }> = {
+  bow: { id: "bow", name: "Pita Komputasi", description: "Aksen manis untuk partner yang penuh ide.", cost: 4, symbol: "◓", color: "pink" },
+  glasses: { id: "glasses", name: "Kacamata Fokus", description: "Untuk sesi belajar yang super teliti.", cost: 5, symbol: "◉", color: "yellow" },
+  crown: { id: "crown", name: "Mahkota Debug", description: "Tanda partner yang tak takut memperbaiki error.", cost: 8, symbol: "♛", color: "green" },
+};
+
+export const shopItems: { id: string; kind: "food" | "accessory"; name: string; description: string; cost: number; food?: number; accessoryId?: AccessoryId; symbol: string; color: string }[] = [
+  { id: "biskuit", kind: "food", name: "Biskuit Bintang", description: "Satu porsi kecil untuk satu kali makan.", cost: 1, food: 1, symbol: "✦", color: "pink" },
+  { id: "bento", kind: "food", name: "Bento Data", description: "Paket hemat untuk empat kali makan.", cost: 3, food: 4, symbol: "▤", color: "yellow" },
+  { id: "nectar", kind: "food", name: "Nektar Neural", description: "Stok delapan porsi untuk hari belajar yang panjang.", cost: 5, food: 8, symbol: "✧", color: "purple" },
+  ...Object.values(accessoryCatalog).map((accessory) => ({ id: accessory.id, kind: "accessory" as const, name: accessory.name, description: accessory.description, cost: accessory.cost, accessoryId: accessory.id, symbol: accessory.symbol, color: accessory.color })),
+];
 
 export const petStages: { id: PetStage; label: string; minXp: number; level: number; description: string }[] = [
   { id: "bayi", label: "Bayi", minXp: 0, level: 1, description: "Mulai penasaran dan siap menemani belajar." },
@@ -69,6 +86,9 @@ export const initialPetProgress: PetProgress = {
   popupEnabled: false,
   foodInventory: 0,
   snackCoins: 0,
+  ownedAccessories: [],
+  equippedAccessory: null,
+  audioEnabled: true,
   daily: createDailyNpcState(),
 };
 
@@ -144,6 +164,22 @@ export function buyNpcFood(progress: PetProgress, today = getDayKey()): PetActio
   if (ready.snackCoins < FOOD_COST) return actionFailure(ready, "Butuh 1 koin snack untuk membeli satu makanan.");
   const next = { ...ready, snackCoins: ready.snackCoins - FOOD_COST, foodInventory: ready.foodInventory + 1 };
   return actionResult(next, "Satu makanan baru masuk ke tas pet.", 0, 0, 1);
+}
+
+export function buyNpcShopItem(progress: PetProgress, itemId: string, today = getDayKey()): PetActionResult {
+  const ready = ensureNpcDaily(progress, today);
+  const item = shopItems.find((entry) => entry.id === itemId);
+  if (!item) return actionFailure(ready, "Barang shop tidak ditemukan.");
+  if (ready.snackCoins < item.cost) return actionFailure(ready, `Butuh ${item.cost} koin snack untuk membeli ${item.name}.`);
+  if (item.kind === "accessory" && item.accessoryId && ready.ownedAccessories.includes(item.accessoryId)) return actionFailure(ready, "Aksesori ini sudah ada di koleksimu.");
+  const next = { ...ready, snackCoins: ready.snackCoins - item.cost, foodInventory: ready.foodInventory + (item.food ?? 0), ownedAccessories: item.accessoryId ? [...ready.ownedAccessories, item.accessoryId] : ready.ownedAccessories };
+  return actionResult(next, item.kind === "food" ? `${item.name} masuk ke tas: +${item.food} makanan.` : `${item.name} masuk koleksi aksesori.`, 0, 0, item.food ?? 0);
+}
+
+export function equipNpcAccessory(progress: PetProgress, accessoryId: AccessoryId | null): PetActionResult {
+  if (accessoryId && !progress.ownedAccessories.includes(accessoryId)) return actionFailure(progress, "Aksesori ini belum kamu miliki.");
+  const name = accessoryId ? accessoryCatalog[accessoryId].name : "tanpa aksesori";
+  return actionResult({ ...progress, equippedAccessory: accessoryId }, `Partner-mu sekarang memakai ${name}.`);
 }
 
 export function claimNpcDailyQuest(progress: PetProgress, questId: DailyQuestId, today = getDayKey()): PetActionResult {

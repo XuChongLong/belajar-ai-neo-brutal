@@ -1,13 +1,14 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createStoredFile, getStoredFileUsageByUser, listStoredFilesByUser, removeStoredFileByUser } from "./db";
+import { createStoredFile, getPublicPetProfileByUser, getStoredFileUsageByUser, listPublicPetLeaderboard, listStoredFilesByUser, removeStoredFileByUser, savePublicPetProfile } from "./db";
 import { validateStudyFile } from "./fileValidation";
 import { buildStorageQuotaSummary } from "./storageQuota";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
+import { rankPublicPetProfiles } from "./petSocial";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -51,6 +52,24 @@ export const appRouter = router({
       if (!removed) throw new TRPCError({ code: "NOT_FOUND", message: "File tidak ditemukan atau bukan milik akun ini." });
       return { success: true } as const;
     }),
+  }),
+  petSocial: router({
+    leaderboard: publicProcedure.query(async () => rankPublicPetProfiles(await listPublicPetLeaderboard())),
+    mine: protectedProcedure.query(({ ctx }) => getPublicPetProfileByUser(ctx.user.id)),
+    update: protectedProcedure.input(z.object({
+      isPublic: z.boolean(),
+      petId: z.enum(["cat", "dog", "unicorn", "robot"]),
+      xp: z.number().int().min(0).max(1_000_000),
+      stage: z.enum(["bayi", "anak", "remaja", "prima", "dewasa"]),
+      equippedAccessory: z.string().max(64).nullable(),
+    })).mutation(({ ctx, input }) => savePublicPetProfile({
+      userId: ctx.user.id,
+      isPublic: input.isPublic ? 1 : 0,
+      petId: input.petId,
+      xp: input.xp,
+      stage: input.stage,
+      equippedAccessory: input.equippedAccessory,
+    })),
   }),
 });
 
