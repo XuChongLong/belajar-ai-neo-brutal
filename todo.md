@@ -66,3 +66,11 @@
 - [x] Attach diagram metadata and one visual quiz to materials 6 and 23.
 - [x] Verify feedback, retry, persistence, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Function Calling and AI Agent Diagrams
+
+- [x] Define beginner-friendly Function Calling and AI Agent visual flows.
+- [x] Create and upload deterministic diagram assets.
+- [x] Attach diagram metadata and one visual quiz to materials 28 and 29.
+- [x] Verify fullscreen, zoom, feedback, retry, persistence, responsive layout, and production build.
+- [x] Save a new delivery checkpoint and report the update.
