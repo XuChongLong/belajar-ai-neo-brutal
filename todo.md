@@ -139,4 +139,4 @@
 - [x] Add a dedicated Profile authentication-error state so service failures are not shown as a login gate.
 - [x] Verify responsive layout, TypeScript, tests, and production build.
 - [ ] Browser-test quota refresh after upload and deletion; deferred at the user's request before this checkpoint.
-- [ ] Save a new delivery checkpoint and report the update.
+- [x] Save a new delivery checkpoint and report the update.
