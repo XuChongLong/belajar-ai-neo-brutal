@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DAILY_FEED_LIMIT, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
+import { DAILY_FEED_LIMIT, MINIGAME_FAST_TIME_MS, MINIGAME_TARGET_SCORE, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
 
 const today = "2026-08-14";
 const freshProgress = () => ({ ...initialPetProgress, daily: createDailyNpcState(today), xp: { cat: 0, dog: 0, unicorn: 0, robot: 0 }, foodInventory: 0, snackCoins: 0, earnedMilestones: { cat: ["bayi"] as const, dog: ["bayi"] as const, unicorn: ["bayi"] as const, robot: ["bayi"] as const } });
@@ -68,5 +68,17 @@ describe("NPC Pet evolution and care", () => {
     expect(equipNpcAccessory(fresh, "glasses").ok).toBe(false);
     const owned = { ...fresh, ownedAccessories: ["glasses"] as const };
     expect(equipNpcAccessory(owned, "glasses")).toMatchObject({ ok: true, progress: { equippedAccessory: "glasses" } });
+  });
+
+  it("awards one daily Snack Sprint bonus with a fast-play boost and resets it tomorrow", () => {
+    const first = claimNpcMiniGameReward(freshProgress(), MINIGAME_TARGET_SCORE, MINIGAME_FAST_TIME_MS, today);
+    expect(first).toMatchObject({ ok: true, coinsAwarded: 2, progress: { snackCoins: 2, daily: { miniGameRounds: 1, miniGameBestScore: MINIGAME_TARGET_SCORE, miniGameCoinsClaimed: 2 } } });
+    expect(claimNpcMiniGameReward(first.progress, MINIGAME_TARGET_SCORE, MINIGAME_FAST_TIME_MS, today).ok).toBe(false);
+    expect(ensureNpcDaily(first.progress, "2026-08-15").daily.miniGameRounds).toBe(0);
+  });
+
+  it("rejects unfinished Snack Sprint scores and gives one coin for a slower valid round", () => {
+    expect(claimNpcMiniGameReward(freshProgress(), MINIGAME_TARGET_SCORE - 1, 1, today).ok).toBe(false);
+    expect(claimNpcMiniGameReward(freshProgress(), MINIGAME_TARGET_SCORE, MINIGAME_FAST_TIME_MS + 1, today)).toMatchObject({ ok: true, coinsAwarded: 1 });
   });
 });

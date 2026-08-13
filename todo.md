@@ -193,4 +193,16 @@
 - [x] Add a mixed-record petSocial.leaderboard router-contract test proving hidden profiles are absent and ranking order is preserved.
 - [x] Confirm desktop/mobile interfaces, shop purchases, sound controls, TypeScript, tests, and production build.
 - [ ] Verify authenticated sharing flow in browser; deferred at the user's request before this checkpoint.
-- [ ] Save a delivery checkpoint and report the social NPC Pet update.
+- [x] Save a delivery checkpoint and report the social NPC Pet update.
+
+## NPC Pet Bonus-Coin Mini-Game
+
+- [x] Define a quick pet-play mini-game, reward tiers, and a daily bonus-coin cap that complements rather than replaces quests.
+- [x] Persist daily mini-game attempts, best result, claimed bonus coins, and reset behavior in the NPC state.
+- [x] Build an accessible interactive mini-game surface on the NPC page with clear instructions, feedback, and replay controls.
+- [x] Add an explicit practice replay control that does not grant additional daily coins after the reward-cap round is complete.
+- [x] Award snack coins only for valid completed rounds and surface the reward in the pet inventory.
+- [x] Add automated coverage for scoring, reward cap, repeat-round prevention, and next-day reset behavior.
+- [x] Verify desktop/mobile play, reward persistence, TypeScript, tests, and production build.
+- [x] Browser-test Snack Sprint reward persistence after a reload and record the result.
+- [ ] Save a delivery checkpoint and report the mini-game update.

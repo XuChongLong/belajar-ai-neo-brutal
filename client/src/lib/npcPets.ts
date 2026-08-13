@@ -9,6 +9,9 @@ export type DailyNpcState = {
   date: string;
   feedings: number;
   plays: number;
+  miniGameRounds: number;
+  miniGameBestScore: number;
+  miniGameCoinsClaimed: number;
   questProgress: Record<QuestProgressKey, number>;
   claimedQuestIds: DailyQuestId[];
 };
@@ -43,6 +46,9 @@ export const DAILY_PLAY_LIMIT = 1;
 export const FEED_XP = 5;
 export const PLAY_XP = 3;
 export const FOOD_COST = 1;
+export const DAILY_MINIGAME_LIMIT = 1;
+export const MINIGAME_TARGET_SCORE = 8;
+export const MINIGAME_FAST_TIME_MS = 11_000;
 
 export const accessoryCatalog: Record<AccessoryId, { id: AccessoryId; name: string; description: string; cost: number; symbol: string; color: string }> = {
   bow: { id: "bow", name: "Pita Komputasi", description: "Aksen manis untuk partner yang penuh ide.", cost: 4, symbol: "◓", color: "pink" },
@@ -76,7 +82,7 @@ export function getDayKey(date = new Date()) {
 }
 
 export function createDailyNpcState(date = getDayKey()): DailyNpcState {
-  return { date, feedings: 0, plays: 0, questProgress: { lessons: 0, quizCorrect: 0, flashcards: 0 }, claimedQuestIds: [] };
+  return { date, feedings: 0, plays: 0, miniGameRounds: 0, miniGameBestScore: 0, miniGameCoinsClaimed: 0, questProgress: { lessons: 0, quizCorrect: 0, flashcards: 0 }, claimedQuestIds: [] };
 }
 
 export const initialPetProgress: PetProgress = {
@@ -157,6 +163,15 @@ export function playWithNpcPet(progress: PetProgress, today = getDayKey()): PetA
   const played = { ...ready, daily: { ...ready.daily, plays: ready.daily.plays + 1 } };
   const outcome = applyPetXp(played, PLAY_XP);
   return actionResult(outcome.progress, `${petProfiles[ready.activePet].name} senang bermain dan mendapat +${PLAY_XP} XP.`, PLAY_XP, 0, 0, before, outcome.stage);
+}
+
+export function claimNpcMiniGameReward(progress: PetProgress, score: number, durationMs: number, today = getDayKey()): PetActionResult {
+  const ready = ensureNpcDaily(progress, today);
+  if (ready.daily.miniGameRounds >= DAILY_MINIGAME_LIMIT) return actionFailure(ready, "Bonus Snack Sprint hari ini sudah diambil. Besok main lagi, ya.");
+  if (score < MINIGAME_TARGET_SCORE) return actionFailure(ready, `Tangkap ${MINIGAME_TARGET_SCORE} biskuit untuk menyelesaikan Snack Sprint.`);
+  const coins = durationMs <= MINIGAME_FAST_TIME_MS ? 2 : 1;
+  const next = { ...ready, snackCoins: ready.snackCoins + coins, daily: { ...ready.daily, miniGameRounds: ready.daily.miniGameRounds + 1, miniGameBestScore: Math.max(ready.daily.miniGameBestScore, score), miniGameCoinsClaimed: ready.daily.miniGameCoinsClaimed + coins } };
+  return actionResult(next, coins === 2 ? "Sprint kilat! Kamu mendapat 2 koin snack." : "Sprint selesai! Kamu mendapat 1 koin snack.", 0, coins);
 }
 
 export function buyNpcFood(progress: PetProgress, today = getDayKey()): PetActionResult {

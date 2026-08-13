@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
-import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetProgress } from "@/lib/npcPets";
+import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
   id: string;
@@ -49,6 +49,7 @@ type LearningContextValue = LearningState & {
   equipNpcAccessory: (accessoryId: AccessoryId | null) => PetActionResult;
   setNpcAudioEnabled: (enabled: boolean) => void;
   claimNpcDailyQuest: (questId: DailyQuestId) => PetActionResult;
+  claimNpcMiniGameReward: (score: number, durationMs: number) => PetActionResult;
   resetProgress: () => void;
 };
 
@@ -128,6 +129,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     equipNpcAccessory: (accessoryId) => { const result = equipNpcAccessory(state.npc, accessoryId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     setNpcAudioEnabled: (enabled) => setState((prev) => ({ ...prev, npc: { ...prev.npc, audioEnabled: enabled } })),
     claimNpcDailyQuest: (questId) => { const result = claimNpcDailyQuest(state.npc, questId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
+    claimNpcMiniGameReward: (score, durationMs) => { const result = claimNpcMiniGameReward(state.npc, score, durationMs); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     resetProgress: () => setState(initialState),
   }), [state]);
 
