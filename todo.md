@@ -128,3 +128,15 @@
 - [x] Persist a direct needs-review queue when users select “Perlu diulang”.
 - [x] Prioritize queued cards in Flashcard Lab and retain the queue after reload.
 - [x] Verify the direct action end-to-end, then run tests, TypeScript, and production build.
+
+## Storage Quota Profile Indicator
+
+- [x] Define a transparent per-user storage quota and usage calculation from stored-file metadata.
+- [x] Add a protected backend quota summary procedure with tests.
+- [x] Build an authenticated Profile page with usage, remaining space, file count, and visual progress bar.
+- [x] Add a Profile navigation entry and graceful authentication/loading/error states.
+- [x] Keep the quota summary fresh after uploads and file removals.
+- [x] Add a dedicated Profile authentication-error state so service failures are not shown as a login gate.
+- [x] Verify responsive layout, TypeScript, tests, and production build.
+- [ ] Browser-test quota refresh after upload and deletion; deferred at the user's request before this checkpoint.
+- [ ] Save a new delivery checkpoint and report the update.

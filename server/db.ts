@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertStoredFile, InsertUser, storedFiles, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -101,6 +101,16 @@ export async function listStoredFilesByUser(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
   return db.select().from(storedFiles).where(eq(storedFiles.userId, userId)).orderBy(desc(storedFiles.createdAt));
+}
+
+export async function getStoredFileUsageByUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const summary = await db.select({
+    usedBytes: sql<number>`coalesce(sum(${storedFiles.sizeBytes}), 0)`,
+    fileCount: sql<number>`count(${storedFiles.id})`,
+  }).from(storedFiles).where(eq(storedFiles.userId, userId));
+  return { usedBytes: Number(summary[0]?.usedBytes ?? 0), fileCount: Number(summary[0]?.fileCount ?? 0) };
 }
 
 export async function removeStoredFileByUser(id: number, userId: number) {

@@ -11,3 +11,9 @@
 - 2026-08-13: Resetting the known card through the needs-review flow returned the deck to 0 mastered and 16 pending; reloading preserved that result.
 - 2026-08-13: With direct queue persistence enabled, selecting “Perlu diulang” on AI advanced to Machine Learning while retaining all 16 cards in the review deck.
 - 2026-08-13: After reload, AI returned as the first active card, confirming that the direct needs-review queue persisted and was prioritized.
+- 2026-08-13: Profile quota page rendered for the authenticated account on desktop, showing account details, a 25 MB storage meter, 0.0 MB used, 25.0 MB remaining, one stored file, Study Files shortcut, and sign-out action.
+- 2026-08-13: Initial mobile Profile review found the four account-detail cells and quota explanatory copy too compressed; responsive stacking will be refined before final verification.
+- 2026-08-13: Final mobile Profile verification showed full-width readable account details, a legible 25 MB quota meter with usage and remaining-space metrics, stacked Study Files actions, and an accessible sign-out action.
+- 2026-08-13: Quota regression coverage confirmed that the protected endpoint reads the current user-owned aggregate on every request, rejects uploads beyond 25 MB before storage, and that Study Files invalidates the quota cache after successful uploads or removals.
+- 2026-08-13: Final release verification passed: 4 Vitest files / 12 tests, TypeScript check, and production build.
+- 2026-08-13: Browser-level upload-and-delete quota refresh verification was deferred at the user's request before the checkpoint; automated quota, cache-invalidation, and fresh-aggregate coverage remains in place.

@@ -27,11 +27,11 @@ export default function StudyFiles() {
   const utils = trpc.useUtils();
   const filesQuery = trpc.files.list.useQuery(undefined, { enabled: isAuthenticated });
   const upload = trpc.files.upload.useMutation({
-    onSuccess: async () => { await utils.files.list.invalidate(); toast("File tersimpan di laci belajarmu."); },
+    onSuccess: async () => { await Promise.all([utils.files.list.invalidate(), utils.files.quota.invalidate()]); toast("File tersimpan di laci belajarmu."); },
     onError: (error) => toast.error(error.message),
   });
   const remove = trpc.files.remove.useMutation({
-    onSuccess: async () => { await utils.files.list.invalidate(); toast("File dihapus dari daftar belajarmu."); },
+    onSuccess: async () => { await Promise.all([utils.files.list.invalidate(), utils.files.quota.invalidate()]); toast("File dihapus dari daftar belajarmu."); },
     onError: (error) => toast.error(error.message),
   });
 

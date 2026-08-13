@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowUpRight, BookMarked, BookOpen, Flame, FolderUp, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, X } from "lucide-react";
+import { ArrowUpRight, BookMarked, BookOpen, Flame, FolderUp, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, UserRound, X } from "lucide-react";
 import { useLearning } from "@/contexts/LearningContext";
 import { materials } from "@/lib/materials";
 import { glossaryTerms } from "@/lib/glossary";
@@ -17,6 +17,7 @@ const navItems = [
   { href: "/glosarium", label: "Glosarium", icon: BookMarked },
   { href: "/flashcards", label: "Flashcards", icon: Layers3 },
   { href: "/files", label: "Study Files", icon: FolderUp },
+  { href: "/profil", label: "Profil", icon: UserRound },
   { href: "/tentang", label: "Tentang", icon: Info },
 ];
 

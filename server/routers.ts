@@ -1,8 +1,9 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createStoredFile, listStoredFilesByUser, removeStoredFileByUser } from "./db";
+import { createStoredFile, getStoredFileUsageByUser, listStoredFilesByUser, removeStoredFileByUser } from "./db";
 import { validateStudyFile } from "./fileValidation";
+import { buildStorageQuotaSummary } from "./storageQuota";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -23,6 +24,7 @@ export const appRouter = router({
   }),
   files: router({
     list: protectedProcedure.query(({ ctx }) => listStoredFilesByUser(ctx.user.id)),
+    quota: protectedProcedure.query(async ({ ctx }) => buildStorageQuotaSummary(await getStoredFileUsageByUser(ctx.user.id))),
     upload: protectedProcedure.input(z.object({
       originalName: z.string().min(1).max(255),
       mimeType: z.string().min(1).max(160),
@@ -36,6 +38,10 @@ export const appRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "File tidak valid." });
       }
       const { bytes, safeName } = validated;
+      const quota = buildStorageQuotaSummary(await getStoredFileUsageByUser(ctx.user.id));
+      if (bytes.length > quota.remainingBytes) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Kuota penyimpanan 25 MB akunmu tidak mencukupi untuk file ini." });
+      }
       const { key, url } = await storagePut(`${ctx.user.id}/study-files/${Date.now()}-${safeName}`, bytes, input.mimeType);
       const file = await createStoredFile({ userId: ctx.user.id, fileKey: key, url, originalName: input.originalName, mimeType: input.mimeType, sizeBytes: bytes.length, purpose: input.purpose });
       return file;
