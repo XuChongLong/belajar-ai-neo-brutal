@@ -24,3 +24,12 @@
 - [x] Add the visual progress bar and metric breakdown to the Progress dashboard.
 - [x] Verify profile changes, zero-state behavior, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Content Audit and Enrichment
+
+- [x] Audit all 33 materials for brevity, jargon, missing context, and weak analogies.
+- [x] Expand each material with a clear explanation, short relatable story, practical example, and recap.
+- [x] Keep category, difficulty, duration, quiz, and learning-path compatibility intact.
+- [x] Add article sections and visual treatment needed for longer, more readable lessons.
+- [x] Verify representative lessons across all four categories, mobile readability, and production build.
+- [x] Save a new delivery checkpoint and report the update.
