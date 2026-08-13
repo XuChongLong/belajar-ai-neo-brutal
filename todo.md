@@ -58,3 +58,11 @@
 - [x] Render the micro-quiz immediately below each matching diagram with direct feedback.
 - [x] Verify retry behavior, score updates, responsive layout, and production build.
 - [x] Save a new delivery checkpoint and report the update.
+
+## Neural Network and Embedding Micro-Quizzes
+
+- [x] Define beginner-friendly Neural Network and Embedding visual flows.
+- [x] Create and upload deterministic diagram assets.
+- [x] Attach diagram metadata and one visual quiz to materials 6 and 23.
+- [x] Verify feedback, retry, persistence, responsive layout, and production build.
+- [x] Save a new delivery checkpoint and report the update.
