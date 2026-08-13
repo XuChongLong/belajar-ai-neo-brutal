@@ -85,3 +85,20 @@ export function getRecommendationSummary(materials: Material[], completed: numbe
   const review = recommendations.find((item) => item.type === "review");
   return { headline: review ? "Jalurmu menemukan satu titik untuk diperkuat." : `Jalur ${goal.label}-mu sudah punya arah berikutnya.`, body: "Rekomendasi ini berubah otomatis saat tujuan atau hasil quiz-mu berubah." };
 }
+
+export function getGoalProgress(materials: Material[], completed: number[], attempts: Record<number, QuizAttempt>, goalId: LearningGoalId | null = null) {
+  const goal = getGoal(goalId);
+  const weights = new Map(goal.priorities.map((category, index) => [category, Math.max(0.7, 1.5 - index * 0.2)]));
+  const totalWeight = materials.reduce((sum, material) => sum + (weights.get(material.category) ?? 0.7), 0);
+  const completedWeight = materials.reduce((sum, material) => sum + (completed.includes(material.id) ? (weights.get(material.category) ?? 0.7) : 0), 0);
+  const completion = totalWeight ? Math.round((completedWeight / totalWeight) * 100) : 0;
+  const attemptedMaterials = materials.filter((material) => attempts[material.id]);
+  const mastery = attemptedMaterials.length ? Math.round(attemptedMaterials.reduce((sum, material) => sum + attempts[material.id].percentage * (weights.get(material.category) ?? 0.7), 0) / attemptedMaterials.reduce((sum, material) => sum + (weights.get(material.category) ?? 0.7), 0)) : 0;
+  const score = Math.round(completion * 0.6 + mastery * 0.4);
+  const relevantCompleted = materials.filter((material) => completed.includes(material.id) && (weights.get(material.category) ?? 0) >= 1).length;
+  const relevantTotal = materials.filter((material) => (weights.get(material.category) ?? 0) >= 1).length;
+  const attempted = Object.keys(attempts).length;
+  const milestone = score >= 90 ? "Tinggal sedikit lagi menuju badge tujuan." : score >= 75 ? "Kamu sudah masuk fase penguatan." : score >= 50 ? "Peta belajarmu mulai terbentuk." : score >= 25 ? "Langkah awalmu sudah terlihat." : "Pilih satu materi untuk menyalakan progress pertamamu.";
+  const nextAction = !attempted ? "Kerjakan quiz pertama untuk membuka sinyal mastery." : score < 50 ? `Selesaikan ${Math.max(1, Math.ceil((50 - score) / 10))} materi prioritas berikutnya.` : mastery < 80 ? "Ulangi quiz dengan skor terendah untuk mengangkat mastery." : "Lanjutkan materi prioritas agar progress tetap naik.";
+  return { goal, score, completion, mastery, relevantCompleted, relevantTotal, attempted, milestone, nextAction };
+}
