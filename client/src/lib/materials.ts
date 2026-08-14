@@ -30,6 +30,9 @@ export type Material = {
   quiz: QuizQuestion[];
 };
 
+export const getFocusedCatalogueHref = (specialization?: Material["specialization"]) =>
+  specialization ? `/materi?jurusan=${specialization}` : "/materi";
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 01 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 02 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },

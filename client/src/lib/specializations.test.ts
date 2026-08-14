@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { materials } from "./materials";
+import { getFocusedCatalogueHref, materials } from "./materials";
 import { getLearningRecommendations, learningGoals } from "./learningPath";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta } from "./specializations";
 
@@ -34,5 +34,8 @@ describe("expanded specialization catalogue", () => {
     expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-engineering"))).toHaveLength(60);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "cloud-devops"))).toHaveLength(8);
     expect(materials.filter((material) => materialMatchesSpecialization(material, null))).toHaveLength(108);
+    expect(getFocusedCatalogueHref("ai-engineering")).toBe("/materi?jurusan=ai-engineering");
+    expect(getFocusedCatalogueHref("cloud-devops")).toBe("/materi?jurusan=cloud-devops");
+    expect(getFocusedCatalogueHref()).toBe("/materi");
   });
 });
