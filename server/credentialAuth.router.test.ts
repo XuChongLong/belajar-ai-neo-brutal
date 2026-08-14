@@ -71,6 +71,20 @@ describe("auth local credentials", () => {
     expect(result.user).not.toHaveProperty("passwordHash");
   });
 
+  it("uses a session-only cookie by default and a bounded persistent cookie when Remember Me is selected", async () => {
+    const passwordHash = await hashPassword("aman-sekali-123");
+    mocked.getUserByUsername.mockResolvedValue({ ...user, passwordHash });
+    const first = createContext();
+    await appRouter.createCaller(first.ctx).auth.login({ username: "anne.belajar", password: "aman-sekali-123", rememberMe: false });
+    expect(mocked.createSessionToken).toHaveBeenLastCalledWith("local:anne.belajar", expect.objectContaining({ expiresInMs: 86_400_000 }));
+    expect(first.cookies[0]?.options).not.toHaveProperty("maxAge");
+
+    const second = createContext();
+    await appRouter.createCaller(second.ctx).auth.login({ username: "anne.belajar", password: "aman-sekali-123", rememberMe: true });
+    expect(mocked.createSessionToken).toHaveBeenLastCalledWith("local:anne.belajar", expect.objectContaining({ expiresInMs: 2_592_000_000 }));
+    expect(second.cookies[0]?.options).toMatchObject({ maxAge: 2_592_000_000, httpOnly: true, secure: true });
+  });
+
   it("rejects a duplicate username before creating a second account", async () => {
     mocked.getUserByUsername.mockResolvedValue(user);
     const { ctx } = createContext();

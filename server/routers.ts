@@ -12,11 +12,14 @@ import { rankPublicPetProfiles } from "./petSocial";
 import { discoverProviderModels, generatePrdMarkdown } from "./prdMaker";
 import { clearFailedLogins, hashPassword, isLoginRateLimited, isValidPassword, isValidUsername, localOpenId, normalizeUsername, recordFailedLogin, verifyPassword } from "./localAuth";
 import { sdk } from "./_core/sdk";
-import { ONE_YEAR_MS } from "@shared/const";
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const REMEMBER_ME_SESSION_MS = 30 * ONE_DAY_MS;
+const STANDARD_SESSION_MS = ONE_DAY_MS;
 
 const localCredentialInput = z.object({
   username: z.string().min(3).max(32),
   password: z.string().min(10).max(128),
+  rememberMe: z.boolean().optional().default(false),
 });
 
 function safeUser(user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>>>) {
@@ -24,9 +27,11 @@ function safeUser(user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>
   return publicUser;
 }
 
-async function createLocalSession(ctx: { req: Parameters<typeof getSessionCookieOptions>[0]; res: { cookie: (name: string, value: string, options: Record<string, unknown>) => unknown } }, user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>>>) {
-  const sessionToken = await sdk.createSessionToken(user.openId, { name: user.name ?? user.username ?? "Belajar AI", expiresInMs: ONE_YEAR_MS });
-  ctx.res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
+async function createLocalSession(ctx: { req: Parameters<typeof getSessionCookieOptions>[0]; res: { cookie: (name: string, value: string, options: Record<string, unknown>) => unknown } }, user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>>>, rememberMe: boolean) {
+  const expiresInMs = rememberMe ? REMEMBER_ME_SESSION_MS : STANDARD_SESSION_MS;
+  const sessionToken = await sdk.createSessionToken(user.openId, { name: user.name ?? user.username ?? "Belajar AI", expiresInMs });
+  const cookieOptions = getSessionCookieOptions(ctx.req);
+  ctx.res.cookie(COOKIE_NAME, sessionToken, rememberMe ? { ...cookieOptions, maxAge: expiresInMs } : cookieOptions);
 }
 
 export const appRouter = router({
@@ -49,7 +54,7 @@ export const appRouter = router({
         throw new TRPCError({ code: "CONFLICT", message: "Username ini sudah digunakan. Coba masuk atau pilih username lain.", cause: error });
       }
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Akun belum dapat dibuat. Coba lagi." });
-      await createLocalSession(ctx, user);
+      await createLocalSession(ctx, user, input.rememberMe);
       return { user: safeUser(user) };
     }),
     login: publicProcedure.input(localCredentialInput).mutation(async ({ ctx, input }) => {
@@ -62,7 +67,7 @@ export const appRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Username atau password tidak cocok." });
       }
       clearFailedLogins(username);
-      await createLocalSession(ctx, user);
+      await createLocalSession(ctx, user, input.rememberMe);
       return { user: safeUser(user) };
     }),
     logout: publicProcedure.mutation(({ ctx }) => {

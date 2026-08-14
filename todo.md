@@ -243,3 +243,9 @@
 - [x] Preserve authenticated ownership for Study Files, storage quota, and public-pet sharing under local credential sessions.
 - [x] Add regression tests for credential validation, duplicate accounts, password verification, session creation, and logout.
 - [x] Verify desktop/mobile account flows, TypeScript, tests, and production build before saving the credential-authentication release.
+
+## Login Convenience Controls
+
+- [x] Add a Remember Me choice that controls a clearly bounded local credential-session duration.
+- [x] Add an accessible show-or-hide password control without changing the entered password value.
+- [x] Add regression coverage for session-duration choice and password-visibility behavior, then verify responsive sign-in UI, TypeScript, tests, and production build.
