@@ -7,6 +7,7 @@ import superjson from "superjson";
 import App from "./App";
 import { localSignInPath } from "./lib/authNavigation";
 import "./index.css";
+import "./styles/specializationThemes.css";
 
 const queryClient = new QueryClient();
 

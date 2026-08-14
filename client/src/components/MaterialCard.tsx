@@ -10,7 +10,7 @@ export default function MaterialCard({ material, compact = false }: { material: 
   const isDone = completed.includes(material.id);
   const isCurrent = current === material.id && !isDone;
   const isBookmarked = bookmarks.includes(material.id);
-  return <article className={`material-card ${compact ? "material-card-compact" : ""}`}>
+  return <article className={`material-card ${compact ? "material-card-compact" : ""} material-card-track-${material.specialization ?? "core"}`}>
     <Link href={`/materi/${material.id}`} className="material-card-link">
       <div className="card-topline"><span className="material-number">{String(material.id).padStart(2, "0")}</span><span className={`status-pill ${isDone ? "status-done" : isCurrent ? "status-current" : ""}`}>{isDone ? <><Check size={12} /> Selesai</> : isCurrent ? "Sedang belajar" : "Belum mulai"}</span></div>
       <div className="material-emoji">{material.emoji}</div>

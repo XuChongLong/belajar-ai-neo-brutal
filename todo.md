@@ -249,3 +249,22 @@
 - [x] Add a Remember Me choice that controls a clearly bounded local credential-session duration.
 - [x] Add an accessible show-or-hide password control without changing the entered password value.
 - [x] Add regression coverage for session-duration choice and password-visibility behavior, then verify responsive sign-in UI, TypeScript, tests, and production build.
+
+## Email Password Reset
+
+- [ ] Review the local-account email model and configure a transactional-email provider for reset delivery.
+- [ ] Add one-time, hashed password-reset tokens with expiry, request throttling, and account-enumeration-safe responses.
+- [ ] Send reset links only to verified account email addresses and invalidate tokens after a successful password change.
+- [ ] Build responsive Forgot Password and Reset Password pages with accessible success, expired-link, and error states.
+- [ ] Add regression coverage for token lifecycle, expiry, throttling, password updates, and user-facing reset routes.
+- [ ] Verify the end-to-end email-reset journey, TypeScript, tests, and production build before release.
+
+## Career Specialization Curriculum Expansion
+
+- [x] Audit the current 39-lesson catalogue, define learning outcomes and prerequisites, and prevent duplication with the existing AI Engineering content.
+- [x] Expand Cloud & DevOps untuk AI with a substantial blue, white, and black specialization path, including deployment, containers, CI/CD, observability, and cloud-cost lessons.
+- [x] Add substantial Data Analyst & Data Engineering, AI Product Builder, Automation Specialist, AI Security & Safety, and Creative AI & Content Systems learning paths.
+- [x] Write beginner-friendly Indonesian lesson narratives, actionable practice, quizzes, and official resources for every new specialization lesson.
+- [x] Implement distinct, high-contrast Paper Playground color systems per specialization across course discovery and individual lessons.
+- [x] Add automated coverage for catalogue totals, specialization metadata, color-theme application, and learning-path compatibility.
+- [x] Verify desktop/mobile readability, all quality checks, and production build before publishing the expanded curriculum.

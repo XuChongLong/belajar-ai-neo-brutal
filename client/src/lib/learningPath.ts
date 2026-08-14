@@ -3,7 +3,7 @@
 import type { Material } from "@/lib/materials";
 
 export type QuizAttempt = { score: number; total: number; percentage: number; lastAttemptAt: string };
-export type LearningGoalId = "ai-explorer" | "prompt-engineer" | "ai-builder" | "rag-specialist";
+export type LearningGoalId = "ai-explorer" | "prompt-engineer" | "ai-builder" | "rag-specialist" | "cloud-operator" | "data-analyst" | "ai-product-builder" | "automation-specialist" | "ai-safety-builder" | "creative-ai-builder";
 
 export type LearningGoal = {
   id: LearningGoalId;
@@ -19,6 +19,12 @@ export const learningGoals: LearningGoal[] = [
   { id: "prompt-engineer", label: "Prompt Engineer", emoji: "⌁", description: "Fokus merancang instruksi dan memahami LLM.", priorities: ["Large Language Models", "Dasar-Dasar AI", "AI Agents & Tools", "RAG & Teknik Lanjutan"], keywords: ["Prompt", "Tokenisasi", "Temperature", "Context Window", "Hallucination"] },
   { id: "ai-builder", label: "AI Builder", emoji: "⚙", description: "Bangun aplikasi AI dari fondasi sampai tools.", priorities: ["Dasar-Dasar AI", "RAG & Teknik Lanjutan", "AI Agents & Tools", "Large Language Models"], keywords: ["Training", "Neural", "RAG", "Vector", "Function Calling", "Memory"] },
   { id: "rag-specialist", label: "RAG Specialist", emoji: "⌗", description: "Dalami pipeline pencarian, embedding, dan evaluasi.", priorities: ["RAG & Teknik Lanjutan", "Large Language Models", "Dasar-Dasar AI", "AI Agents & Tools"], keywords: ["RAG", "Vector", "Embedding", "Chunking", "Semantic", "Pipeline", "Evaluasi"] },
+  { id: "cloud-operator", label: "Cloud Operator", emoji: "☁", description: "Deploy, pantau, dan rawat layanan AI dengan lebih tenang.", priorities: ["Cloud & DevOps untuk AI", "Infrastruktur Agent", "AI Agents & Tools", "Dasar-Dasar AI"], keywords: ["Cloud", "Docker", "CI/CD", "Observability", "Deploy", "Runbook"] },
+  { id: "data-analyst", label: "Data Analyst", emoji: "▦", description: "Ubah data menjadi insight yang bisa dipertanggungjawabkan.", priorities: ["Data Analyst & Data Engineering", "Dasar-Dasar AI", "RAG & Teknik Lanjutan"], keywords: ["Data", "SQL", "Dashboard", "ETL", "Statistik"] },
+  { id: "ai-product-builder", label: "AI Product Builder", emoji: "▱", description: "Rancang produk AI dari masalah sampai evaluasi.", priorities: ["AI Product Builder", "Large Language Models", "AI Agents & Tools", "Dasar-Dasar AI"], keywords: ["Produk", "PRD", "User", "Metrik", "Evaluasi"] },
+  { id: "automation-specialist", label: "Automation Specialist", emoji: "↻", description: "Bangun workflow lintas tool yang tetap terkendali.", priorities: ["Automation Specialist", "AI Agents & Tools", "Infrastruktur Agent", "Large Language Models"], keywords: ["Workflow", "Trigger", "Webhook", "Automation", "Agentic"] },
+  { id: "ai-safety-builder", label: "AI Safety Builder", emoji: "◆", description: "Bangun kebiasaan keamanan dan safety sejak awal.", priorities: ["AI Security & Safety", "AI Agents & Tools", "Dasar-Dasar AI", "Large Language Models"], keywords: ["Security", "Secret", "Prompt Injection", "Akses", "Agent"] },
+  { id: "creative-ai-builder", label: "Creative AI Builder", emoji: "✺", description: "Buat sistem konten AI yang transparan dan terarah.", priorities: ["Creative AI & Content Systems", "Large Language Models", "Dasar-Dasar AI"], keywords: ["Konten", "Prompt Kreatif", "Visual", "Storyboard", "Provenance"] },
 ];
 
 export type LearningRecommendation = {
@@ -36,15 +42,14 @@ export type ReviewItem = {
   signal: "quiz" | "bookmark" | "next";
 };
 
-const categoryOrder = ["Dasar-Dasar AI", "Large Language Models", "RAG & Teknik Lanjutan", "AI Agents & Tools"];
-
 function getGoal(goalId: LearningGoalId | null) {
   return learningGoals.find((goal) => goal.id === goalId) ?? learningGoals[0];
 }
 
 function goalScore(material: Material, goalId: LearningGoalId | null) {
   const goal = getGoal(goalId);
-  const categoryScore = (goal.priorities.length - goal.priorities.indexOf(material.category)) * 10;
+  const priorityIndex = goal.priorities.indexOf(material.category);
+  const categoryScore = priorityIndex >= 0 ? (goal.priorities.length - priorityIndex) * 10 : 0;
   const keywordScore = goal.keywords.some((keyword) => material.title.toLowerCase().includes(keyword.toLowerCase())) ? 8 : 0;
   return categoryScore + keywordScore;
 }
@@ -52,7 +57,7 @@ function goalScore(material: Material, goalId: LearningGoalId | null) {
 export function getLearningRecommendations(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null): LearningRecommendation[] {
   const goal = getGoal(goalId);
   const attempted = materials.filter((material) => attempts[material.id]);
-  const categoryScores = categoryOrder.map((category) => {
+  const categoryScores = Array.from(new Set(materials.map((material) => material.category))).map((category) => {
     const categoryMaterials = attempted.filter((material) => material.category === category);
     const average = categoryMaterials.length ? categoryMaterials.reduce((sum, material) => sum + (attempts[material.id]?.percentage ?? 0), 0) / categoryMaterials.length : null;
     return { category, average, count: categoryMaterials.length };
