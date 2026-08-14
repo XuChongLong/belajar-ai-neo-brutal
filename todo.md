@@ -285,3 +285,10 @@
 - [x] Add a persistent top-corner menu control that opens and closes the desktop navigation without obstructing page content.
 - [x] Persist the desktop sidebar preference and provide clear keyboard, label, and focus behavior.
 - [x] Verify desktop and mobile layouts, add regression coverage, then run TypeScript, tests, and production build before release.
+
+## AI Engineering Content Reset for PDF Rebuild
+
+- [x] Remove the current AI Engineering lesson content while retaining the visible AI Engineering specialization title and entrance card.
+- [x] Show an honest, readable empty-track state that clearly reserves AI Engineering for the user’s forthcoming PDF-led curriculum.
+- [x] Update goal recommendations and catalogue counts so no deleted AI Engineering lesson is surfaced as available learning content.
+- [x] Add regression coverage and verify home, focused catalogue, desktop/mobile states, TypeScript, tests, and production build before release.

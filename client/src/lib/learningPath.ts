@@ -3,7 +3,7 @@
 import type { Material } from "@/lib/materials";
 
 export type QuizAttempt = { score: number; total: number; percentage: number; lastAttemptAt: string };
-export type LearningGoalId = "ai-explorer" | "ai-engineer" | "prompt-engineer" | "ai-builder" | "rag-specialist" | "cloud-operator" | "data-analyst" | "ai-product-builder" | "automation-specialist" | "ai-safety-builder" | "creative-ai-builder";
+export type LearningGoalId = "ai-explorer" | "prompt-engineer" | "ai-builder" | "rag-specialist" | "cloud-operator" | "data-analyst" | "ai-product-builder" | "automation-specialist" | "ai-safety-builder" | "creative-ai-builder";
 
 export type LearningGoal = {
   id: LearningGoalId;
@@ -16,7 +16,6 @@ export type LearningGoal = {
 
 export const learningGoals: LearningGoal[] = [
   { id: "ai-explorer", label: "AI Explorer", emoji: "✦", description: "Peta besar AI dari nol, tanpa buru-buru.", priorities: ["Dasar-Dasar AI", "Large Language Models", "RAG & Teknik Lanjutan", "AI Agents & Tools"], keywords: ["Apa Itu", "Sejarah", "Jenis-Jenis", "Kehidupan"] },
-  { id: "ai-engineer", label: "AI Engineer", emoji: "✦", description: "Bangun sistem AI dari use case sampai evaluasi, guardrail, operasi, dan feedback loop.", priorities: ["AI Engineering", "Dasar-Dasar AI", "Large Language Models", "RAG & Teknik Lanjutan", "AI Agents & Tools", "Infrastruktur Agent"], keywords: ["Demo", "Evals", "Model", "Prompt", "RAG", "Agent", "Produksi", "Feedback"] },
   { id: "prompt-engineer", label: "Prompt Engineer", emoji: "⌁", description: "Fokus merancang instruksi dan memahami LLM.", priorities: ["Large Language Models", "Dasar-Dasar AI", "AI Agents & Tools", "RAG & Teknik Lanjutan"], keywords: ["Prompt", "Tokenisasi", "Temperature", "Context Window", "Hallucination"] },
   { id: "ai-builder", label: "AI Builder", emoji: "⚙", description: "Bangun aplikasi AI dari fondasi sampai tools.", priorities: ["Dasar-Dasar AI", "RAG & Teknik Lanjutan", "AI Agents & Tools", "Large Language Models"], keywords: ["Training", "Neural", "RAG", "Vector", "Function Calling", "Memory"] },
   { id: "rag-specialist", label: "RAG Specialist", emoji: "⌗", description: "Dalami pipeline pencarian, embedding, dan evaluasi.", priorities: ["RAG & Teknik Lanjutan", "Large Language Models", "Dasar-Dasar AI", "AI Agents & Tools"], keywords: ["RAG", "Vector", "Embedding", "Chunking", "Semantic", "Pipeline", "Evaluasi"] },
