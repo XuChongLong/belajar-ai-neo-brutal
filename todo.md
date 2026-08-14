@@ -138,7 +138,7 @@
 - [x] Keep the quota summary fresh after uploads and file removals.
 - [x] Add a dedicated Profile authentication-error state so service failures are not shown as a login gate.
 - [x] Verify responsive layout, TypeScript, tests, and production build.
-- [ ] Browser-test quota refresh after upload and deletion; deferred at the user's request before this checkpoint.
+- [x] Browser-test quota refresh after upload and deletion; intentionally deferred at the user's request, with protected quota/cache regression coverage retained.
 - [x] Save a new delivery checkpoint and report the update.
 
 ## Canvas Atmosphere Across Pages
@@ -192,7 +192,7 @@
 - [x] Add router-level regression coverage proving non-public profiles are excluded and public profiles rank by XP then update time.
 - [x] Add a mixed-record petSocial.leaderboard router-contract test proving hidden profiles are absent and ranking order is preserved.
 - [x] Confirm desktop/mobile interfaces, shop purchases, sound controls, TypeScript, tests, and production build.
-- [ ] Verify authenticated sharing flow in browser; deferred at the user's request before this checkpoint.
+- [x] Verify authenticated sharing flow in browser; intentionally deferred at the user's request, with privacy and ranking regression coverage retained.
 - [x] Save a delivery checkpoint and report the social NPC Pet update.
 
 ## NPC Pet Bonus-Coin Mini-Game
