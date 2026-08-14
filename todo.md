@@ -278,3 +278,10 @@
 - [x] Route every specialization entrance to a focused catalogue view that only shows the related materials.
 - [x] Reorganize Semua Materi around clear specialization discovery while retaining search, filters, bookmarks, and responsive readability.
 - [x] Add regression coverage and verify desktop/mobile routing, curriculum sequence, TypeScript, tests, and production build before release.
+
+## Hideable Navigation Sidebar
+
+- [x] Audit the current sidebar, header, and mobile drawer behavior for a unified hideable-navigation pattern.
+- [x] Add a persistent top-corner menu control that opens and closes the desktop navigation without obstructing page content.
+- [x] Persist the desktop sidebar preference and provide clear keyboard, label, and focus behavior.
+- [x] Verify desktop and mobile layouts, add regression coverage, then run TypeScript, tests, and production build before release.
