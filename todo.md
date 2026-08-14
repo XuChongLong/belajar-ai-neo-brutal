@@ -310,3 +310,12 @@
 - [x] Reset scroll position and provide a light transition when moving to the previous or next lesson.
 - [x] Move the always-visible subchapter list away from the primary reading column and widen the focused lesson text area.
 - [x] Add regression coverage and verify desktop/mobile reading, next-lesson behavior, TypeScript, tests, and production build before release.
+
+## Book-Led AI Engineering Teaching Rebuild
+
+- [x] Re-audit each of the 60 AI Engineering lessons against the primary PDF’s chapter concepts and identify explanation gaps.
+- [x] Replace brief descriptive copy with a consistent teaching pattern: concept, mechanism, real-world case, worked example, decision rule, and recap.
+- [x] Write accessible academic Indonesian throughout, defining technical terms at first use and removing casual or repetitive wording.
+- [x] Add concrete real-world scenarios and worked examples that show how an AI Engineering team applies each concept.
+- [x] Expand quizzes and curriculum safeguards to check substantive book-led coverage rather than only the presence of section headings.
+- [x] Verify representative lessons across all ten chapters on desktop and mobile; run tests, TypeScript, and production build before release.

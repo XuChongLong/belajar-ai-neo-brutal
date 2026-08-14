@@ -1,4 +1,5 @@
 import type { Material, MaterialLevel } from "./materials";
+import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
 
 type LessonSeed = { id: number; chapter: number; title: string; level: MaterialLevel; minutes: number; focus: string; story: string; practice: string; caution: string; check: string; speedrun?: boolean };
 
@@ -101,6 +102,8 @@ function makeQuiz(seed: LessonSeed): Material["quiz"] {
 export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
   const chapterName = chapterNames[seed.chapter];
   const lessonNumber = ((seed.id - 100) % 6) + 1;
+  const teaching = aiEngineeringTeachingContent[seed.id];
+  if (!teaching) throw new Error(`Missing substantive teaching content for AI Engineering lesson ${seed.id}`);
   return {
     id: seed.id,
     displayNumber: seed.id - 99,
@@ -108,18 +111,19 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
     category: `AI Engineering · Bab ${seed.chapter} — ${chapterName}`,
     specialization: "ai-engineering",
     level: seed.level,
-    minutes: seed.minutes,
+    minutes: Math.max(seed.minutes, 18),
     emoji: "✦",
-    summary: seed.focus,
+    summary: `${seed.focus} Materi ini membahas cara kerja konsep, contoh penerapannya, dan keputusan yang perlu dibuat ketika konsep tersebut digunakan dalam produk AI.`,
     analogy: `Bab ini seperti peta kerja: ${seed.title.toLowerCase()} membantu kamu memilih langkah yang masuk akal sebelum menambah kerumitan.`,
     sections: [
-      { heading: "Inti pembahasan", body: `${seed.focus}\n\nFokusnya adalah memahami keputusan yang sedang dibuat, alasan di balik keputusan tersebut, dan bukti yang diperlukan untuk menilainya. Jangan mulai dari nama tool; mulai dari hasil yang perlu dicapai pengguna serta batas nyata yang harus dijaga.` },
-      { heading: "Mengapa ini penting", body: `Dalam proyek nyata, konsep ini membantu tim ${seed.check.toLowerCase()}. Saat keputusan dibuat lebih awal dan dicatat dengan jelas, tim dapat membandingkan pilihan secara adil, mengurangi pekerjaan ulang, dan mengetahui kapan sebuah eksperimen perlu dihentikan atau diperbaiki.` },
-      { heading: "Contoh penerapan", body: seed.story },
-      { heading: "Langkah yang dapat dicoba", body: `${seed.practice} Catat hasilnya agar percobaan berikutnya dapat dibandingkan secara objektif.` },
-      { heading: "Pertanyaan untuk sistemmu", body: `Jika konsep ini diterapkan pada produk yang sedang kamu bayangkan, bagian mana yang paling mungkin berubah? Tentukan satu asumsi yang perlu dibuktikan sebelum kamu menambah solusi atau tool baru.` },
-      { heading: "Hal yang perlu diwaspadai", body: seed.caution },
-      { heading: "Ringkasan", body: `Setelah materi ini, kamu dapat ${seed.check.toLowerCase()}. Gunakan pemahaman tersebut sebagai dasar sebelum melanjutkan ke sub-bab berikutnya.` },
+      { heading: "Konsep yang perlu dipahami", body: `${seed.focus}\n\nDalam alur buku, konsep ini ditempatkan sebagai bagian dari Bab ${seed.chapter} karena keputusan pada tahap ini memengaruhi kualitas sistem pada tahap berikutnya.` },
+      { heading: "Bagaimana konsep ini bekerja", body: teaching.mechanism },
+      { heading: "Kasus di dunia kerja", body: teaching.caseStudy },
+      { heading: "Contoh langkah demi langkah", body: teaching.workedExample },
+      { heading: "Aturan pengambilan keputusan", body: teaching.decisionRule },
+      { heading: "Latihan terarah", body: `${seed.practice} Catat asumsi, bukti yang digunakan, dan hasilnya agar percobaan berikutnya dapat dibandingkan secara objektif.` },
+      { heading: "Batasan dan risiko", body: seed.caution },
+      { heading: "Ringkasan pembelajaran", body: `Setelah mempelajari materi ini, kamu dapat ${seed.check.toLowerCase()}. Ingat tiga hal: pahami tugasnya, uji dengan bukti, dan pilih solusi yang sepadan dengan risiko.` },
     ],
     resources: seed.speedrun ? [bookResource, companionResource, speedrunResource] : [bookResource, companionResource],
     quiz: makeQuiz(seed),
