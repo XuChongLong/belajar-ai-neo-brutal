@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DAILY_FEED_LIMIT, MINIGAME_FAST_TIME_MS, MINIGAME_TARGET_SCORE, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
+import { DAILY_FEED_LIMIT, MINIGAME_FAST_TIME_MS, MINIGAME_TARGET_SCORE, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
 
 const today = "2026-08-14";
 const freshProgress = () => ({ ...initialPetProgress, daily: createDailyNpcState(today), xp: { cat: 0, dog: 0, unicorn: 0, robot: 0 }, foodInventory: 0, snackCoins: 0, earnedMilestones: { cat: ["bayi"] as const, dog: ["bayi"] as const, unicorn: ["bayi"] as const, robot: ["bayi"] as const } });
@@ -80,5 +80,16 @@ describe("NPC Pet evolution and care", () => {
   it("rejects unfinished Snack Sprint scores and gives one coin for a slower valid round", () => {
     expect(claimNpcMiniGameReward(freshProgress(), MINIGAME_TARGET_SCORE - 1, 1, today).ok).toBe(false);
     expect(claimNpcMiniGameReward(freshProgress(), MINIGAME_TARGET_SCORE, MINIGAME_FAST_TIME_MS + 1, today)).toMatchObject({ ok: true, coinsAwarded: 1 });
+  });
+
+  it("normalizes the draggable companion position into a safe persisted viewport range", () => {
+    expect(normalizeNpcPopupPosition({ x: -0.2, y: 1.4 })).toEqual({ x: 0, y: 1 });
+    expect(normalizeNpcPopupPosition({ x: Number.NaN, y: .42 })).toEqual({ x: .5, y: .42 });
+  });
+
+  it("keeps a dragged companion position stable after persistence and a later route remount", () => {
+    const dragged = normalizeNpcPopupPosition({ x: .784, y: .163 });
+    const persisted = JSON.parse(JSON.stringify({ npc: { popupPosition: dragged } })) as { npc: { popupPosition: typeof dragged } };
+    expect(normalizeNpcPopupPosition(persisted.npc.popupPosition)).toEqual(dragged);
   });
 });

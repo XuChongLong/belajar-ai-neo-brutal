@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
-import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetProgress } from "@/lib/npcPets";
+import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
   id: string;
@@ -42,6 +42,7 @@ type LearningContextValue = LearningState & {
   setSelectedGoal: (goal: string) => void;
   selectNpcPet: (petId: PetId) => void;
   setNpcPopupEnabled: (enabled: boolean) => void;
+  setNpcPopupPosition: (position: PetPopupPosition) => void;
   feedNpcPet: () => PetActionResult;
   playWithNpcPet: () => PetActionResult;
   buyNpcFood: () => PetActionResult;
@@ -70,6 +71,7 @@ function readState(): LearningState {
         ...parsed?.npc,
         xp: { ...initialPetProgress.xp, ...parsed?.npc?.xp },
         earnedMilestones: { ...initialPetProgress.earnedMilestones, ...parsed?.npc?.earnedMilestones },
+        popupPosition: normalizeNpcPopupPosition(parsed?.npc?.popupPosition ?? initialPetProgress.popupPosition),
         ownedAccessories: parsed?.npc?.ownedAccessories ?? initialPetProgress.ownedAccessories,
         equippedAccessory: parsed?.npc?.equippedAccessory ?? initialPetProgress.equippedAccessory,
         audioEnabled: parsed?.npc?.audioEnabled ?? initialPetProgress.audioEnabled,
@@ -122,6 +124,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),
     selectNpcPet: (petId) => setState((prev) => ({ ...prev, npc: { ...prev.npc, activePet: petId } })),
     setNpcPopupEnabled: (enabled) => setState((prev) => ({ ...prev, npc: { ...prev.npc, popupEnabled: enabled } })),
+    setNpcPopupPosition: (position) => setState((prev) => ({ ...prev, npc: { ...prev.npc, popupPosition: normalizeNpcPopupPosition(position) } })),
     feedNpcPet: () => { const result = feedNpcPet(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     playWithNpcPet: () => { const result = playWithNpcPet(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     buyNpcFood: () => { const result = buyNpcFood(state.npc); setState((prev) => ({ ...prev, npc: result.progress })); return result; },

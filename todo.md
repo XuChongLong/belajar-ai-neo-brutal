@@ -205,4 +205,25 @@
 - [x] Add automated coverage for scoring, reward cap, repeat-round prevention, and next-day reset behavior.
 - [x] Verify desktop/mobile play, reward persistence, TypeScript, tests, and production build.
 - [x] Browser-test Snack Sprint reward persistence after a reload and record the result.
-- [ ] Save a delivery checkpoint and report the mini-game update.
+- [x] Save a delivery checkpoint and report the mini-game update.
+
+## Course Expansion Beyond AI Engineering
+
+- [x] Audit the current catalogue to identify complementary capability gaps beyond AI Engineering.
+- [x] Recommend prioritized course tracks with outcomes, explicit prerequisites, and appropriate difficulty progression.
+- [x] Add clear prerequisite and prerequisite-free labels for every proposed course track in the recommendation document.
+- [ ] Present the proposed curriculum additions for user selection before writing new lessons.
+
+## Draggable NPC, Infrastructure Course, and PRD Maker
+
+- [x] Redesign the optional NPC popup as an art-only companion with no background, label, or speech panel.
+- [x] Persist a draggable companion position across routes, constrain it to the viewport, and add safe idle animations with reduced-motion support.
+- [x] Research and write sourced Hermes Agent setup lessons for VPS, local development, WhatsApp, and Telegram, including original screenshots or diagrams where permitted.
+- [x] Research and write sourced 9Router setup and Hermes integration lessons, including the official repository link and safe configuration guidance.
+- [x] Research and write an AWS cloud-architecture lesson using authoritative source images or original diagrams with clear attribution.
+- [x] Define a secure PRD Maker provider-configuration flow that accepts a user-controlled base URL and API key without exposing credentials in client storage or logs.
+- [x] Implement PRD Maker generation, model discovery, step-by-step guidance, starter templates, and downloadable project-document output.
+- [x] Include example generated files for architecture.md, prd.md, rules.md, design.md, security/qc.md, todo.md, workflow.md, and personality.mdd.
+- [x] Add automated tests for drag persistence, PRD template assembly, validation, and provider-request safety.
+- [x] Verify content citations, credentials handling, desktop/mobile flows, TypeScript, tests, and production build.
+- [x] Save a delivery checkpoint and report the course and PRD Maker update.

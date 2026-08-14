@@ -4,6 +4,7 @@ export type PetStage = "bayi" | "anak" | "remaja" | "prima" | "dewasa";
 export type AccessoryId = "bow" | "glasses" | "crown";
 export type DailyQuestId = "lesson" | "quiz" | "flashcard";
 type QuestProgressKey = "lessons" | "quizCorrect" | "flashcards";
+export type PetPopupPosition = { x: number; y: number };
 
 export type DailyNpcState = {
   date: string;
@@ -21,6 +22,7 @@ export type PetProgress = {
   xp: Record<PetId, number>;
   earnedMilestones: Record<PetId, PetStage[]>;
   popupEnabled: boolean;
+  popupPosition: PetPopupPosition;
   foodInventory: number;
   snackCoins: number;
   ownedAccessories: AccessoryId[];
@@ -90,6 +92,7 @@ export const initialPetProgress: PetProgress = {
   xp: { cat: 0, dog: 0, unicorn: 0, robot: 0 },
   earnedMilestones: { cat: ["bayi"], dog: ["bayi"], unicorn: ["bayi"], robot: ["bayi"] },
   popupEnabled: false,
+  popupPosition: { x: 0.83, y: 0.76 },
   foodInventory: 0,
   snackCoins: 0,
   ownedAccessories: [],
@@ -97,6 +100,11 @@ export const initialPetProgress: PetProgress = {
   audioEnabled: true,
   daily: createDailyNpcState(),
 };
+
+export function normalizeNpcPopupPosition(position: PetPopupPosition): PetPopupPosition {
+  const clamp = (value: number) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0.5));
+  return { x: clamp(position.x), y: clamp(position.y) };
+}
 
 export const petProfiles: Record<PetId, { id: PetId; name: string; species: string; color: string; personality: string; symbol: string }> = {
   cat: { id: "cat", name: "Kiko", species: "Kucing Penjelajah", color: "pink", personality: "Teliti, penasaran, dan suka merapikan ide yang rumit.", symbol: "✦" },

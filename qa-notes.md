@@ -47,3 +47,4 @@
 - 2026-08-13: After the daily bonus cap, the explicit “Latihan tanpa bonus” control reopened the target with a live “Latihan: 0/8” state while retaining the claimed one-coin inventory total, so users can replay without bypassing the reward limit.
 - 2026-08-13: Completing the practice round changed the replay label to “Ulangi latihan” while keeping both “Klaim hari ini 1 koin” and inventory at 1 snack coin, confirming the repeat game mode cannot mint additional rewards.
 - 2026-08-13: Reloading the NPC page preserved Snack Sprint’s 8/8 best score, one claimed daily coin, one snack coin in inventory, and the daily-cap practice-replay state.
+- 2026-08-14: Desktop and mobile NPC page checks confirmed the companion remains off by default, does not obstruct page content, and the settings now explain art-only display plus persistent drag placement. Coordinate normalization is covered by the NPC rule test suite.

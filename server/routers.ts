@@ -9,6 +9,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
 import { rankPublicPetProfiles } from "./petSocial";
+import { discoverProviderModels, generatePrdMarkdown } from "./prdMaker";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -70,6 +71,13 @@ export const appRouter = router({
       stage: input.stage,
       equippedAccessory: input.equippedAccessory,
     })),
+  }),
+  prdMaker: router({
+    models: protectedProcedure.input(z.object({ baseUrl: z.string().min(8).max(500), apiKey: z.string().min(1).max(2048) })).mutation(({ input }) => discoverProviderModels(input.baseUrl, input.apiKey)),
+    generate: protectedProcedure.input(z.object({
+      baseUrl: z.string().min(8).max(500), apiKey: z.string().min(1).max(2048), model: z.string().min(1).max(256),
+      projectName: z.string().min(2).max(100), problem: z.string().min(20).max(12_000), audience: z.string().min(2).max(300), stack: z.string().min(2).max(300),
+    })).mutation(({ input }) => generatePrdMarkdown(input)),
   }),
 });
 
