@@ -8,6 +8,7 @@ import App from "./App";
 import { localSignInPath } from "./lib/authNavigation";
 import "./index.css";
 import "./styles/specializationThemes.css";
+import "./styles/specializationDiscovery.css";
 
 const queryClient = new QueryClient();
 

@@ -268,3 +268,13 @@
 - [x] Implement distinct, high-contrast Paper Playground color systems per specialization across course discovery and individual lessons.
 - [x] Add automated coverage for catalogue totals, specialization metadata, color-theme application, and learning-path compatibility.
 - [x] Verify desktop/mobile readability, all quality checks, and production build before publishing the expanded curriculum.
+
+## AI Engineering Rework and Specialization Entry Points
+
+- [x] Analyze the two user-provided AI Engineering YouTube sources and record their source-backed themes, practices, and cautions.
+- [x] Audit the current AI Engineering material sequence, then rework its lessons one by one into a coherent source-aligned path.
+- [x] Add source-grounded Indonesian explanations, practices, quizzes, and resource links to the rewritten AI Engineering lessons.
+- [x] Add specialization entrance cards on Beranda for AI Engineering, Cloud Computing AI, Cyber Security AI, and the other curriculum tracks.
+- [x] Route every specialization entrance to a focused catalogue view that only shows the related materials.
+- [x] Reorganize Semua Materi around clear specialization discovery while retaining search, filters, bookmarks, and responsive readability.
+- [x] Add regression coverage and verify desktop/mobile routing, curriculum sequence, TypeScript, tests, and production build before release.
