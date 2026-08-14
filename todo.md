@@ -227,3 +227,9 @@
 - [x] Add automated tests for drag persistence, PRD template assembly, validation, and provider-request safety.
 - [x] Verify content citations, credentials handling, desktop/mobile flows, TypeScript, tests, and production build.
 - [x] Save a delivery checkpoint and report the course and PRD Maker update.
+
+## Catalogue Count Accuracy Follow-up
+
+- [x] Update the home-page material count so it reflects the expanded 39-lesson catalogue rather than the pre-expansion total.
+- [x] Replace stale literal catalogue totals on the catalogue and progress pages with the live material count.
+- [x] Re-run TypeScript, tests, and production build; then save a follow-up checkpoint.
