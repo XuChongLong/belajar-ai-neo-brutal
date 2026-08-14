@@ -113,16 +113,16 @@ export const petProfiles: Record<PetId, { id: PetId; name: string; species: stri
   robot: { id: "robot", name: "Byte", species: "Robot Pembelajar", color: "green", personality: "Logis, sigap, dan suka mencatat kemajuan kecilmu.", symbol: "▣" },
 };
 
-const partyReference = "/manus-storage/npc-pet-party-reference_ab31577b.png";
-const assets: Record<Exclude<PetId, "robot">, Record<PetStage, string>> = {
+const assets: Record<PetId, Record<PetStage, string>> = {
   cat: { bayi: "/manus-storage/npc-cat-bayi_e687f02e.png", anak: "/manus-storage/npc-cat-anak_0b19a7ce.png", remaja: "/manus-storage/npc-cat-remaja_d3340e6f.png", prima: "/manus-storage/npc-cat-prima_dfe1ad9c.png", dewasa: "/manus-storage/npc-cat-dewasa_fea0c5fb.png" },
   dog: { bayi: "/manus-storage/npc-dog-bayi_1600082c.png", anak: "/manus-storage/npc-dog-anak_a4ec6ce1.png", remaja: "/manus-storage/npc-dog-remaja_550d8563.png", prima: "/manus-storage/npc-dog-prima_f2cf2f11.png", dewasa: "/manus-storage/npc-dog-dewasa_fea0c5fb.png" },
   unicorn: { bayi: "/manus-storage/npc-unicorn-bayi_4e454e72.png", anak: "/manus-storage/npc-unicorn-anak_3ee6aa49.png", remaja: "/manus-storage/npc-unicorn-remaja_d2ca9803.png", prima: "/manus-storage/npc-unicorn-prima_9ae7258b.png", dewasa: "/manus-storage/npc-unicorn-dewasa_9030978a.png" },
+  robot: { bayi: "/manus-storage/npc-byte-bayi-clean_c5d82627.png", anak: "/manus-storage/npc-byte-anak-clean_a945de5a.png", remaja: "/manus-storage/npc-byte-remaja-clean_45548fe9.png", prima: "/manus-storage/npc-byte-prima-clean_fe5c8848.png", dewasa: "/manus-storage/npc-byte-dewasa-clean_7459fa58.png" },
 };
 
 export function getPetStage(xp: number) { return [...petStages].reverse().find((stage) => xp >= stage.minXp) ?? petStages[0]; }
 export function getNextPetStage(xp: number) { return petStages.find((stage) => stage.minXp > xp) ?? null; }
-export function getPetAsset(petId: PetId, stage: PetStage) { return petId === "robot" ? partyReference : assets[petId][stage]; }
+export function getPetAsset(petId: PetId, stage: PetStage) { return assets[petId][stage]; }
 export function getPetXpProgress(xp: number) { const stage = getPetStage(xp); const nextStage = getNextPetStage(xp); if (!nextStage) return { stage, nextStage, percent: 100, remaining: 0 }; const span = nextStage.minXp - stage.minXp; return { stage, nextStage, percent: Math.min(100, Math.round(((xp - stage.minXp) / span) * 100)), remaining: Math.max(0, nextStage.minXp - xp) }; }
 
 export function ensureNpcDaily(progress: PetProgress, today = getDayKey()): PetProgress {

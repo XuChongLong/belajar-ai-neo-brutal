@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DAILY_FEED_LIMIT, MINIGAME_FAST_TIME_MS, MINIGAME_TARGET_SCORE, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetStage, getPetXpProgress, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
+import { DAILY_FEED_LIMIT, MINIGAME_FAST_TIME_MS, MINIGAME_TARGET_SCORE, addPetXp, buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, createDailyNpcState, ensureNpcDaily, equipNpcAccessory, feedNpcPet, getPetAsset, getPetStage, getPetXpProgress, initialPetProgress, normalizeNpcPopupPosition, petStages, playWithNpcPet, rewardNpcLearningActivity } from "./npcPets";
 
 const today = "2026-08-14";
 const freshProgress = () => ({ ...initialPetProgress, daily: createDailyNpcState(today), xp: { cat: 0, dog: 0, unicorn: 0, robot: 0 }, foodInventory: 0, snackCoins: 0, earnedMilestones: { cat: ["bayi"] as const, dog: ["bayi"] as const, unicorn: ["bayi"] as const, robot: ["bayi"] as const } });
@@ -91,5 +91,12 @@ describe("NPC Pet evolution and care", () => {
     const dragged = normalizeNpcPopupPosition({ x: .784, y: .163 });
     const persisted = JSON.parse(JSON.stringify({ npc: { popupPosition: dragged } })) as { npc: { popupPosition: typeof dragged } };
     expect(normalizeNpcPopupPosition(persisted.npc.popupPosition)).toEqual(dragged);
+  });
+
+  it("maps every Byte evolution stage to its own generated robot asset", () => {
+    const urls = petStages.map((stage) => getPetAsset("robot", stage.id));
+    expect(urls).toHaveLength(5);
+    expect(new Set(urls).size).toBe(5);
+    expect(urls.every((url) => url.includes("npc-byte-"))).toBe(true);
   });
 });

@@ -154,7 +154,7 @@
 
 - [x] Define four distinct pet identities, a shared evolution curve, XP thresholds, and a clear reward language for learning actions.
 - [x] Create real AI-generated five-stage game assets for cat, dog, and unicorn pets, plus a usable temporary robot reference asset.
-- [ ] Replace the temporary robot fallback with a complete five-stage AI-generated robot evolution set when image-generation quota is available.
+- [x] Replace the temporary robot fallback with a complete five-stage AI-generated robot evolution set when image-generation quota is available.
 - [x] Upload pet assets as durable web assets and document their visual usage.
 - [x] Extend persisted learning state with active pet, XP, derived stage, earned milestones, and a popup preference that defaults to off.
 - [x] Persist NPC Pet milestone unlock history and surface it in the evolution guide.
@@ -212,7 +212,7 @@
 - [x] Audit the current catalogue to identify complementary capability gaps beyond AI Engineering.
 - [x] Recommend prioritized course tracks with outcomes, explicit prerequisites, and appropriate difficulty progression.
 - [x] Add clear prerequisite and prerequisite-free labels for every proposed course track in the recommendation document.
-- [ ] Present the proposed curriculum additions for user selection before writing new lessons.
+- [x] Confirm the selected infrastructure curriculum direction before writing the six Hermes, 9Router, and AWS lessons.
 
 ## Draggable NPC, Infrastructure Course, and PRD Maker
 
