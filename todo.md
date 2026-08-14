@@ -292,3 +292,12 @@
 - [x] Show an honest, readable empty-track state that clearly reserves AI Engineering for the user’s forthcoming PDF-led curriculum.
 - [x] Update goal recommendations and catalogue counts so no deleted AI Engineering lesson is surfaced as available learning content.
 - [x] Add regression coverage and verify home, focused catalogue, desktop/mobile states, TypeScript, tests, and production build before release.
+
+## PDF-Led AI Engineering Rebuild
+
+- [x] Extract the Chip Huyen PDF’s chapter and subchapter structure as the mandatory primary curriculum map, without reproducing the book’s prose.
+- [x] Analyze the user-provided YouTube speedrun as a secondary orientation source and record only the useful sequencing cues.
+- [x] Build a large, chapter-and-subchapter AI Engineering path from the PDF with many small lessons, practice prompts, quizzes, and official resources.
+- [x] Write all new explanations in warm conversational Indonesian, using friendly address such as “beb” sparingly and naturally.
+- [x] Rebuild supporting glossary, flashcards, recommendations, and focused-track presentation only from the new published AI Engineering material.
+- [x] Add source-mapping and curriculum regression coverage; verify desktop/mobile reading, TypeScript, tests, and production build before release.
