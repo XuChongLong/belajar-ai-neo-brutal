@@ -9,6 +9,7 @@ import { localSignInPath } from "./lib/authNavigation";
 import "./index.css";
 import "./styles/specializationThemes.css";
 import "./styles/specializationDiscovery.css";
+import "./styles/lessonReading.css";
 import "./styles/hideableNavigation.css";
 
 const queryClient = new QueryClient();

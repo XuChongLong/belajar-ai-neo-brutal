@@ -301,3 +301,12 @@
 - [x] Write all new explanations in warm conversational Indonesian, using friendly address such as “beb” sparingly and naturally.
 - [x] Rebuild supporting glossary, flashcards, recommendations, and focused-track presentation only from the new published AI Engineering material.
 - [x] Add source-mapping and curriculum regression coverage; verify desktop/mobile reading, TypeScript, tests, and production build before release.
+
+## AI Engineering Readability and Navigation Refinement
+
+- [x] Replace raw material-ID display with sequential lesson numbers starting at 1 across the AI Engineering focused track and lesson pages.
+- [x] Rewrite AI Engineering lesson language into clear, general Indonesian and remove overly casual or repetitive AI-like phrasing.
+- [x] Deepen each AI Engineering chapter with more substantial subchapter explanations, concrete examples, and clean recaps.
+- [x] Reset scroll position and provide a light transition when moving to the previous or next lesson.
+- [x] Move the always-visible subchapter list away from the primary reading column and widen the focused lesson text area.
+- [x] Add regression coverage and verify desktop/mobile reading, next-lesson behavior, TypeScript, tests, and production build before release.

@@ -14,6 +14,7 @@ export type QuizQuestion = {
 
 export type Material = {
   id: number;
+  displayNumber?: number;
   title: string;
   category: string;
   specialization?: import("./specializations").SpecializationId;

@@ -12,7 +12,7 @@ export default function MaterialCard({ material, compact = false }: { material: 
   const isBookmarked = bookmarks.includes(material.id);
   return <article className={`material-card ${compact ? "material-card-compact" : ""} material-card-track-${material.specialization ?? "core"}`}>
     <Link href={`/materi/${material.id}`} className="material-card-link">
-      <div className="card-topline"><span className="material-number">{String(material.id).padStart(2, "0")}</span><span className={`status-pill ${isDone ? "status-done" : isCurrent ? "status-current" : ""}`}>{isDone ? <><Check size={12} /> Selesai</> : isCurrent ? "Sedang belajar" : "Belum mulai"}</span></div>
+      <div className="card-topline"><span className="material-number">{String(material.displayNumber ?? material.id).padStart(2, "0")}</span><span className={`status-pill ${isDone ? "status-done" : isCurrent ? "status-current" : ""}`}>{isDone ? <><Check size={12} /> Selesai</> : isCurrent ? "Sedang belajar" : "Belum mulai"}</span></div>
       <div className="material-emoji">{material.emoji}</div>
       <div className="material-category">{material.category}</div>
       <h3>{material.title}</h3>

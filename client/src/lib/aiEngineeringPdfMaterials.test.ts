@@ -6,13 +6,15 @@ describe("PDF-led AI Engineering curriculum", () => {
     expect(aiEngineeringPdfMaterials).toHaveLength(60);
     expect(aiEngineeringPdfMaterials[0]?.id).toBe(100);
     expect(aiEngineeringPdfMaterials.at(-1)?.id).toBe(159);
+    expect(aiEngineeringPdfMaterials[0]?.displayNumber).toBe(1);
+    expect(aiEngineeringPdfMaterials.at(-1)?.displayNumber).toBe(60);
     expect(new Set(aiEngineeringPdfMaterials.map((material) => material.category)).size).toBe(10);
   });
 
   it("keeps every lesson original, practical, quiz-backed, and connected to the primary source", () => {
     aiEngineeringPdfMaterials.forEach((material) => {
       expect(material.sections.length).toBeGreaterThanOrEqual(5);
-      expect(material.sections.some((section) => section.heading === "Coba sendiri")).toBe(true);
+      expect(material.sections.some((section) => section.heading === "Langkah yang dapat dicoba")).toBe(true);
       expect(material.quiz).toHaveLength(2);
       expect(material.resources?.some((resource) => resource.label.includes("Chip Huyen"))).toBe(true);
     });
