@@ -2,10 +2,10 @@
 
 import { ArrowUpRight, CalendarDays, FileText, FolderUp, HardDrive, Loader2, LogIn, LogOut, Mail, RefreshCw, ShieldAlert, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
-import { Link } from "wouter";
-import { startLogin } from "@/const";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { localSignInPath } from "@/lib/authNavigation";
 
 function formatBytes(bytes: number) {
   if (bytes === 0) return "0 MB";
@@ -13,11 +13,12 @@ function formatBytes(bytes: number) {
 }
 
 function formatLoginMethod(method: string | null | undefined) {
-  const labels: Record<string, string> = { google: "Google", manus: "Manus" };
+  const labels: Record<string, string> = { google: "Google", manus: "Manus", password: "Username & password" };
   return method ? (labels[method.toLowerCase()] ?? method) : "Akun belajar.ai";
 }
 
 export default function Profile() {
+  const [, setLocation] = useLocation();
   const { error, isAuthenticated, loading, refresh, user, logout } = useAuth();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const quotaQuery = trpc.files.quota.useQuery(undefined, { enabled: isAuthenticated });
@@ -35,7 +36,7 @@ export default function Profile() {
 
   if (error) return <div className="page"><div className="page-wrap profile-auth-gate profile-error-gate"><div className="profile-gate-sticker"><ShieldAlert size={31} /><span>STATUS<br />AKUN</span></div><span className="eyebrow">PROFIL · STATUS BELUM TERSEDIA</span><h1>Profil belum bisa<br /><em>dibuka.</em></h1><p>Koneksi untuk memeriksa sesi akun sedang bermasalah. Coba muat ulang status akun terlebih dahulu; kamu tidak perlu masuk ulang untuk mencoba lagi.</p><p className="profile-error-message">{error.message}</p><button type="button" className="brutal-button button-black" onClick={() => refresh()}><RefreshCw size={17} /> Coba lagi</button></div></div>;
 
-  if (!isAuthenticated) return <div className="page"><div className="page-wrap profile-auth-gate"><div className="profile-gate-sticker"><UserRound size={31} /><span>MY<br />PROFILE</span></div><span className="eyebrow">PROFIL · AKUN PRIBADI</span><h1>Masuk untuk melihat<br /><em>ruang belajarmu.</em></h1><p>Profil menyatukan identitas akun dan ringkasan pemakaian laci Study Files-mu, sehingga kapasitas penyimpanan selalu mudah dipantau.</p><button type="button" className="brutal-button button-pink" onClick={() => startLogin()}><LogIn size={17} /> Masuk untuk buka profil</button></div></div>;
+  if (!isAuthenticated) return <div className="page"><div className="page-wrap profile-auth-gate"><div className="profile-gate-sticker"><UserRound size={31} /><span>MY<br />PROFILE</span></div><span className="eyebrow">PROFIL · AKUN PRIBADI</span><h1>Masuk untuk melihat<br /><em>ruang belajarmu.</em></h1><p>Profil menyatukan identitas akun dan ringkasan pemakaian laci Study Files-mu, sehingga kapasitas penyimpanan selalu mudah dipantau.</p><button type="button" className="brutal-button button-pink" onClick={() => setLocation(localSignInPath("/profil"))}><LogIn size={17} /> Masuk untuk buka profil</button></div></div>;
 
   const quota = quotaQuery.data;
   const quotaWarning = (quota?.percentUsed ?? 0) >= 80;

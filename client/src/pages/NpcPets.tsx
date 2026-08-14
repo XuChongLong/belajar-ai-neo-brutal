@@ -1,9 +1,9 @@
 import { Check, CircleDollarSign, Crown, Gamepad2, Gift, PawPrint, Play, ShoppingBag, Sparkles, Trophy, UserRoundCheck, Volume2, VolumeX, ToggleLeft, ToggleRight, Utensils } from "lucide-react";
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { startLogin } from "@/const";
+import { localSignInPath } from "@/lib/authNavigation";
 import NpcPetArt from "@/components/NpcPetArt";
 import NpcEvolutionCelebration, { type EvolutionCelebration } from "@/components/NpcEvolutionCelebration";
 import NpcSnackSprint from "@/components/NpcSnackSprint";
@@ -13,6 +13,7 @@ import { playNpcSound } from "@/lib/npcAudio";
 import { DAILY_FEED_LIMIT, DAILY_PLAY_LIMIT, FEED_XP, FOOD_COST, PLAY_XP, accessoryCatalog, dailyQuests, getPetStage, getPetXpProgress, petProfiles, petRewards, petStages, shopItems, type PetActionResult, type PetId } from "@/lib/npcPets";
 
 export default function NpcPets() {
+  const [, setLocation] = useLocation();
   const { npc, selectNpcPet, setNpcPopupEnabled, setNpcAudioEnabled, feedNpcPet, playWithNpcPet, buyNpcFood, buyNpcShopItem, equipNpcAccessory, claimNpcDailyQuest, claimNpcMiniGameReward } = useLearning();
   const { user, isAuthenticated, loading } = useAuth();
   const utils = trpc.useUtils();
@@ -37,7 +38,7 @@ export default function NpcPets() {
   };
 
   const toggleSharing = () => {
-    if (!isAuthenticated) { startLogin(); return; }
+    if (!isAuthenticated) { setLocation(localSignInPath("/npc")); return; }
     socialMutation.mutate({ isPublic: !socialIsPublic, petId: activeId, xp: activeXp, stage: progress.stage.id, equippedAccessory: npc.equippedAccessory });
   };
 

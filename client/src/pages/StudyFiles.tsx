@@ -3,9 +3,10 @@
 import { Download, FileImage, FileText, FolderUp, Loader2, LogIn, Trash2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { startLogin } from "@/const";
+import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { localSignInPath } from "@/lib/authNavigation";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const allowedTypes = ["application/pdf", "text/plain", "image/png", "image/jpeg", "image/webp"];
@@ -21,6 +22,7 @@ function fileIcon(type: string) {
 }
 
 export default function StudyFiles() {
+  const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
   const [purpose, setPurpose] = useState<keyof typeof purposeLabel>("reference");
   const { isAuthenticated, loading, user } = useAuth();
@@ -51,7 +53,7 @@ export default function StudyFiles() {
 
   if (loading) return <div className="page"><div className="page-wrap files-loading"><Loader2 className="spin" size={25} /> Menyiapkan laci belajar...</div></div>;
 
-  if (!isAuthenticated) return <div className="page"><div className="page-wrap files-auth-gate"><div className="files-gate-sticker"><FolderUp size={30} /><span>PRIVATE<br />DRAWER</span></div><span className="eyebrow">STUDY FILES · AKUN PRIBADI</span><h1>Masuk untuk menyimpan<br /><em>catatan belajarmu.</em></h1><p>Gunakan laci pribadi untuk menyimpan PDF, teks, atau gambar referensi hingga 5 MB. File dan metadata hanya muncul di akun pemiliknya.</p><button type="button" className="brutal-button button-pink" onClick={() => startLogin()}><LogIn size={17} /> Masuk untuk buka laci</button></div></div>;
+  if (!isAuthenticated) return <div className="page"><div className="page-wrap files-auth-gate"><div className="files-gate-sticker"><FolderUp size={30} /><span>PRIVATE<br />DRAWER</span></div><span className="eyebrow">STUDY FILES · AKUN PRIBADI</span><h1>Masuk untuk menyimpan<br /><em>catatan belajarmu.</em></h1><p>Gunakan laci pribadi untuk menyimpan PDF, teks, atau gambar referensi hingga 5 MB. File dan metadata hanya muncul di akun pemiliknya.</p><button type="button" className="brutal-button button-pink" onClick={() => setLocation(localSignInPath("/files"))}><LogIn size={17} /> Masuk untuk buka laci</button></div></div>;
 
   return <div className="page"><div className="page-wrap files-page"><div className="page-heading"><div><span className="eyebrow">STUDY FILES · LACI PRIBADI</span><h1>Bahan belajar,<br /><em>satu tempat rapi.</em></h1></div><div className="files-user-note"><span>AKUN AKTIF</span><strong>{user?.name ?? "Pembelajar"}</strong><small>file tersimpan otomatis</small></div></div>
     <section className="files-upload-panel"><div><span className="eyebrow">TAMBAH BAHAN</span><h2>Simpan referensi untuk dibaca lagi nanti.</h2><p>Didukung: PDF, TXT, PNG, JPG, atau WEBP. Maksimum 5 MB per file.</p></div><div className="files-upload-actions"><select value={purpose} onChange={(event) => setPurpose(event.target.value as keyof typeof purposeLabel)} aria-label="Tujuan file"><option value="reference">Referensi</option><option value="study-note">Catatan belajar</option><option value="other">Lainnya</option></select><input ref={inputRef} className="file-input-hidden" type="file" accept=".pdf,.txt,image/png,image/jpeg,image/webp" onChange={(event) => { onSelectFile(event.target.files?.[0]); event.currentTarget.value = ""; }} /><button type="button" className="brutal-button button-black" disabled={upload.isPending} onClick={() => inputRef.current?.click()}>{upload.isPending ? <Loader2 className="spin" size={17} /> : <UploadCloud size={17} />}{upload.isPending ? "Mengunggah..." : "Pilih file"}</button></div></section>

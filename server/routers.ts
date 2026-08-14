@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createStoredFile, getPublicPetProfileByUser, getStoredFileUsageByUser, listPublicPetLeaderboard, listStoredFilesByUser, removeStoredFileByUser, savePublicPetProfile } from "./db";
+import { createPasswordUser, createStoredFile, getPublicPetProfileByUser, getStoredFileUsageByUser, getUserByUsername, listPublicPetLeaderboard, listStoredFilesByUser, removeStoredFileByUser, savePublicPetProfile } from "./db";
 import { validateStudyFile } from "./fileValidation";
 import { buildStorageQuotaSummary } from "./storageQuota";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -10,12 +10,61 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
 import { rankPublicPetProfiles } from "./petSocial";
 import { discoverProviderModels, generatePrdMarkdown } from "./prdMaker";
+import { clearFailedLogins, hashPassword, isLoginRateLimited, isValidPassword, isValidUsername, localOpenId, normalizeUsername, recordFailedLogin, verifyPassword } from "./localAuth";
+import { sdk } from "./_core/sdk";
+import { ONE_YEAR_MS } from "@shared/const";
+
+const localCredentialInput = z.object({
+  username: z.string().min(3).max(32),
+  password: z.string().min(10).max(128),
+});
+
+function safeUser(user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>>>) {
+  const { passwordHash: _passwordHash, ...publicUser } = user;
+  return publicUser;
+}
+
+async function createLocalSession(ctx: { req: Parameters<typeof getSessionCookieOptions>[0]; res: { cookie: (name: string, value: string, options: Record<string, unknown>) => unknown } }, user: NonNullable<Awaited<ReturnType<typeof getUserByUsername>>>) {
+  const sessionToken = await sdk.createSessionToken(user.openId, { name: user.name ?? user.username ?? "Belajar AI", expiresInMs: ONE_YEAR_MS });
+  ctx.res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(ctx.req), maxAge: ONE_YEAR_MS });
+}
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query(opts => opts.ctx.user ? safeUser(opts.ctx.user) : null),
+    register: publicProcedure.input(localCredentialInput).mutation(async ({ ctx, input }) => {
+      const username = normalizeUsername(input.username);
+      if (!isValidUsername(username) || !isValidPassword(input.password)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Gunakan username 3–32 karakter (huruf kecil, angka, titik, garis bawah, atau strip) dan password 10–128 karakter." });
+      }
+      if (await getUserByUsername(username)) {
+        throw new TRPCError({ code: "CONFLICT", message: "Username ini sudah digunakan. Coba masuk atau pilih username lain." });
+      }
+      let user;
+      try {
+        user = await createPasswordUser({ openId: localOpenId(username), username, passwordHash: await hashPassword(input.password) });
+      } catch (error) {
+        throw new TRPCError({ code: "CONFLICT", message: "Username ini sudah digunakan. Coba masuk atau pilih username lain.", cause: error });
+      }
+      if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Akun belum dapat dibuat. Coba lagi." });
+      await createLocalSession(ctx, user);
+      return { user: safeUser(user) };
+    }),
+    login: publicProcedure.input(localCredentialInput).mutation(async ({ ctx, input }) => {
+      const username = normalizeUsername(input.username);
+      if (isLoginRateLimited(username)) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Terlalu banyak percobaan masuk. Tunggu sebentar lalu coba lagi." });
+      const user = isValidUsername(username) ? await getUserByUsername(username) : undefined;
+      const valid = user?.loginMethod === "password" && await verifyPassword(input.password, user.passwordHash);
+      if (!user || !valid) {
+        recordFailedLogin(username);
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Username atau password tidak cocok." });
+      }
+      clearFailedLogins(username);
+      await createLocalSession(ctx, user);
+      return { user: safeUser(user) };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });

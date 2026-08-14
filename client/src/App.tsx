@@ -20,6 +20,7 @@ import StudyFiles from "./pages/StudyFiles";
 import Profile from "./pages/Profile";
 import NpcPets from "./pages/NpcPets";
 import PrdMaker from "./pages/PrdMaker";
+import Login from "./pages/Login";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -36,6 +37,7 @@ function Router() {
       <Route path={"/profil"} component={Profile} />
       <Route path={"/npc"} component={NpcPets} />
       <Route path={"/prd-maker"} component={PrdMaker} />
+      <Route path={"/masuk"} component={Login} />
       <Route path={"/tentang"} component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

@@ -90,6 +90,27 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result[0];
+}
+
+export async function createPasswordUser(input: { openId: string; username: string; passwordHash: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(users).values({
+    openId: input.openId,
+    username: input.username,
+    name: input.username,
+    passwordHash: input.passwordHash,
+    loginMethod: "password",
+    lastSignedIn: new Date(),
+  });
+  return getUserByOpenId(input.openId);
+}
+
 export async function createStoredFile(file: InsertStoredFile) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");

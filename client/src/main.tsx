@@ -5,7 +5,7 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
-import { startLogin } from "./const";
+import { localSignInPath } from "./lib/authNavigation";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -18,7 +18,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
-  startLogin();
+  if (window.location.pathname !== "/masuk") window.location.assign(localSignInPath(`${window.location.pathname}${window.location.search}`));
 };
 
 queryClient.getQueryCache().subscribe(event => {

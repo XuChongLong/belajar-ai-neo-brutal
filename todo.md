@@ -233,3 +233,13 @@
 - [x] Update the home-page material count so it reflects the expanded 39-lesson catalogue rather than the pre-expansion total.
 - [x] Replace stale literal catalogue totals on the catalogue and progress pages with the live material count.
 - [x] Re-run TypeScript, tests, and production build; then save a follow-up checkpoint.
+
+## Username and Password Authentication
+
+- [x] Audit the existing OAuth session, user table, protected procedures, and protected-page entry points for compatibility with local credentials.
+- [x] Add secure credential fields and session persistence without storing plaintext passwords or exposing password hashes.
+- [x] Create guarded registration and sign-in procedures with duplicate-account handling, password verification, and rate-limit-friendly errors.
+- [x] Build responsive Paper Playground sign-up and sign-in screens, then route private-feature login prompts to those screens.
+- [x] Preserve authenticated ownership for Study Files, storage quota, and public-pet sharing under local credential sessions.
+- [x] Add regression tests for credential validation, duplicate accounts, password verification, session creation, and logout.
+- [x] Verify desktop/mobile account flows, TypeScript, tests, and production build before saving the credential-authentication release.
