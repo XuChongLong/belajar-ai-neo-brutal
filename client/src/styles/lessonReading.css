@@ -58,6 +58,59 @@
   margin-bottom: 11px;
 }
 
+.material-detail-track-ai-engineering .chapter-lecture {
+  margin: 34px 0 38px;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 7px 7px 0 var(--pink);
+}
+
+.material-detail-track-ai-engineering .chapter-lecture > header {
+  padding: 23px 27px 20px;
+  border-bottom: 3px solid var(--ink);
+  background: var(--pink);
+}
+
+.material-detail-track-ai-engineering .chapter-lecture h2 {
+  max-width: 26ch;
+  margin: 7px 0 0;
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.04;
+}
+
+.material-detail-track-ai-engineering .chapter-lecture > div {
+  padding: 24px 27px 10px;
+}
+
+.material-detail-track-ai-engineering .chapter-lecture p,
+.material-detail-track-ai-engineering .chapter-lecture li {
+  max-width: 76ch;
+  font-size: 16px;
+  line-height: 1.76;
+}
+
+.material-detail-track-ai-engineering .chapter-lecture p + p {
+  margin-top: 14px;
+}
+
+.material-detail-track-ai-engineering .chapter-lecture aside {
+  padding: 18px 27px 24px;
+  border-top: 2px solid var(--ink);
+  background: var(--green);
+}
+
+.material-detail-track-ai-engineering .chapter-lecture ol {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0 0;
+  padding-left: 23px;
+}
+
+.material-detail-track-ai-engineering .chapter-lecture li::marker {
+  color: var(--pink-deep);
+  font-weight: 900;
+}
+
 .material-detail-track-ai-engineering .chained-case-study {
   margin: 40px 0 52px;
   border: 3px solid var(--ink);
@@ -191,6 +244,24 @@
   .material-detail-track-ai-engineering .article-section-copy > p {
     font-size: 16px;
     line-height: 1.75;
+  }
+
+  .material-detail-track-ai-engineering .chapter-lecture {
+    margin: 27px 0 31px;
+    box-shadow: 5px 5px 0 var(--pink);
+  }
+
+  .material-detail-track-ai-engineering .chapter-lecture > header,
+  .material-detail-track-ai-engineering .chapter-lecture > div,
+  .material-detail-track-ai-engineering .chapter-lecture aside {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .material-detail-track-ai-engineering .chapter-lecture p,
+  .material-detail-track-ai-engineering .chapter-lecture li {
+    font-size: 15px;
+    line-height: 1.68;
   }
 
   .material-detail-track-ai-engineering .chained-case-study {

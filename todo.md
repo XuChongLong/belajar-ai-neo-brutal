@@ -327,3 +327,12 @@
 - [x] Integrate the case-study progression into lessons 1.1–1.6 and 2.1–2.6 without replacing the core book-led instruction.
 - [x] Add an accessible case-study treatment that clearly distinguishes each project milestone from the general lesson content.
 - [x] Add curriculum regression coverage for the twelve linked case-study modules and verify desktop/mobile reading, tests, TypeScript, and production build.
+
+## AI Engineering Catalogue and Teaching Correction
+
+- [x] Audit and correct the AI Engineering focused-catalogue ordering so it begins with Chapter 1 rather than later internal IDs or prior materials.
+- [x] Replace any visible AI Engineering numbering derived from internal IDs or global catalogue positions with a clear sequence beginning at 1.
+- [x] Remove the generic summary, source-documentation, and worksheet closing blocks that repeat after every AI Engineering lesson.
+- [x] Expand the Chapter 1-first book-led lesson sequence with substantive source-aligned instruction rather than short generalized summaries.
+- [x] Protect the corrected order, numbering, and required source-led teaching structure with regression coverage.
+- [x] Verify focused catalogue and representative lessons on desktop/mobile; run tests, TypeScript, and production build before release.

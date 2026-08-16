@@ -19,7 +19,10 @@ export default function Materials() {
   const [category, setCategory] = useState(categories[0]);
   const [level, setLevel] = useState(levels[0]);
   const [onlySaved, setOnlySaved] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("filter") === "saved");
-  const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)), [selectedTrack]);
+  const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => {
+    if (selectedTrack === "ai-engineering") return (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id);
+    return left.id - right.id;
+  }), [selectedTrack]);
   const trackCompletedCount = trackMaterials.filter((material) => completed.includes(material.id)).length;
   const emptyReservedTrack = Boolean(selectedTrackMeta && trackMaterials.length === 0);
   const filtered = useMemo(() => trackMaterials.filter((material) => {

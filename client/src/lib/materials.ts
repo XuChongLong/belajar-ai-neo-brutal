@@ -3,6 +3,7 @@
 import { specializationMaterials } from "./specializationMaterials";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
 import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
+import type { AiEngineeringChapterLecture } from "./aiEngineeringChapterLectures";
 
 export type MaterialLevel = "Pemula" | "Menengah" | "Lanjut";
 
@@ -25,6 +26,7 @@ export type Material = {
   summary: string;
   analogy: string;
   sections: { heading: string; body: string }[];
+  chapterLecture?: AiEngineeringChapterLecture;
   caseStudy?: ChainedCaseStudy;
   diagram?: { src: string; alt: string; caption: string; note: string };
   diagramQuiz?: QuizQuestion;
@@ -36,15 +38,15 @@ export const getFocusedCatalogueHref = (specialization?: Material["specializatio
   specialization ? `/materi?jurusan=${specialization}` : "/materi";
 
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
-  "AI Engineering · Bab 01 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
-  "AI Engineering · Bab 02 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
-  "AI Engineering · Bab 03 — Fondasi Evaluasi": { emoji: "✦", level: "Pemula" },
-  "AI Engineering · Bab 04 — Evaluation Pipeline yang Andal": { emoji: "✦", level: "Menengah" },
-  "AI Engineering · Bab 05 — Prompt Engineering dan Pertahanan": { emoji: "✦", level: "Menengah" },
-  "AI Engineering · Bab 06 — Context Engineering, RAG, dan Agent": { emoji: "✦", level: "Menengah" },
-  "AI Engineering · Bab 07 — Finetuning dan Adaptasi Model": { emoji: "✦", level: "Menengah" },
-  "AI Engineering · Bab 08 — Data Engineering untuk AI": { emoji: "✦", level: "Menengah" },
-  "AI Engineering · Bab 09 — Inference Cepat dan Hemat": { emoji: "✦", level: "Lanjut" },
+  "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
+  "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
+  "AI Engineering · Bab 3 — Fondasi Evaluasi": { emoji: "✦", level: "Pemula" },
+  "AI Engineering · Bab 4 — Evaluation Pipeline yang Andal": { emoji: "✦", level: "Menengah" },
+  "AI Engineering · Bab 5 — Prompt Engineering dan Pertahanan": { emoji: "✦", level: "Menengah" },
+  "AI Engineering · Bab 6 — Context Engineering, RAG, dan Agent": { emoji: "✦", level: "Menengah" },
+  "AI Engineering · Bab 7 — Finetuning dan Adaptasi Model": { emoji: "✦", level: "Menengah" },
+  "AI Engineering · Bab 8 — Data Engineering untuk AI": { emoji: "✦", level: "Menengah" },
+  "AI Engineering · Bab 9 — Inference Cepat dan Hemat": { emoji: "✦", level: "Lanjut" },
   "AI Engineering · Bab 10 — Sistem Produksi dan Feedback Loop": { emoji: "✦", level: "Lanjut" },
   "Cloud Computing AI": { emoji: "☁", level: "Menengah" },
   "Data Analyst & Data Engineering": { emoji: "▦", level: "Menengah" },
