@@ -362,3 +362,12 @@
 - [x] Update the reader so all 60 lessons show their own book-context module while retaining chapter lectures, long-form instruction, and quizzes.
 - [x] Add regression coverage for complete 60-module coverage, source-order alignment, and readable desktop/mobile presentation.
 - [x] Run tests, TypeScript, and production build before publishing the corrected all-sublesson book-context experience.
+
+## AI Engineering Full-Text Search and Sublesson Progress
+
+- [x] Audit and extend global search so specific keywords can match the full instructional content of all 60 AI Engineering lessons.
+- [x] Rank and label full-text lesson matches clearly, then route every result directly to its material.
+- [x] Add a persistent “Tandai Selesai” control to each AI Engineering sublesson with an accessible completed and undo state.
+- [x] Surface sublesson completion in the chapter table of contents, current reader progress, and focused AI Engineering catalogue progress.
+- [x] Add regression coverage for full-text indexing and search matching, completion persistence, progress calculations, and completion toggling.
+- [x] Verify desktop/mobile global search and completion flows; run tests, TypeScript, and production build before release.

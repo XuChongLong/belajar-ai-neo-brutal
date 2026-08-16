@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
-import { addChapterReadLesson } from "@/lib/chapterReading";
+import { addChapterReadLesson, toggleCompletedLesson } from "@/lib/chapterReading";
 import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
@@ -35,6 +35,7 @@ type LearningContextValue = LearningState & {
   bookmarkCount: number;
   progressPercent: number;
   markComplete: (id: number) => void;
+  toggleComplete: (id: number) => void;
   markCurrent: (id: number) => void;
   toggleBookmark: (id: number) => void;
   saveScore: (id: number, score: number) => void;
@@ -106,6 +107,9 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     bookmarkCount: state.bookmarks.length,
     progressPercent: Math.round((state.completed.length / materials.length) * 100),
     markComplete: (id) => setState((prev) => prev.completed.includes(id) ? { ...prev, current: id } : ({ ...prev, completed: [...prev.completed, id], current: id, npc: rewardNpcLearningActivity(prev.npc, "lessons", 1, 35) })),
+    toggleComplete: (id) => setState((prev) => prev.completed.includes(id)
+      ? { ...prev, completed: toggleCompletedLesson(prev.completed, id), current: id }
+      : ({ ...prev, completed: toggleCompletedLesson(prev.completed, id), current: id, npc: rewardNpcLearningActivity(prev.npc, "lessons", 1, 35) })),
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
     toggleBookmark: (id) => setState((prev) => ({ ...prev, bookmarks: prev.bookmarks.includes(id) ? prev.bookmarks.filter((bookmark) => bookmark !== id) : [...prev.bookmarks, id] })),
     saveScore: (id, score) => setState((prev) => ({ ...prev, scores: { ...prev.scores, [id]: Math.max(prev.scores[id] ?? 0, score) } })),

@@ -8,7 +8,7 @@ import { getFocusedCatalogueHref, materials } from "@/lib/materials";
 import { useLearning } from "@/contexts/LearningContext";
 import { glossaryTerms } from "@/lib/glossary";
 import { aiEngineeringChapterQuizzes } from "@/lib/aiEngineeringChapterQuizzes";
-import { getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
+import { getChapterCompletedCount, getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
 
 export default function MaterialDetail() {
   const [, params] = useRoute("/materi/:id");
@@ -21,6 +21,7 @@ export default function MaterialDetail() {
     bookmarks,
     chapterReadLessons,
     markComplete,
+    toggleComplete,
     markCurrent,
     markChapterLessonRead,
     saveQuizAttempt,
@@ -50,7 +51,8 @@ export default function MaterialDetail() {
     .filter((item) => item.specialization === "ai-engineering" && item.category === material.category)
     .sort((left, right) => (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id)) : [], [chapterNumber, material.category]);
   const chapterReadCount = chapterNumber ? getChapterReadCount(chapterReadLessons[chapterNumber] ?? [], chapterMaterials.map((item) => item.id)) : 0;
-  const chapterReadPercent = getChapterReadPercent(chapterReadCount, chapterMaterials.length);
+  const chapterCompletedCount = getChapterCompletedCount(completed, chapterMaterials.map((item) => item.id));
+  const chapterCompletedPercent = getChapterReadPercent(chapterCompletedCount, chapterMaterials.length);
   const chapterQuiz = chapterNumber ? aiEngineeringChapterQuizzes[chapterNumber] : undefined;
   const isChapterEnd = chapterMaterials.at(-1)?.id === material.id;
   const prev = materials.find((item) => item.id === material.id - 1);
@@ -108,9 +110,10 @@ export default function MaterialDetail() {
     toast(chapterScore === chapterQuiz.questions.length ? "Bab ini kamu kuasai dengan sangat baik." : `Uji bab selesai: ${chapterScore}/${chapterQuiz.questions.length}. Tinjau lagi konsep yang masih ragu.`);
   };
   const finish = () => {
-    markComplete(material.id);
-    markCurrent(next?.id ?? material.id);
-    toast("Materi ditandai selesai. Nice work!");
+    const wasDone = completed.includes(material.id);
+    toggleComplete(material.id);
+    if (!wasDone) markCurrent(next?.id ?? material.id);
+    toast(wasDone ? "Tanda selesai dibatalkan. Kamu dapat menandainya lagi kapan saja." : "Subbab ditandai selesai. Progres kamu diperbarui.");
   };
   const submitDiagramQuiz = () => {
     if (diagramAnswer === null || !material.diagramQuiz) return;
@@ -136,9 +139,9 @@ export default function MaterialDetail() {
         </div>
 
         {chapterNumber && <section className="chapter-reading-progress" aria-label={`Progres membaca Bab ${chapterNumber}`}>
-          <div><span className="eyebrow">PROGRES MEMBACA BAB {chapterNumber}</span><strong>{chapterReadCount} dari {chapterMaterials.length} materi sudah dibuka</strong></div>
-          <div className="chapter-progress-meter" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapterReadPercent}><i style={{ width: `${chapterReadPercent}%` }} /></div>
-          <b>{chapterReadPercent}%</b>
+          <div><span className="eyebrow">PROGRES SUBBAB BAB {chapterNumber}</span><strong>{chapterCompletedCount} dari {chapterMaterials.length} subbab sudah selesai</strong></div>
+          <div className="chapter-progress-meter" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapterCompletedPercent}><i style={{ width: `${chapterCompletedPercent}%` }} /></div>
+          <b>{chapterCompletedPercent}%</b>
         </section>}
 
         {material.chapterLecture && <section className="chapter-lecture" aria-labelledby={`chapter-lecture-${material.id}`}>
@@ -183,7 +186,7 @@ export default function MaterialDetail() {
 
         {isChapterEnd && chapterQuiz && <section className="chapter-end-quiz" aria-labelledby={`chapter-quiz-${chapterQuiz.chapter}`}><header><div><span className="eyebrow">KUIS AKHIR BAB {chapterQuiz.chapter}</span><h2 id={`chapter-quiz-${chapterQuiz.chapter}`}>{chapterQuiz.title}</h2><p>{chapterQuiz.intro}</p></div><span className="chapter-quiz-score">{chapterSubmitted ? `${chapterScore}/${chapterQuiz.questions.length}` : `${chapterQuiz.questions.length} soal konsep`}</span></header>{chapterQuiz.questions.map((question, questionIndex) => <div className="chapter-quiz-question" key={question.question}><span>{String(questionIndex + 1).padStart(2, "0")}</span><div><h3>{question.question}</h3><div className="chapter-quiz-options">{question.options.map((option, optionIndex) => { const selected = chapterAnswers[questionIndex] === optionIndex; const correct = chapterSubmitted && optionIndex === question.answer; const wrong = chapterSubmitted && selected && !correct; return <button type="button" key={option} className={`${selected ? "selected" : ""} ${correct ? "correct" : ""} ${wrong ? "wrong" : ""}`} onClick={() => !chapterSubmitted && setChapterAnswers((previous) => ({ ...previous, [questionIndex]: optionIndex }))}><b>{String.fromCharCode(65 + optionIndex)}</b>{option}{correct && <Check size={15} />}</button>; })}</div>{chapterSubmitted && <p className={chapterAnswers[questionIndex] === question.answer ? "chapter-feedback-good" : "chapter-feedback-bad"}>{chapterAnswers[questionIndex] === question.answer ? "✓ " : "↗ "}{question.explanation}</p>}</div></div>)}<footer>{chapterSubmitted ? <button type="button" className="text-button" onClick={() => { setChapterSubmitted(false); setChapterAnswers({}); }}><RotateCcw size={15} /> Ulangi kuis akhir bab</button> : <button type="button" className="brutal-button button-black" disabled={Object.keys(chapterAnswers).length !== chapterQuiz.questions.length} onClick={submitChapterQuiz}>Nilai pemahaman bab <ArrowRight size={17} /></button>}</footer></section>}
 
-        <div className="lesson-complete"><div><span className="eyebrow">SELESAI MEMBACA?</span><h2>{isDone ? "Materi ini sudah kamu taklukkan." : "Satu materi lagi masuk checklist."}</h2><p>{isDone ? `Skor terbaikmu ${scores[material.id] ?? 0}/${material.quiz.length}. Lanjutkan ke materi berikutnya.` : "Tandai selesai supaya progress dan badge kamu ikut bergerak."}</p></div><button type="button" className={`brutal-button ${isDone ? "button-white" : "button-black"}`} onClick={finish}>{isDone ? <><Check size={17} /> Sudah selesai</> : <>Tandai selesai <Check size={17} /></>}</button></div>
+        <div className="lesson-complete"><div><span className="eyebrow">PROGRES SUBBAB</span><h2>{isDone ? "Subbab ini sudah masuk progresmu." : "Tandai subbab ini setelah selesai belajar."}</h2><p>{isDone ? `Skor terbaikmu ${scores[material.id] ?? 0}/${material.quiz.length}. Kamu dapat membatalkan penanda bila ingin mengulang.` : "Gunakan penanda ini untuk melacak perjalanan dari Bab 1.1 sampai Bab 10.6."}</p></div><button type="button" className={`brutal-button ${isDone ? "button-white" : "button-black"}`} onClick={finish} aria-pressed={isDone}>{isDone ? <><Check size={17} /> Selesai · batalkan</> : <>Tandai selesai <Check size={17} /></>}</button></div>
 
         <div className="prev-next">{prev ? <button type="button" className="lesson-nav prev" onClick={() => { markCurrent(prev.id); navigate(`/materi/${prev.id}`); }}><ArrowLeft size={17} /><span><small>MATERI SEBELUMNYA</small>{prev.title}</span></button> : <span />}{next ? <button type="button" className="lesson-nav next" onClick={() => { markCurrent(next.id); navigate(`/materi/${next.id}`); }}><span><small>MATERI BERIKUTNYA</small>{next.title}</span><ArrowRight size={17} /></button> : <span />}</div>
       </article>
@@ -194,7 +197,7 @@ export default function MaterialDetail() {
           <Link href={focusedCatalogueHref} className="back-link"><ArrowLeft size={15} /> Kembali ke jalur</Link>
           <span className="lesson-sidebar-label">{chapterNumber ? `DAFTAR ISI BAB ${chapterNumber}` : "DAFTAR SUB-BAB"}</span>
           <strong className="lesson-sidebar-title">{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</strong>
-          {chapterNumber && <div className="sidebar-chapter-progress"><div><span>Sudah dibaca</span><b>{chapterReadCount}/{chapterMaterials.length}</b></div><div role="progressbar" aria-label={`Progres membaca Bab ${chapterNumber}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapterReadPercent}><i style={{ width: `${chapterReadPercent}%` }} /></div><small>{chapterReadPercent}% materi bab ini sudah kamu kunjungi</small></div>}
+          {chapterNumber && <div className="sidebar-chapter-progress"><div><span>Subbab selesai</span><b>{chapterCompletedCount}/{chapterMaterials.length}</b></div><div role="progressbar" aria-label={`Progres penyelesaian Bab ${chapterNumber}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapterCompletedPercent}><i style={{ width: `${chapterCompletedPercent}%` }} /></div><small>{chapterCompletedPercent}% bab ini sudah ditandai selesai · {chapterReadCount}/{chapterMaterials.length} dibuka</small></div>}
           <div className="lesson-list">{(chapterNumber ? chapterMaterials : materials.filter((item) => item.category === material.category)).map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "lesson-active" : ""} onClick={() => { markCurrent(item.id); if (chapterNumber) markChapterLessonRead(chapterNumber, item.id); }}><span>{item.specialization === "ai-engineering" ? item.title.match(/^Bab\s+(\d+\.\d+)/)?.[1] ?? "✦" : String(item.displayNumber ?? item.id).padStart(2, "0")}</span><b>{item.title}</b>{completed.includes(item.id) && <Check size={14} />}</Link>)}</div>
         </div>
       </aside>
