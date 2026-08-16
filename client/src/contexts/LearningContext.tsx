@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { materials } from "@/lib/materials";
+import { addChapterReadLesson } from "@/lib/chapterReading";
 import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 
 export type WrongQuizQuestion = {
@@ -19,6 +20,7 @@ type LearningState = {
   scores: Record<number, number>;
   quizAttempts: Record<string, { score: number; total: number; percentage: number; lastAttemptAt: string }>;
   wrongQuizQuestions: Record<string, WrongQuizQuestion[]>;
+  chapterReadLessons: Record<number, number[]>;
   flashcardKnown: string[];
   flashcardReviewQueue: string[];
   selectedGoal: string | null;
@@ -37,6 +39,7 @@ type LearningContextValue = LearningState & {
   toggleBookmark: (id: number) => void;
   saveScore: (id: number, score: number) => void;
   saveQuizAttempt: (id: number | string, score: number, total: number, wrongQuestions?: WrongQuizQuestion[]) => void;
+  markChapterLessonRead: (chapter: number, lessonId: number) => void;
   markFlashcardKnown: (id: string) => void;
   markFlashcardReview: (id: string) => void;
   setSelectedGoal: (goal: string) => void;
@@ -55,7 +58,7 @@ type LearningContextValue = LearningState & {
 };
 
 const STORAGE_KEY = "belajar-ai-progress-v1";
-const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 3, lastVisit: "" };
+const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 3, lastVisit: "" };
 const LearningContext = createContext<LearningContextValue | null>(null);
 
 function readState(): LearningState {
@@ -65,7 +68,7 @@ function readState(): LearningState {
     return {
       ...initialState,
       ...parsed,
-      completed: parsed?.completed ?? [], bookmarks: parsed?.bookmarks ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, wrongQuizQuestions: parsed?.wrongQuizQuestions ?? {}, flashcardKnown: parsed?.flashcardKnown ?? [], flashcardReviewQueue: parsed?.flashcardReviewQueue ?? [], selectedGoal: parsed?.selectedGoal ?? null,
+      completed: parsed?.completed ?? [], bookmarks: parsed?.bookmarks ?? [], scores: parsed?.scores ?? {}, quizAttempts: parsed?.quizAttempts ?? {}, wrongQuizQuestions: parsed?.wrongQuizQuestions ?? {}, chapterReadLessons: parsed?.chapterReadLessons ?? {}, flashcardKnown: parsed?.flashcardKnown ?? [], flashcardReviewQueue: parsed?.flashcardReviewQueue ?? [], selectedGoal: parsed?.selectedGoal ?? null,
       npc: {
         ...initialPetProgress,
         ...parsed?.npc,
@@ -118,6 +121,11 @@ export function LearningProvider({ children }: { children: ReactNode }) {
         wrongQuizQuestions: wrongQuestions.length ? { ...prev.wrongQuizQuestions, [key]: wrongQuestions } : Object.fromEntries(Object.entries(prev.wrongQuizQuestions).filter(([questionKey]) => questionKey !== key)),
         npc: gainedXp ? rewardNpcLearningActivity(prev.npc, "quizCorrect", gainedCorrect, gainedXp) : prev.npc,
       };
+    }),
+    markChapterLessonRead: (chapter, lessonId) => setState((prev) => {
+      const alreadyRead = prev.chapterReadLessons[chapter] ?? [];
+      if (alreadyRead.includes(lessonId)) return prev;
+      return { ...prev, chapterReadLessons: { ...prev.chapterReadLessons, [chapter]: addChapterReadLesson(alreadyRead, lessonId) } };
     }),
     markFlashcardKnown: (id) => setState((prev) => prev.flashcardKnown.includes(id) ? { ...prev, flashcardReviewQueue: prev.flashcardReviewQueue.filter((queuedId) => queuedId !== id) } : ({ ...prev, flashcardKnown: [...prev.flashcardKnown, id], flashcardReviewQueue: prev.flashcardReviewQueue.filter((queuedId) => queuedId !== id), npc: rewardNpcLearningActivity(prev.npc, "flashcards", 1, 6) })),
     markFlashcardReview: (id) => setState((prev) => ({ ...prev, flashcardKnown: prev.flashcardKnown.filter((knownId) => knownId !== id), flashcardReviewQueue: prev.flashcardReviewQueue.includes(id) ? prev.flashcardReviewQueue : [id, ...prev.flashcardReviewQueue] })),

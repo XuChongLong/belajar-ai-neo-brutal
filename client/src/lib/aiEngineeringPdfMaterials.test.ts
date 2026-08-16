@@ -5,6 +5,7 @@ import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseS
 import { aiEngineeringChapterLectures } from "./aiEngineeringChapterLectures";
 import { categoryMeta } from "./materials";
 import { aiEngineeringAdvancedLectures } from "./aiEngineeringAdvancedLectures";
+import { aiEngineeringChapterQuizzes } from "./aiEngineeringChapterQuizzes";
 
 describe("PDF-led AI Engineering curriculum", () => {
   it("contains sixty small lessons ordered across the ten required chapter groups", () => {
@@ -56,6 +57,20 @@ describe("PDF-led AI Engineering curriculum", () => {
       expect(lecture).toBeTruthy();
       expect(lecture.length).toBeGreaterThan(700);
       expect(material.sections[1]).toMatchObject({ heading: "Penjelasan dosen: menghubungkan konsep dengan sistem nyata", body: lecture });
+    });
+  });
+
+  it("provides one substantive end-of-chapter comprehension quiz for every AI Engineering chapter", () => {
+    expect(Object.keys(aiEngineeringChapterQuizzes).map(Number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    Object.values(aiEngineeringChapterQuizzes).forEach((quiz) => {
+      expect(quiz.questions).toHaveLength(3);
+      expect(quiz.intro.length).toBeGreaterThanOrEqual(60);
+      quiz.questions.forEach((question) => {
+        expect(question.options).toHaveLength(3);
+        expect(question.answer).toBeGreaterThanOrEqual(0);
+        expect(question.answer).toBeLessThan(question.options.length);
+        expect(question.explanation.length).toBeGreaterThan(35);
+      });
     });
   });
 

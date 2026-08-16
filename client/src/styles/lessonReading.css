@@ -211,6 +211,64 @@
   font-weight: 900;
 }
 
+.material-detail-track-ai-engineering .chapter-reading-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, .62fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 32px;
+  padding: 15px 17px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+.material-detail-track-ai-engineering .chapter-reading-progress strong { display: block; margin-top: 4px; font-size: 14px; line-height: 1.3; }
+.material-detail-track-ai-engineering .chapter-progress-meter,
+.material-detail-track-ai-engineering .sidebar-chapter-progress > div[role="progressbar"] { height: 12px; overflow: hidden; border: 2px solid var(--ink); background: var(--paper-pink); }
+.material-detail-track-ai-engineering .chapter-progress-meter i,
+.material-detail-track-ai-engineering .sidebar-chapter-progress > div[role="progressbar"] i { display: block; height: 100%; background: var(--pink); transition: width 240ms var(--ease-out); }
+.material-detail-track-ai-engineering .chapter-reading-progress > b { font-family: var(--font-display); font-size: 22px; }
+
+.material-detail-track-ai-engineering .lesson-glossary { margin: 29px 0 36px; border: 2px solid var(--ink); background: var(--paper); }
+.material-detail-track-ai-engineering .lesson-glossary-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 20px; background: var(--yellow); }
+.material-detail-track-ai-engineering .lesson-glossary h2 { margin: 6px 0 0; font-size: 21px; line-height: 1.12; }
+.material-detail-track-ai-engineering .glossary-toggle { display: inline-flex; flex: none; align-items: center; gap: 7px; min-height: 36px; padding: 0 11px; border: 2px solid var(--ink); background: var(--paper); font-family: var(--font-display); font-size: 11px; font-weight: 700; cursor: pointer; }
+.material-detail-track-ai-engineering .glossary-toggle:active { transform: translate(2px, 2px); }
+.material-detail-track-ai-engineering .lesson-glossary-popover { padding: 18px 20px 20px; }
+.material-detail-track-ai-engineering .lesson-glossary-popover > label { display: block; margin-bottom: 7px; font-weight: 800; font-size: 12px; }
+.material-detail-track-ai-engineering .glossary-search-input { display: flex; align-items: center; gap: 8px; min-height: 43px; padding: 0 11px; border: 2px solid var(--ink); background: var(--paper-pink); }
+.material-detail-track-ai-engineering .glossary-search-input input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); }
+.material-detail-track-ai-engineering .glossary-match-list { display: grid; gap: 8px; margin-top: 13px; }
+.material-detail-track-ai-engineering .glossary-match { display: grid; gap: 3px; padding: 12px 13px; border: 2px solid var(--ink); background: var(--paper); transition: transform 160ms var(--ease-out), background 160ms var(--ease-out); }
+.material-detail-track-ai-engineering .glossary-match:hover { transform: translate(2px, 2px); background: var(--green); }
+.material-detail-track-ai-engineering .glossary-match strong { font-family: var(--font-display); font-size: 16px; }
+.material-detail-track-ai-engineering .glossary-match span { font-size: 13px; line-height: 1.5; }
+.material-detail-track-ai-engineering .glossary-match small { color: var(--muted); font-size: 11px; font-weight: 700; }
+.material-detail-track-ai-engineering .glossary-empty { margin: 0; color: var(--muted); font-size: 13px; }
+
+.material-detail-track-ai-engineering .chapter-end-quiz { margin: 42px 0; border: 3px solid var(--ink); background: var(--paper-pink); box-shadow: 7px 7px 0 var(--ink); }
+.material-detail-track-ai-engineering .chapter-end-quiz > header { display: flex; justify-content: space-between; gap: 18px; padding: 24px 26px 21px; border-bottom: 3px solid var(--ink); background: var(--pink); }
+.material-detail-track-ai-engineering .chapter-end-quiz h2 { margin: 7px 0; font-size: clamp(26px, 3.2vw, 39px); line-height: 1.02; }
+.material-detail-track-ai-engineering .chapter-end-quiz header p { max-width: 62ch; margin: 0; font-size: 15px; line-height: 1.55; }
+.material-detail-track-ai-engineering .chapter-quiz-score { align-self: flex-start; flex: none; padding: 8px 10px; border: 2px solid var(--ink); background: var(--paper); font-family: var(--font-display); font-size: 11px; font-weight: 800; }
+.material-detail-track-ai-engineering .chapter-quiz-question { display: grid; grid-template-columns: 45px minmax(0, 1fr); gap: 12px; padding: 21px 26px; border-bottom: 2px solid var(--ink); background: var(--paper); }
+.material-detail-track-ai-engineering .chapter-quiz-question > span { font-family: var(--font-display); color: var(--pink-deep); font-size: 17px; font-weight: 800; }
+.material-detail-track-ai-engineering .chapter-quiz-question h3 { margin: 0; font-size: 17px; line-height: 1.3; }
+.material-detail-track-ai-engineering .chapter-quiz-options { display: grid; gap: 7px; margin-top: 12px; }
+.material-detail-track-ai-engineering .chapter-quiz-options button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 40px; padding: 8px 10px; border: 2px solid var(--ink); background: var(--paper); text-align: left; cursor: pointer; transition: transform 150ms var(--ease-out), background 150ms var(--ease-out); }
+.material-detail-track-ai-engineering .chapter-quiz-options button:hover { transform: translate(2px, 2px); background: var(--yellow); }
+.material-detail-track-ai-engineering .chapter-quiz-options button.selected { background: var(--yellow); }
+.material-detail-track-ai-engineering .chapter-quiz-options button.correct { background: var(--green); }
+.material-detail-track-ai-engineering .chapter-quiz-options button.wrong { background: var(--paper-pink); }
+.material-detail-track-ai-engineering .chapter-quiz-options button b { display: grid; place-items: center; width: 20px; height: 20px; border: 1.5px solid var(--ink); border-radius: 50%; font-size: 11px; }
+.material-detail-track-ai-engineering .chapter-quiz-options button svg { margin-left: auto; }
+.material-detail-track-ai-engineering .chapter-feedback-good, .material-detail-track-ai-engineering .chapter-feedback-bad { margin: 11px 0 0; padding: 10px 11px; font-size: 13px; line-height: 1.5; }
+.material-detail-track-ai-engineering .chapter-feedback-good { background: var(--green); }
+.material-detail-track-ai-engineering .chapter-feedback-bad { background: var(--paper-pink); }
+.material-detail-track-ai-engineering .chapter-end-quiz > footer { display: flex; justify-content: flex-end; padding: 18px 26px; background: var(--yellow); }
+.material-detail-track-ai-engineering .sidebar-chapter-progress { display: grid; gap: 8px; margin: 17px 0 10px; padding: 13px 11px; border: 2px solid var(--ink); background: var(--paper-pink); }
+.material-detail-track-ai-engineering .sidebar-chapter-progress > div:first-child { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: 800; }
+.material-detail-track-ai-engineering .sidebar-chapter-progress small { color: var(--muted); font-size: 10px; line-height: 1.35; }
+
 @keyframes lesson-reading-enter {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -298,4 +356,20 @@
 
 @media (prefers-reduced-motion: reduce) {
   .lesson-article-enter { animation: none; }
+}
+
+@media (max-width: 760px) {
+  .material-detail-track-ai-engineering .chapter-reading-progress { grid-template-columns: 1fr auto; gap: 10px; margin: 20px 0 25px; padding: 13px; }
+  .material-detail-track-ai-engineering .chapter-reading-progress .chapter-progress-meter { grid-column: 1 / -1; }
+  .material-detail-track-ai-engineering .chapter-reading-progress strong { font-size: 13px; }
+  .material-detail-track-ai-engineering .lesson-glossary-heading { align-items: flex-start; flex-direction: column; gap: 12px; padding: 16px; }
+  .material-detail-track-ai-engineering .lesson-glossary-popover { padding: 16px; }
+  .material-detail-track-ai-engineering .glossary-toggle { width: 100%; justify-content: center; }
+  .material-detail-track-ai-engineering .chapter-end-quiz { margin: 32px 0; box-shadow: 5px 5px 0 var(--ink); }
+  .material-detail-track-ai-engineering .chapter-end-quiz > header { flex-direction: column; padding: 19px 17px; }
+  .material-detail-track-ai-engineering .chapter-quiz-score { align-self: flex-start; }
+  .material-detail-track-ai-engineering .chapter-quiz-question { grid-template-columns: 29px minmax(0, 1fr); padding: 17px; }
+  .material-detail-track-ai-engineering .chapter-end-quiz > footer { padding: 15px 17px; }
+  .material-detail-track-ai-engineering .chapter-end-quiz > footer .brutal-button,
+  .material-detail-track-ai-engineering .chapter-end-quiz > footer .text-button { width: 100%; justify-content: center; }
 }

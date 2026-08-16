@@ -344,3 +344,12 @@
 - [x] Add concrete mechanisms, real-world cases, worked decisions, and risk boundaries to each of the 48 advanced lessons.
 - [x] Preserve the Chapter 1-first ordering, accessible academic Indonesian, existing quizzes, and the core lesson reading flow.
 - [x] Add regression safeguards for the expanded Chapters 3–10 teaching content and verify representative desktop/mobile lessons, tests, TypeScript, and production build.
+
+## Long-Form Course Navigation and Comprehension
+
+- [x] Add an interactive chapter table of contents that lets learners jump among the six lessons in the current AI Engineering chapter.
+- [x] Persist per-chapter reading progress and show a clear reading indicator in the lesson reader and focused catalogue.
+- [x] Create one interactive end-of-chapter comprehension quiz for each of the ten AI Engineering chapters, grounded in the expanded course material.
+- [x] Add accessible glossary lookup from the lesson reader, including keyword search and a pop-up definition treatment for technical AI terms.
+- [x] Add regression coverage for chapter structure, progress persistence, quiz assessment rules, and glossary lookup behavior.
+- [x] Verify chapter navigation, reading progress, chapter quizzes, and glossary interactions on desktop/mobile; run tests, TypeScript, and production build before release.
