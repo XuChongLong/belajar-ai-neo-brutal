@@ -11,3 +11,7 @@ Pada mobile, struktur satu kolom rapi dan konten tetap dapat dibaca. Namun, hala
 ## Verifikasi setelah pembaruan katalog dan navigasi
 
 Punggung workbook kini tampil terbuka secara default pada desktop. Rail menampilkan identitas belajar.ai, progres buku, kelompok menu Belajar/Meja Kerja/Akun, serta status penyimpanan akun. Katalog jurusan AI Engineering memakai pembagian checkpoint per bab dan progres yang terlihat pada setiap bab. Saat verifikasi, tombol kontrol rail masih bertumpuk dengan label kecil "WORKBOOK" pada sudut atas; posisinya perlu dirapikan sebelum penyerahan.
+
+## Verifikasi tindak lanjut sinkronisasi
+
+Beranda kini menampilkan kartu checkpoint terakhir tepat setelah ringkasan statistik, dengan judul materi, durasi, level, dan tombol untuk meneruskan pembacaan. Halaman Progress menampilkan status tersimpan yang menggunakan waktu relatif serta penjelasan cakupan data akun. Kedua tambahan tetap terbaca pada desktop dan mobile; pada layar ponsel, kartu checkpoint berubah menjadi susunan vertikal dengan CTA lebar penuh.

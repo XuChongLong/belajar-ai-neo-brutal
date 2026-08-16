@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState, type R
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { materials } from "@/lib/materials";
+import type { SyncStatus } from "@/lib/syncStatus";
 import { addChapterReadLesson, toggleCompletedLesson } from "@/lib/chapterReading";
 import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 import type { LearningProgressSnapshot, WrongQuizQuestion } from "@shared/learningProgress";
@@ -11,13 +12,14 @@ import type { LearningProgressSnapshot, WrongQuizQuestion } from "@shared/learni
 export type { WrongQuizQuestion } from "@shared/learningProgress";
 
 type LearningState = LearningProgressSnapshot & { npc: PetProgress };
-export type LearningSyncStatus = "guest" | "loading" | "syncing" | "synced" | "offline";
+export type LearningSyncStatus = SyncStatus;
 
 type LearningContextValue = LearningState & {
   completedCount: number;
   bookmarkCount: number;
   progressPercent: number;
   syncStatus: LearningSyncStatus;
+  lastSyncedAt: number | null;
   markComplete: (id: number) => void;
   toggleComplete: (id: number) => void;
   markCurrent: (id: number) => void;
@@ -94,12 +96,14 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const saveProgress = trpc.learning.save.useMutation();
   const [state, setState] = useState<LearningState>(() => readState(LEGACY_STORAGE_KEY));
   const [accountReady, setAccountReady] = useState(false);
+  const [lastSyncedAt, setLastSyncedAt] = useState<number | null>(null);
   const lastPersistedRef = useRef("");
 
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated || !user) {
       setAccountReady(false);
+      setLastSyncedAt(null);
       setState(readState(LEGACY_STORAGE_KEY));
       return;
     }
@@ -114,6 +118,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     setState(next);
     localStorage.setItem(accountStorageKey(user.id), JSON.stringify(next));
     lastPersistedRef.current = remoteState ? JSON.stringify(toSnapshot(next)) : "";
+    setLastSyncedAt(progressQuery.data?.updatedAt ? new Date(progressQuery.data.updatedAt).getTime() : null);
     setAccountReady(true);
   }, [authLoading, isAuthenticated, user?.id, progressQuery.isLoading, progressQuery.isFetching, progressQuery.isError, progressQuery.data?.updatedAt]);
 
@@ -139,7 +144,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     const fingerprint = JSON.stringify(snapshot);
     if (fingerprint === lastPersistedRef.current) return;
     const timer = window.setTimeout(() => {
-      saveProgress.mutate(snapshot, { onSuccess: () => { lastPersistedRef.current = fingerprint; } });
+      saveProgress.mutate(snapshot, { onSuccess: (saved) => { lastPersistedRef.current = fingerprint; setLastSyncedAt(new Date(saved.updatedAt).getTime()); } });
     }, 500);
     return () => window.clearTimeout(timer);
   }, [state, isAuthenticated, user?.id, accountReady, saveProgress.mutate]);
@@ -150,6 +155,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     bookmarkCount: state.bookmarks.length,
     progressPercent: Math.round((state.completed.length / materials.length) * 100),
     syncStatus: !isAuthenticated ? "guest" : !accountReady ? "loading" : saveProgress.isPending ? "syncing" : saveProgress.isError ? "offline" : "synced",
+    lastSyncedAt,
     markComplete: (id) => setState((prev) => prev.completed.includes(id) ? { ...prev, current: id } : ({ ...prev, completed: [...prev.completed, id], current: id, npc: rewardNpcLearningActivity(prev.npc, "lessons", 1, 35) })),
     toggleComplete: (id) => setState((prev) => prev.completed.includes(id) ? { ...prev, completed: toggleCompletedLesson(prev.completed, id), current: id } : ({ ...prev, completed: toggleCompletedLesson(prev.completed, id), current: id, npc: rewardNpcLearningActivity(prev.npc, "lessons", 1, 35) })),
     markCurrent: (id) => setState((prev) => ({ ...prev, current: id })),
@@ -182,7 +188,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     claimNpcDailyQuest: (questId) => { const result = claimNpcDailyQuest(state.npc, questId); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     claimNpcMiniGameReward: (score, durationMs) => { const result = claimNpcMiniGameReward(state.npc, score, durationMs); setState((prev) => ({ ...prev, npc: result.progress })); return result; },
     resetProgress: () => setState(initialState),
-  }), [state, isAuthenticated, accountReady, saveProgress.isPending, saveProgress.isError]);
+  }), [state, isAuthenticated, accountReady, saveProgress.isPending, saveProgress.isError, lastSyncedAt]);
 
   return <LearningContext.Provider value={value}>{children}</LearningContext.Provider>;
 }

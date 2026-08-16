@@ -8,3 +8,6 @@
 - [x] Desain ulang katalog materi dengan filter jurusan serta checkpoint progres per bab.
 - [x] Ubah navigasi desktop menjadi punggung workbook yang lebih dominan, terstruktur, dan responsif.
 - [x] Tambahkan pengujian otomatis dan verifikasi visual untuk alur yang diperbarui.
+- [x] Tampilkan waktu serta status sinkronisasi terakhir pada halaman Progress.
+- [x] Tambahkan aksi lanjutkan checkpoint terakhir pada beranda berdasarkan progres pengguna.
+- [x] Perkuat pengujian isolasi progres untuk dua cakupan akun yang berbeda dan verifikasi antarmuka baru.

@@ -11,8 +11,8 @@ vi.mock("./storage", () => ({ storagePut: vi.fn() }));
 
 import { appRouter } from "./routers";
 
-function createContext(): TrpcContext {
-  return { user: { id: 12, openId: "learning-user-12", name: "Rani", email: null, loginMethod: "password", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() }, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] };
+function createContext(id = 12): TrpcContext {
+  return { user: { id, openId: `learning-user-${id}`, name: "Rani", email: null, loginMethod: "password", role: "user", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() }, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] };
 }
 
 const snapshot = {
@@ -32,6 +32,20 @@ describe("learning router", () => {
     const caller = appRouter.createCaller(createContext());
     await expect(caller.learning.mine({ accountId: 99 })).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mocks.getLearningProgressByUser).not.toHaveBeenCalled();
+  });
+
+  it("keeps two account scopes isolated when their snapshots are read in the same session", async () => {
+    const snapshotForA = { userId: 12, snapshot: { ...snapshot, completed: [1] } };
+    const snapshotForB = { userId: 27, snapshot: { ...snapshot, completed: [8, 9] } };
+    mocks.getLearningProgressByUser.mockImplementation(async (userId) => userId === 12 ? snapshotForA : userId === 27 ? snapshotForB : undefined);
+
+    const accountA = appRouter.createCaller(createContext(12));
+    const accountB = appRouter.createCaller(createContext(27));
+    const [resultA, resultB] = await Promise.all([accountA.learning.mine({ accountId: 12 }), accountB.learning.mine({ accountId: 27 })]);
+
+    expect(resultA?.snapshot.completed).toEqual([1]);
+    expect(resultB?.snapshot.completed).toEqual([8, 9]);
+    expect(resultA?.snapshot.completed).not.toEqual(resultB?.snapshot.completed);
   });
 
   it("persists a validated snapshot only under the authenticated learner id", async () => {
