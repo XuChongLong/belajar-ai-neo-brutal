@@ -336,3 +336,11 @@
 - [x] Expand the Chapter 1-first book-led lesson sequence with substantive source-aligned instruction rather than short generalized summaries.
 - [x] Protect the corrected order, numbering, and required source-led teaching structure with regression coverage.
 - [x] Verify focused catalogue and representative lessons on desktop/mobile; run tests, TypeScript, and production build before release.
+
+## Long-Form AI Engineering Teaching Expansion — Chapters 3 to 10
+
+- [x] Audit lessons 3.1–10.6 and map the explanation depth still required for each source-led topic.
+- [x] Write long-form lecturer-style teaching explanations for evaluation, prompting, context/RAG/agents, adaptation, data, inference, and production systems.
+- [x] Add concrete mechanisms, real-world cases, worked decisions, and risk boundaries to each of the 48 advanced lessons.
+- [x] Preserve the Chapter 1-first ordering, accessible academic Indonesian, existing quizzes, and the core lesson reading flow.
+- [x] Add regression safeguards for the expanded Chapters 3–10 teaching content and verify representative desktop/mobile lessons, tests, TypeScript, and production build.

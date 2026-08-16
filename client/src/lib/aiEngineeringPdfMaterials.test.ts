@@ -4,6 +4,7 @@ import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
 import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import { aiEngineeringChapterLectures } from "./aiEngineeringChapterLectures";
 import { categoryMeta } from "./materials";
+import { aiEngineeringAdvancedLectures } from "./aiEngineeringAdvancedLectures";
 
 describe("PDF-led AI Engineering curriculum", () => {
   it("contains sixty small lessons ordered across the ten required chapter groups", () => {
@@ -23,22 +24,38 @@ describe("PDF-led AI Engineering curriculum", () => {
 
   it("keeps every lesson original, practical, quiz-backed, and connected to the primary source", () => {
     aiEngineeringPdfMaterials.forEach((material) => {
-      expect(material.sections.map((section) => section.heading)).toEqual([
+      const expectedHeadings = [
         "Konsep yang perlu dipahami",
+        ...(material.id >= 112 ? ["Penjelasan dosen: menghubungkan konsep dengan sistem nyata"] : []),
         "Bagaimana konsep ini bekerja",
         "Kasus di dunia kerja",
         "Contoh langkah demi langkah",
         "Aturan pengambilan keputusan",
         "Latihan terarah",
         "Batasan dan risiko",
-      ]);
+      ];
+      expect(material.sections.map((section) => section.heading)).toEqual(expectedHeadings);
       expect(material.sections[1]?.body.length).toBeGreaterThan(180);
-      expect(material.sections[2]?.body.length).toBeGreaterThan(180);
-      expect(material.sections[3]?.body.length).toBeGreaterThan(180);
-      expect(material.sections.map((section) => section.body).join(" ").length).toBeGreaterThan(1200);
+      const substantiveOffset = material.id >= 112 ? 1 : 0;
+      expect(material.sections[2 + substantiveOffset]?.body.length).toBeGreaterThan(180);
+      expect(material.sections[3 + substantiveOffset]?.body.length).toBeGreaterThan(180);
+      expect(material.sections.map((section) => section.body).join(" ").length).toBeGreaterThan(material.id >= 112 ? 1850 : 1200);
       expect(material.sections.map((section) => section.body).join(" ")).not.toMatch(/\bbeb\b/i);
       expect(material.quiz).toHaveLength(2);
       expect(material.resources?.some((resource) => resource.label.includes("Chip Huyen"))).toBe(true);
+    });
+  });
+
+  it("gives every Chapter 3–10 lesson a distinct long-form lecturer explanation", () => {
+    const advancedMaterials = aiEngineeringPdfMaterials.filter((material) => material.id >= 112);
+    expect(advancedMaterials).toHaveLength(48);
+    expect(Object.keys(aiEngineeringAdvancedLectures)).toHaveLength(48);
+
+    advancedMaterials.forEach((material) => {
+      const lecture = aiEngineeringAdvancedLectures[material.id];
+      expect(lecture).toBeTruthy();
+      expect(lecture.length).toBeGreaterThan(700);
+      expect(material.sections[1]).toMatchObject({ heading: "Penjelasan dosen: menghubungkan konsep dengan sistem nyata", body: lecture });
     });
   });
 

@@ -2,6 +2,7 @@ import type { Material, MaterialLevel } from "./materials";
 import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
 import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import { aiEngineeringChapterLectures } from "./aiEngineeringChapterLectures";
+import { aiEngineeringAdvancedLectures } from "./aiEngineeringAdvancedLectures";
 
 type LessonSeed = { id: number; chapter: number; title: string; level: MaterialLevel; minutes: number; focus: string; story: string; practice: string; caution: string; check: string; speedrun?: boolean };
 
@@ -105,7 +106,9 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
   const chapterName = chapterNames[seed.chapter];
   const lessonNumber = ((seed.id - 100) % 6) + 1;
   const teaching = aiEngineeringTeachingContent[seed.id];
+  const advancedLecture = seed.chapter >= 3 ? aiEngineeringAdvancedLectures[seed.id] : undefined;
   if (!teaching) throw new Error(`Missing substantive teaching content for AI Engineering lesson ${seed.id}`);
+  if (seed.chapter >= 3 && !advancedLecture) throw new Error(`Missing long-form lecture for AI Engineering lesson ${seed.id}`);
   return {
     id: seed.id,
     displayNumber: seed.id - 99,
@@ -121,6 +124,7 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
     caseStudy: employeePolicyAssistantCaseStudy[seed.id],
     sections: [
       { heading: "Konsep yang perlu dipahami", body: `${seed.focus}\n\nDalam alur buku, konsep ini ditempatkan sebagai bagian dari Bab ${seed.chapter} karena keputusan pada tahap ini memengaruhi kualitas sistem pada tahap berikutnya.` },
+      ...(advancedLecture ? [{ heading: "Penjelasan dosen: menghubungkan konsep dengan sistem nyata", body: advancedLecture }] : []),
       { heading: "Bagaimana konsep ini bekerja", body: teaching.mechanism },
       { heading: "Kasus di dunia kerja", body: teaching.caseStudy },
       { heading: "Contoh langkah demi langkah", body: teaching.workedExample },
