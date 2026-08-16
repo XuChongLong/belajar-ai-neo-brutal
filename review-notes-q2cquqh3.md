@@ -7,3 +7,7 @@ Desain secara konsisten menerapkan konsep **Paper Playground**: latar kertas han
 Pada desktop, navigasi tampil sebagai header horizontal saat sidebar dalam keadaan tertutup; akibatnya ciri "workbook spine" yang direncanakan belum menjadi struktur visual utama. Halaman materi sangat panjang dan memakai banyak kartu yang serupa, sehingga pola pemindaian dan pembeda antarbagian mulai melemah. Dominasi warna pastel kategori juga sesekali mengurangi peran pink sebagai aksen utama.
 
 Pada mobile, struktur satu kolom rapi dan konten tetap dapat dibaca. Namun, halaman materi dan detail materi menjadi sangat panjang; kontrol orientasi, progres bab, serta akses cepat ke aksi selanjutnya perlu diperkuat agar pengguna tidak kehilangan konteks saat menggulir.
+
+## Verifikasi setelah pembaruan katalog dan navigasi
+
+Punggung workbook kini tampil terbuka secara default pada desktop. Rail menampilkan identitas belajar.ai, progres buku, kelompok menu Belajar/Meja Kerja/Akun, serta status penyimpanan akun. Katalog jurusan AI Engineering memakai pembagian checkpoint per bab dan progres yang terlihat pada setiap bab. Saat verifikasi, tombol kontrol rail masih bertumpuk dengan label kecil "WORKBOOK" pada sudut atas; posisinya perlu dirapikan sebelum penyerahan.

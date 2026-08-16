@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createPasswordUser, createStoredFile, getPublicPetProfileByUser, getStoredFileUsageByUser, getUserByUsername, listPublicPetLeaderboard, listStoredFilesByUser, removeStoredFileByUser, savePublicPetProfile } from "./db";
+import { createPasswordUser, createStoredFile, getLearningProgressByUser, getPublicPetProfileByUser, getStoredFileUsageByUser, getUserByUsername, listPublicPetLeaderboard, listStoredFilesByUser, removeStoredFileByUser, saveLearningProgressByUser, savePublicPetProfile } from "./db";
 import { validateStudyFile } from "./fileValidation";
 import { buildStorageQuotaSummary } from "./storageQuota";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -12,6 +12,7 @@ import { rankPublicPetProfiles } from "./petSocial";
 import { discoverProviderModels, generatePrdMarkdown } from "./prdMaker";
 import { clearFailedLogins, hashPassword, isLoginRateLimited, isValidPassword, isValidUsername, localOpenId, normalizeUsername, recordFailedLogin, verifyPassword } from "./localAuth";
 import { sdk } from "./_core/sdk";
+import { learningProgressSnapshotSchema } from "./learningProgress";
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 const REMEMBER_ME_SESSION_MS = 30 * ONE_DAY_MS;
 const STANDARD_SESSION_MS = ONE_DAY_MS;
@@ -107,6 +108,14 @@ export const appRouter = router({
       if (!removed) throw new TRPCError({ code: "NOT_FOUND", message: "File tidak ditemukan atau bukan milik akun ini." });
       return { success: true } as const;
     }),
+  }),
+  learning: router({
+    mine: protectedProcedure.input(z.object({ accountId: z.number().int().positive() })).query(async ({ ctx, input }) => {
+      if (input.accountId !== ctx.user.id) throw new TRPCError({ code: "FORBIDDEN", message: "Snapshot progres hanya dapat dibuka oleh pemilik akun." });
+      return (await getLearningProgressByUser(ctx.user.id)) ?? null;
+    }),
+    save: protectedProcedure.input(learningProgressSnapshotSchema).mutation(({ ctx, input }) =>
+      saveLearningProgressByUser(ctx.user.id, input)),
   }),
   petSocial: router({
     leaderboard: publicProcedure.query(async () => rankPublicPetProfiles(await listPublicPetLeaderboard())),

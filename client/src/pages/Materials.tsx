@@ -1,15 +1,21 @@
-// Style reminder: Paper Playground — the catalog is an organized activity sheet with bold filters, tactile cards, and generous scanability.
+// Style reminder: Paper Playground — the catalogue behaves like a guided workbook, with routes, chapter checkpoints, and tactile filter controls.
 
-import { ArrowRight, Bookmark, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Bookmark, Check, CircleDotDashed, Filter, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import MaterialCard from "@/components/MaterialCard";
 import { categories, categoryMeta, levels, materials } from "@/lib/materials";
-import { isSpecializationId, materialMatchesSpecialization, specializationMeta, specializationOrder } from "@/lib/specializations";
+import { isSpecializationId, materialMatchesSpecialization, specializationMeta, specializationOrder, type SpecializationId } from "@/lib/specializations";
 import { useLearning } from "@/contexts/LearningContext";
 
+type LearningFilter = "all" | "in-progress" | "completed" | "not-started";
+
+function trackHref(track: SpecializationId | null) {
+  return track ? `/materi?jurusan=${track}` : "/materi";
+}
+
 export default function Materials() {
-  const { bookmarks, completed, completedCount, progressPercent } = useLearning();
+  const { bookmarks, completed, completedCount, current, progressPercent } = useLearning();
   const [, navigate] = useLocation();
   const searchString = useSearch();
   const trackParam = new URLSearchParams(searchString).get("jurusan");
@@ -18,25 +24,70 @@ export default function Materials() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(categories[0]);
   const [level, setLevel] = useState(levels[0]);
+  const [learningFilter, setLearningFilter] = useState<LearningFilter>("all");
   const [onlySaved, setOnlySaved] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("filter") === "saved");
+
   const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => {
     if (selectedTrack === "ai-engineering") return (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id);
     return left.id - right.id;
   }), [selectedTrack]);
   const trackCompletedCount = trackMaterials.filter((material) => completed.includes(material.id)).length;
+  const trackPercent = trackMaterials.length ? Math.round((trackCompletedCount / trackMaterials.length) * 100) : 0;
   const emptyReservedTrack = Boolean(selectedTrackMeta && trackMaterials.length === 0);
+  const nextMaterial = trackMaterials.find((material) => !completed.includes(material.id)) ?? trackMaterials[0];
+
   const filtered = useMemo(() => trackMaterials.filter((material) => {
     const matchesSearch = `${material.title} ${material.category}`.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch && (category === categories[0] || material.category === category) && (level === levels[0] || material.level === level) && (!onlySaved || bookmarks.includes(material.id));
-  }), [trackMaterials, search, category, level, onlySaved, bookmarks]);
-  const grouped = useMemo(() => categories.slice(1).map((item) => ({ category: item, items: filtered.filter((material) => material.category === item) })).filter((group) => group.items.length > 0), [filtered]);
-  const resetFilters = () => { setSearch(""); setCategory(categories[0]); setLevel(levels[0]); setOnlySaved(false); };
-  return <div className="page"><div className={`page-wrap catalog-page ${selectedTrack ? `catalog-track-${selectedTrack}` : ""}`}><div className="page-heading"><div><span className="eyebrow">{selectedTrackMeta ? `JALUR ${selectedTrackMeta.label.toUpperCase()} · ${trackMaterials.length} MATERI` : `KATALOG BELAJAR · ${materials.length} MATERI`}</span><h1>{selectedTrackMeta ? <>{selectedTrackMeta.label},<br /><em>mulai dari sini.</em></> : <>Semua materi,<br /><em>pilih sesukamu.</em></>}</h1></div><div className="heading-note"><span className="scribble-arrow">↗</span><p>{selectedTrackMeta ? selectedTrackMeta.intro : <>Urutannya fleksibel.<br />Rasa penasarannya wajib.</>}</p></div></div>
-    <section className="progress-tracker"><div className="tracker-copy"><span className="section-index">PROGRESS TRACKER</span><strong>{emptyReservedTrack ? "Menunggu materi baru dari PDF" : selectedTrackMeta ? `${trackCompletedCount} dari ${trackMaterials.length} materi di jalur ini selesai` : `${completedCount} dari ${materials.length} materi selesai`}</strong></div><div className="tracker-bar"><i style={{ width: `${selectedTrackMeta ? (trackMaterials.length ? Math.round((trackCompletedCount / trackMaterials.length) * 100) : 0) : progressPercent}%` }} /></div><b>{emptyReservedTrack ? "—" : `${selectedTrackMeta ? (trackMaterials.length ? Math.round((trackCompletedCount / trackMaterials.length) * 100) : 0) : progressPercent}%`}</b></section>
-    <section className="catalog-track-picker" aria-label="Pilih jurusan"><div className="track-picker-copy"><span className="section-index">PINTU MASUK JURUSAN</span><strong>Pilih satu jalur agar materi tidak bercampur.</strong></div><div className="track-picker-options"><Link href="/materi" className={`track-picker-option ${!selectedTrack ? "track-picker-active" : ""}`}><span>✦</span> Semua</Link>{specializationOrder.map((track) => <Link key={track} href={`/materi?jurusan=${track}`} className={`track-picker-option track-option-${specializationMeta[track].accent} ${selectedTrack === track ? "track-picker-active" : ""}`}><span>{specializationMeta[track].emoji}</span> {specializationMeta[track].shortLabel}</Link>)}</div></section>
-    {emptyReservedTrack ? <section className="empty-track-state"><span className="empty-track-mark">✦</span><div><span className="eyebrow">MATERI BARU SEDANG DISIAPKAN</span><h2>{selectedTrackMeta?.label} akan dibangun ulang dari PDF.</h2><p>Judul jalurnya tetap ada, tetapi materi lama sengaja dikosongkan agar tidak tercampur dengan kurikulum baru. Tambahkan PDF saat siap, lalu jalur ini akan diisi kembali secara runtut.</p><Link href="/materi" className="brutal-button button-black">Lihat jurusan lain <ArrowRight size={17} /></Link></div></section> : <><section className="catalog-toolbar"><div className="search-box"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={selectedTrackMeta ? `Cari di ${selectedTrackMeta.shortLabel}...` : "Cari materi, misalnya: RAG..."} aria-label="Cari materi" /></div><div className="filter-label"><SlidersHorizontal size={16} /> FILTER</div><select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Filter kategori">{categories.map((item) => <option key={item}>{item}</option>)}</select><select value={level} onChange={(event) => setLevel(event.target.value)} aria-label="Filter level">{levels.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button></section>
-    <div className="results-meta"><span>Menampilkan <strong>{filtered.length}</strong> materi</span><span className="results-tip">✦ klik kartu untuk mulai · bookmark untuk nanti</span></div>
-    <section className="materials-groups">{grouped.map((group) => { const track = group.items[0]?.specialization ?? "core"; return <div className={`material-group material-group-track-${track}`} key={group.category}><div className="material-group-heading"><span className="group-tab">{categoryMeta[group.category]?.emoji ?? "✦"}</span><div><span className="section-index">KATEGORI {String(categories.indexOf(group.category)).padStart(2, "0")}</span><h2>{group.category}</h2></div><span className="group-count">{group.items.length} materi</span></div><div className="materials-grid">{group.items.map((material) => <MaterialCard key={material.id} material={material} />)}</div></div>; })}</section>
-    {filtered.length === 0 && <div className="empty-state"><span>⊙</span><h2>{onlySaved ? "Belum ada bookmark." : "Materinya belum ketemu."}</h2><p>{onlySaved ? "Simpan beberapa materi dulu, lalu meja review-mu akan terasa lebih personal." : "Coba ganti kata kunci atau reset filter."}</p><button className="brutal-button button-black" onClick={() => { resetFilters(); navigate(selectedTrack ? `/materi?jurusan=${selectedTrack}` : "/materi"); }}>Reset filter</button></div>}</>}
+    const matchesFilters = (category === categories[0] || material.category === category) && (level === levels[0] || material.level === level) && (!onlySaved || bookmarks.includes(material.id));
+    const matchesLearning = learningFilter === "all" || (learningFilter === "completed" && completed.includes(material.id)) || (learningFilter === "in-progress" && material.id === current && !completed.includes(material.id)) || (learningFilter === "not-started" && !completed.includes(material.id) && material.id !== current);
+    return matchesSearch && matchesFilters && matchesLearning;
+  }), [trackMaterials, search, category, level, onlySaved, bookmarks, learningFilter, completed, current]);
+
+  const chapters = useMemo(() => Array.from(new Set(trackMaterials.map((material) => material.category))).map((chapter, index) => {
+    const allItems = trackMaterials.filter((material) => material.category === chapter);
+    const items = filtered.filter((material) => material.category === chapter);
+    const doneCount = allItems.filter((material) => completed.includes(material.id)).length;
+    const chapterCurrent = allItems.some((material) => material.id === current);
+    const chapterNext = allItems.find((material) => !completed.includes(material.id)) ?? allItems[0];
+    return { chapter, allItems, items, doneCount, chapterCurrent, chapterNext, index, percent: allItems.length ? Math.round((doneCount / allItems.length) * 100) : 0 };
+  }).filter((chapter) => chapter.items.length > 0), [trackMaterials, filtered, completed, current]);
+
+  const resetFilters = () => { setSearch(""); setCategory(categories[0]); setLevel(levels[0]); setLearningFilter("all"); setOnlySaved(false); };
+  const displayPercent = selectedTrackMeta ? trackPercent : progressPercent;
+  const displayCompleted = selectedTrackMeta ? trackCompletedCount : completedCount;
+  const displayTotal = selectedTrackMeta ? trackMaterials.length : materials.length;
+
+  return <div className="page"><div className={`page-wrap catalog-page ${selectedTrack ? `catalog-track-${selectedTrack}` : ""}`}>
+    <div className="page-heading catalog-heading">
+      <div><span className="eyebrow">{selectedTrackMeta ? `JALUR ${selectedTrackMeta.label.toUpperCase()} · ${trackMaterials.length} MATERI` : `KATALOG BELAJAR · ${materials.length} MATERI`}</span><h1>{selectedTrackMeta ? <>{selectedTrackMeta.label},<br /><em>berprogres per bab.</em></> : <>Pilih jurusan,<br /><em>ikuti checkpoint.</em></>}</h1></div>
+      <div className="heading-note"><span className="scribble-arrow">↗</span><p>{selectedTrackMeta ? "Setiap bab punya garis finish kecil. Selesaikan satu demi satu, bukan semuanya sekaligus." : "Pilih jalur yang paling dekat dengan tujuanmu. Katalog akan menata langkah berikutnya."}</p></div>
+    </div>
+
+    <section className="catalog-track-picker catalog-track-picker-workbook" aria-label="Pilih jurusan">
+      <div className="track-picker-copy"><span className="section-index">01 · PILIH JURUSAN</span><strong>Masuk lewat satu pintu, bukan daftar campuran.</strong></div>
+      <div className="track-picker-options"><Link href="/materi" className={`track-picker-option ${!selectedTrack ? "track-picker-active" : ""}`}><span>✦</span> Semua jurusan</Link>{specializationOrder.map((track) => <Link key={track} href={trackHref(track)} className={`track-picker-option track-option-${specializationMeta[track].accent} ${selectedTrack === track ? "track-picker-active" : ""}`}><span>{specializationMeta[track].emoji}</span> {specializationMeta[track].shortLabel}</Link>)}</div>
+    </section>
+
+    <section className="progress-tracker catalog-progress-tracker"><div className="tracker-copy"><span className="section-index">PROGRESS JALUR</span><strong>{emptyReservedTrack ? "Menunggu materi baru dari PDF" : `${displayCompleted} dari ${displayTotal} materi selesai`}</strong></div><div className="tracker-bar"><i style={{ width: `${displayPercent}%` }} /></div><b>{emptyReservedTrack ? "—" : `${displayPercent}%`}</b></section>
+
+    {!emptyReservedTrack && nextMaterial && <section className="catalog-resume-card"><div className="resume-stamp"><CircleDotDashed size={20} /><span>CHECKPOINT<br />BERIKUTNYA</span></div><div><span className="eyebrow">LANJUTKAN JALURMU</span><strong>{nextMaterial.title}</strong><p>{completed.includes(nextMaterial.id) ? "Kamu sudah menutup semua checkpoint di jalur ini." : `${nextMaterial.minutes} menit · ${nextMaterial.level} · satu langkah kecil untuk menjaga ritme.`}</p></div><Link className="brutal-button button-pink" href={`/materi/${nextMaterial.id}`}>Buka checkpoint <ArrowRight size={17} /></Link></section>}
+
+    {emptyReservedTrack ? <section className="empty-track-state"><span className="empty-track-mark">✦</span><div><span className="eyebrow">MATERI BARU SEDANG DISIAPKAN</span><h2>{selectedTrackMeta?.label} akan dibangun ulang dari PDF.</h2><p>Judul jalurnya tetap ada, tetapi materi lama sengaja dikosongkan agar tidak tercampur dengan kurikulum baru. Tambahkan PDF saat siap, lalu jalur ini akan diisi kembali secara runtut.</p><Link href="/materi" className="brutal-button button-black">Lihat jurusan lain <ArrowRight size={17} /></Link></div></section> : <>
+      <section className="catalog-toolbar catalog-toolbar-workbook" aria-label="Filter katalog">
+        <div className="search-box"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={selectedTrackMeta ? `Cari di ${selectedTrackMeta.shortLabel}...` : "Cari materi, misalnya: RAG..."} aria-label="Cari materi" /></div>
+        <div className="filter-label"><SlidersHorizontal size={16} /> FILTER</div>
+        <select value={selectedTrack ?? "all"} onChange={(event) => { const nextTrack = event.target.value; navigate(nextTrack === "all" ? "/materi" : trackHref(nextTrack as SpecializationId)); }} aria-label="Filter jurusan"><option value="all">Semua jurusan</option>{specializationOrder.map((track) => <option key={track} value={track}>{specializationMeta[track].shortLabel}</option>)}</select>
+        <select value={learningFilter} onChange={(event) => setLearningFilter(event.target.value as LearningFilter)} aria-label="Filter status belajar"><option value="all">Semua status</option><option value="in-progress">Sedang berjalan</option><option value="not-started">Belum dimulai</option><option value="completed">Sudah selesai</option></select>
+        <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Filter bab atau kategori">{categories.filter((item) => item === categories[0] || trackMaterials.some((material) => material.category === item)).map((item) => <option key={item}>{item}</option>)}</select>
+        <select value={level} onChange={(event) => setLevel(event.target.value)} aria-label="Filter level">{levels.map((item) => <option key={item}>{item}</option>)}</select>
+        <button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button>
+      </section>
+      <div className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
+      <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => <section className={`material-group chapter-checkpoint ${chapter.percent === 100 ? "checkpoint-complete" : ""} ${chapter.chapterCurrent ? "checkpoint-current" : ""}`} key={chapter.chapter}>
+        <div className="checkpoint-heading"><div className="checkpoint-number"><span>CHECKPOINT</span><strong>{String(chapter.index + 1).padStart(2, "0")}</strong></div><div className="checkpoint-copy"><span className="section-index">{categoryMeta[chapter.chapter]?.emoji ?? "✦"} · {chapter.allItems.length} LANGKAH</span><h2>{chapter.chapter}</h2><p>{chapter.doneCount === chapter.allItems.length ? "Bab ini sudah selesai. Kamu bisa meninjaunya lagi kapan saja." : `${chapter.doneCount} dari ${chapter.allItems.length} materi telah ditandai selesai.`}</p></div><div className="checkpoint-meter" aria-label={`Progres ${chapter.chapter}`}><span>{chapter.percent}%</span><div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapter.percent}><i style={{ width: `${chapter.percent}%` }} /></div>{chapter.chapterNext && <Link href={`/materi/${chapter.chapterNext.id}`} className="checkpoint-next">{chapter.percent === 100 ? "Review bab" : "Lanjutkan"} <ArrowRight size={14} /></Link>}</div></div>
+        <div className="materials-grid">{chapter.items.map((material) => <MaterialCard key={material.id} material={material} />)}</div>
+      </section>)}</section>
+      {filtered.length === 0 && <div className="empty-state"><span>⊙</span><h2>{onlySaved ? "Belum ada bookmark." : "Checkpoint ini belum punya materi yang cocok."}</h2><p>{onlySaved ? "Simpan beberapa materi dulu, lalu meja review-mu akan terasa lebih personal." : "Coba ubah jurusan, status, atau kata kunci pencarian."}</p><button className="brutal-button button-black" onClick={() => { resetFilters(); navigate(trackHref(selectedTrack)); }}>Reset filter</button></div>}
+    </>}
   </div></div>;
 }

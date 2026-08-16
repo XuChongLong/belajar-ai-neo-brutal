@@ -1,4 +1,5 @@
-import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, json, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import type { LearningProgressSnapshot } from "../shared/learningProgress";
 
 /**
  * Core user table backing auth flow.
@@ -41,6 +42,19 @@ export const storedFiles = mysqlTable("storedFiles", {
 
 export type StoredFile = typeof storedFiles.$inferSelect;
 export type InsertStoredFile = typeof storedFiles.$inferInsert;
+
+/**
+ * Account-owned learning state. This intentionally stores only learning progress,
+ * while temporary presentation preferences and game-only UI remain device-local.
+ */
+export const learningProgress = mysqlTable("learningProgress", {
+  userId: int("userId").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  snapshot: json("snapshot").$type<LearningProgressSnapshot>().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("learningProgress_updated_idx").on(table.updatedAt)]);
+
+export type LearningProgress = typeof learningProgress.$inferSelect;
+export type InsertLearningProgress = typeof learningProgress.$inferInsert;
 
 /**
  * An explicit, opt-in snapshot of a user's selected pet for the public leaderboard.

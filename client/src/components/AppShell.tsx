@@ -13,18 +13,10 @@ import { DESKTOP_SIDEBAR_PREFERENCE_KEY, getDesktopSidebarOpenPreference, serial
 
 const logo = "/manus-storage/belajar-ai-logo_ce2158e2.png";
 
-const navItems = [
-  { href: "/", label: "Beranda", icon: Home },
-  { href: "/materi", label: "Semua Materi", icon: BookOpen },
-  { href: "/progress", label: "Progress", icon: LayoutDashboard },
-  { href: "/review", label: "Mode Review", icon: RotateCcw },
-  { href: "/glosarium", label: "Glosarium", icon: BookMarked },
-  { href: "/flashcards", label: "Flashcards", icon: Layers3 },
-  { href: "/npc", label: "NPC Pet", icon: Gamepad2 },
-  { href: "/prd-maker", label: "PRD Maker", icon: FilePenLine },
-  { href: "/files", label: "Study Files", icon: FolderUp },
-  { href: "/profil", label: "Profil", icon: UserRound },
-  { href: "/tentang", label: "Tentang", icon: Info },
+const navGroups = [
+  { label: "BELAJAR", items: [{ href: "/", label: "Beranda", icon: Home }, { href: "/materi", label: "Materi & jurusan", icon: BookOpen }, { href: "/progress", label: "Progress", icon: LayoutDashboard }, { href: "/review", label: "Mode Review", icon: RotateCcw }, { href: "/flashcards", label: "Flashcards", icon: Layers3 }, { href: "/glosarium", label: "Glosarium", icon: BookMarked }] },
+  { label: "MEJA KERJA", items: [{ href: "/files", label: "Study Files", icon: FolderUp }, { href: "/prd-maker", label: "PRD Maker", icon: FilePenLine }, { href: "/npc", label: "NPC Pet", icon: Gamepad2 }] },
+  { label: "AKUN", items: [{ href: "/profil", label: "Profil", icon: UserRound }, { href: "/tentang", label: "Tentang", icon: Info }] },
 ];
 
 type Spark = { id: string; x: number; y: number; glyph: string };
@@ -41,7 +33,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [cursor, setCursor] = useState({ x: -100, y: -100 });
   const trailRef = useRef({ x: -100, y: -100 });
   const [trail, setTrail] = useState({ x: -100, y: -100 });
-  const { streak } = useLearning();
+  const { streak, progressPercent, completedCount, syncStatus } = useLearning();
   const searchResults = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) return [];
@@ -99,22 +91,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {searchOpen && <div className="global-search-overlay" role="dialog" aria-modal="true" aria-label="Pencarian global" onMouseDown={(event) => { if (event.target === event.currentTarget) setSearchOpen(false); }}><div className="global-search-panel"><div className="global-search-head"><div><span className="eyebrow">CARI DI BELAJAR.AI</span><h2>Temukan langkah berikutnya.</h2></div><button type="button" className="icon-button" onClick={() => setSearchOpen(false)} aria-label="Tutup pencarian"><X size={20} /></button></div><div className="global-search-input"><Search size={19} /><input ref={searchInputRef} value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Cari isi materi, kuis, atau istilah..." aria-label="Cari isi materi, kuis, atau istilah" /><kbd>ESC</kbd></div>{searchQuery.trim() ? <div className="global-search-results">{searchResults.length ? searchResults.map((result) => <Link href={result.href} className="global-search-result" key={`${result.type}-${result.title}`} onClick={() => setSearchOpen(false)}><span className="search-result-type">{result.type}</span><div><strong>{result.title}</strong><small>{result.meta}</small></div><ArrowUpRight size={16} /></Link>) : <div className="global-search-empty"><span>⊙</span><p>Belum ada yang cocok. Coba kata yang lebih pendek.</p></div>}</div> : <div className="global-search-hint"><span>TIP CEPAT</span><p>Tekan <kbd>/</kbd> kapan pun untuk membuka pencarian. Cari kata spesifik dari penjelasan, konteks buku, studi kasus, kuis, atau istilah AI.</p></div>}</div></div>}
       <button type="button" className="desktop-nav-toggle" onClick={() => setDesktopSidebarOpen((open) => !open)} aria-controls="primary-navigation" aria-expanded={desktopSidebarOpen} aria-label={desktopSidebarOpen ? "Sembunyikan navigasi" : "Tampilkan navigasi"}>{desktopSidebarOpen ? <X size={20} /> : <Menu size={21} />}</button>
       <aside id="primary-navigation" className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`} aria-label="Navigasi utama" aria-hidden={!navigationVisible}>
+        <div className="workbook-spine-top" aria-hidden="true"><span>WORKBOOK</span><i /><b>01</b></div>
         <div className="sidebar-brand">
           <img src={logo} alt="" className="brand-mark" />
           <div><span className="brand-name">belajar<span>.ai</span></span><small>workbook interaktif</small></div>
           <button className="icon-button mobile-close" onClick={() => setMobileOpen(false)} aria-label="Tutup menu"><X size={19} /></button>
         </div>
-        <div className="sidebar-kicker">MENU UTAMA</div>
+        <div className="spine-learning-state"><div><span>PROGRES BUKU</span><strong>{completedCount} selesai</strong></div><b>{progressPercent}%</b><div className="spine-learning-meter"><i style={{ width: `${progressPercent}%` }} /></div></div>
+        <div className="sidebar-kicker">PETA WORKBOOK</div>
         <nav className="sidebar-nav">
-          {navItems.map(({ href, label, icon: Icon }) => {
+          {navGroups.map((group) => <div className="sidebar-nav-group" key={group.label}><span>{group.label}</span>{group.items.map(({ href, label, icon: Icon }) => {
             const active = href === "/" ? location === "/" : location.startsWith(href);
-            return <Link key={href} href={href} className={`nav-link ${active ? "nav-active" : ""}`}><Icon size={19} strokeWidth={2.5} /><span>{label}</span>{active && <i />}</Link>;
-          })}
+            return <Link key={href} href={href} className={`nav-link ${active ? "nav-active" : ""}`}><Icon size={18} strokeWidth={2.5} /><span>{label}</span>{active && <i />}</Link>;
+          })}</div>)}
         </nav>
         <div className="sidebar-bottom">
-          <div className="streak-card"><div className="streak-icon"><Flame size={18} fill="currentColor" /></div><div><strong>{streak} hari</strong><span>streak belajar</span></div></div>
+          <div className="streak-card"><div className="streak-icon"><Flame size={18} fill="currentColor" /></div><div><strong>{streak} hari</strong><span>streak belajar</span></div><span className={`spine-sync spine-sync-${syncStatus}`}>{syncStatus === "synced" ? "akun tersimpan" : syncStatus === "syncing" ? "menyimpan…" : syncStatus === "offline" ? "simpan lagi" : syncStatus === "loading" ? "memuat…" : "mode tamu"}</span></div>
           <div className="sidebar-tip">“Pelan-pelan, yang penting konsisten.”</div>
-          <span className="sidebar-version">v1.0 · dibuat untuk penasaran</span>
+          <span className="sidebar-version">v1.1 · buku digitalmu</span>
         </div>
       </aside>
       <div className="main-column">

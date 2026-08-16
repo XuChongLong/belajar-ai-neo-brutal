@@ -1,6 +1,7 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertPublicPetProfile, InsertStoredFile, InsertUser, publicPetProfiles, storedFiles, users } from "../drizzle/schema";
+import { InsertPublicPetProfile, InsertStoredFile, InsertUser, learningProgress, publicPetProfiles, storedFiles, users } from "../drizzle/schema";
+import type { LearningProgressSnapshot } from "../shared/learningProgress";
 import { ENV } from './_core/env';
 import { rankPublicPetProfiles } from "./petSocial";
 
@@ -140,6 +141,20 @@ export async function removeStoredFileByUser(id: number, userId: number) {
   if (!db) throw new Error("Database is not available");
   const result = await db.delete(storedFiles).where(and(eq(storedFiles.id, id), eq(storedFiles.userId, userId)));
   return Number(result[0]?.affectedRows ?? 0) > 0;
+}
+
+export async function getLearningProgressByUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const result = await db.select().from(learningProgress).where(eq(learningProgress.userId, userId)).limit(1);
+  return result[0];
+}
+
+export async function saveLearningProgressByUser(userId: number, snapshot: LearningProgressSnapshot) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(learningProgress).values({ userId, snapshot }).onDuplicateKeyUpdate({ set: { snapshot } });
+  return getLearningProgressByUser(userId);
 }
 
 export async function getPublicPetProfileByUser(userId: number) {
