@@ -1,5 +1,6 @@
 import type { Material, MaterialLevel } from "./materials";
 import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
+import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseStudy";
 
 type LessonSeed = { id: number; chapter: number; title: string; level: MaterialLevel; minutes: number; focus: string; story: string; practice: string; caution: string; check: string; speedrun?: boolean };
 
@@ -115,6 +116,7 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
     emoji: "✦",
     summary: `${seed.focus} Materi ini membahas cara kerja konsep, contoh penerapannya, dan keputusan yang perlu dibuat ketika konsep tersebut digunakan dalam produk AI.`,
     analogy: `Bab ini seperti peta kerja: ${seed.title.toLowerCase()} membantu kamu memilih langkah yang masuk akal sebelum menambah kerumitan.`,
+    caseStudy: employeePolicyAssistantCaseStudy[seed.id],
     sections: [
       { heading: "Konsep yang perlu dipahami", body: `${seed.focus}\n\nDalam alur buku, konsep ini ditempatkan sebagai bagian dari Bab ${seed.chapter} karena keputusan pada tahap ini memengaruhi kualitas sistem pada tahap berikutnya.` },
       { heading: "Bagaimana konsep ini bekerja", body: teaching.mechanism },

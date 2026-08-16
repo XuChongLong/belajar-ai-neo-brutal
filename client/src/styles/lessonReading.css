@@ -58,6 +58,106 @@
   margin-bottom: 11px;
 }
 
+.material-detail-track-ai-engineering .chained-case-study {
+  margin: 40px 0 52px;
+  border: 3px solid var(--ink);
+  background: var(--paper-pink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.material-detail-track-ai-engineering .chained-case-study > header {
+  padding: 25px 27px 18px;
+  border-bottom: 3px solid var(--ink);
+  background: var(--yellow);
+}
+
+.material-detail-track-ai-engineering .case-study-phase {
+  margin: 9px 0 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.material-detail-track-ai-engineering .chained-case-study h2,
+.material-detail-track-ai-engineering .chained-case-study h3 {
+  margin: 0;
+}
+
+.material-detail-track-ai-engineering .chained-case-study h2 {
+  max-width: 24ch;
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.02;
+}
+
+.material-detail-track-ai-engineering .case-study-narrative {
+  padding: 26px 27px 2px;
+}
+
+.material-detail-track-ai-engineering .case-study-narrative p,
+.material-detail-track-ai-engineering .case-study-artifact p,
+.material-detail-track-ai-engineering .case-study-teaching p,
+.material-detail-track-ai-engineering .case-study-questions li {
+  max-width: 76ch;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.material-detail-track-ai-engineering .case-study-narrative p + p {
+  margin-top: 14px;
+}
+
+.material-detail-track-ai-engineering .case-study-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.material-detail-track-ai-engineering .case-study-artifact,
+.material-detail-track-ai-engineering .case-study-teaching {
+  padding: 22px 27px 24px;
+}
+
+.material-detail-track-ai-engineering .case-study-artifact {
+  background: var(--paper);
+  border-right: 2px solid var(--ink);
+}
+
+.material-detail-track-ai-engineering .case-study-teaching {
+  background: var(--green);
+}
+
+.material-detail-track-ai-engineering .case-study-grid h3,
+.material-detail-track-ai-engineering .case-study-questions h3 {
+  margin-top: 7px;
+  font-size: 20px;
+  line-height: 1.13;
+}
+
+.material-detail-track-ai-engineering .case-study-artifact p,
+.material-detail-track-ai-engineering .case-study-teaching p {
+  margin-top: 13px;
+}
+
+.material-detail-track-ai-engineering .case-study-questions {
+  padding: 24px 27px 26px;
+  background: var(--paper);
+}
+
+.material-detail-track-ai-engineering .case-study-questions ol {
+  display: grid;
+  gap: 8px;
+  margin: 15px 0 0;
+  padding-left: 24px;
+}
+
+.material-detail-track-ai-engineering .case-study-questions li::marker {
+  color: var(--pink);
+  font-weight: 900;
+}
+
 @keyframes lesson-reading-enter {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -91,6 +191,37 @@
   .material-detail-track-ai-engineering .article-section-copy > p {
     font-size: 16px;
     line-height: 1.75;
+  }
+
+  .material-detail-track-ai-engineering .chained-case-study {
+    margin: 30px 0 37px;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .material-detail-track-ai-engineering .chained-case-study > header,
+  .material-detail-track-ai-engineering .case-study-narrative,
+  .material-detail-track-ai-engineering .case-study-artifact,
+  .material-detail-track-ai-engineering .case-study-teaching,
+  .material-detail-track-ai-engineering .case-study-questions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .material-detail-track-ai-engineering .case-study-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .material-detail-track-ai-engineering .case-study-artifact {
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .material-detail-track-ai-engineering .case-study-narrative p,
+  .material-detail-track-ai-engineering .case-study-artifact p,
+  .material-detail-track-ai-engineering .case-study-teaching p,
+  .material-detail-track-ai-engineering .case-study-questions li {
+    font-size: 15px;
+    line-height: 1.68;
   }
 }
 

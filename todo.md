@@ -319,3 +319,11 @@
 - [x] Add concrete real-world scenarios and worked examples that show how an AI Engineering team applies each concept.
 - [x] Expand quizzes and curriculum safeguards to check substantive book-led coverage rather than only the presence of section headings.
 - [x] Verify representative lessons across all ten chapters on desktop and mobile; run tests, TypeScript, and production build before release.
+
+## Employee Policy Assistant Chained Case Study — Chapters 1 and 2
+
+- [x] Map the Employee Policy Assistant’s design decisions to every lesson in Chapters 1 and 2.
+- [x] Write deep lecturer-style case-study modules with requirements, constraints, artifacts, examples, and guided questions.
+- [x] Integrate the case-study progression into lessons 1.1–1.6 and 2.1–2.6 without replacing the core book-led instruction.
+- [x] Add an accessible case-study treatment that clearly distinguishes each project milestone from the general lesson content.
+- [x] Add curriculum regression coverage for the twelve linked case-study modules and verify desktop/mobile reading, tests, TypeScript, and production build.

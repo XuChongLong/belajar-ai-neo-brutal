@@ -2,6 +2,7 @@
 
 import { specializationMaterials } from "./specializationMaterials";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
+import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
 
 export type MaterialLevel = "Pemula" | "Menengah" | "Lanjut";
 
@@ -24,6 +25,7 @@ export type Material = {
   summary: string;
   analogy: string;
   sections: { heading: string; body: string }[];
+  caseStudy?: ChainedCaseStudy;
   diagram?: { src: string; alt: string; caption: string; note: string };
   diagramQuiz?: QuizQuestion;
   resources?: { label: string; url: string; note?: string }[];

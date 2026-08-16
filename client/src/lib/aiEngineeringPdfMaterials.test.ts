@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
 import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
+import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseStudy";
 
 describe("PDF-led AI Engineering curriculum", () => {
   it("contains sixty small lessons ordered across the ten required chapter groups", () => {
@@ -32,6 +33,23 @@ describe("PDF-led AI Engineering curriculum", () => {
       expect(material.sections.map((section) => section.body).join(" ")).not.toMatch(/\bbeb\b/i);
       expect(material.quiz).toHaveLength(2);
       expect(material.resources?.some((resource) => resource.label.includes("Chip Huyen"))).toBe(true);
+    });
+  });
+
+  it("connects Chapters 1 and 2 through a substantive Employee Policy Assistant case study", () => {
+    const caseStudyLessonIds = aiEngineeringPdfMaterials.filter((material) => material.caseStudy).map((material) => material.id);
+    expect(Object.keys(employeePolicyAssistantCaseStudy)).toHaveLength(12);
+    expect(caseStudyLessonIds).toEqual([100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111]);
+
+    aiEngineeringPdfMaterials.filter((material) => material.caseStudy).forEach((material, index) => {
+      const caseStudy = material.caseStudy!;
+      expect(caseStudy.phase).toContain(`Fase ${index + 1} dari 12`);
+      expect(caseStudy.title).toContain("Kasus berantai");
+      expect(caseStudy.narrative.length).toBeGreaterThan(700);
+      expect(caseStudy.artifact.length).toBeGreaterThan(140);
+      expect(caseStudy.teachingPoint.length).toBeGreaterThan(120);
+      expect(caseStudy.guidedQuestions).toHaveLength(3);
+      expect(`${caseStudy.narrative} ${caseStudy.artifact} ${caseStudy.teachingPoint}`).not.toMatch(/\bbeb\b/i);
     });
   });
 });
