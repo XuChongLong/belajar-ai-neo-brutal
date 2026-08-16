@@ -353,3 +353,12 @@
 - [x] Add accessible glossary lookup from the lesson reader, including keyword search and a pop-up definition treatment for technical AI terms.
 - [x] Add regression coverage for chapter structure, progress persistence, quiz assessment rules, and glossary lookup behavior.
 - [x] Verify chapter navigation, reading progress, chapter quizzes, and glossary interactions on desktop/mobile; run tests, TypeScript, and production build before release.
+
+## Per-Sublesson Book Context and PDF Alignment
+
+- [x] Re-audit the supplied Chip Huyen PDF table of contents and chapter flow against the current 60 AI Engineering lessons.
+- [x] Write one substantial original “Mulai dari Buku” context module for each lesson 1.1–10.6, not only the first lesson of each chapter.
+- [x] Ensure every context module explains the sublesson’s role within the corresponding source-book chapter without reproducing the book’s text.
+- [x] Update the reader so all 60 lessons show their own book-context module while retaining chapter lectures, long-form instruction, and quizzes.
+- [x] Add regression coverage for complete 60-module coverage, source-order alignment, and readable desktop/mobile presentation.
+- [x] Run tests, TypeScript, and production build before publishing the corrected all-sublesson book-context experience.

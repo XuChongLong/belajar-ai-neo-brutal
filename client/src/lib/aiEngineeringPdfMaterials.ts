@@ -3,6 +3,7 @@ import { aiEngineeringTeachingContent } from "./aiEngineeringTeachingContent";
 import { employeePolicyAssistantCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import { aiEngineeringChapterLectures } from "./aiEngineeringChapterLectures";
 import { aiEngineeringAdvancedLectures } from "./aiEngineeringAdvancedLectures";
+import { aiEngineeringSublessonBookContexts } from "./aiEngineeringSublessonBookContexts";
 
 type LessonSeed = { id: number; chapter: number; title: string; level: MaterialLevel; minutes: number; focus: string; story: string; practice: string; caution: string; check: string; speedrun?: boolean };
 
@@ -107,8 +108,10 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
   const lessonNumber = ((seed.id - 100) % 6) + 1;
   const teaching = aiEngineeringTeachingContent[seed.id];
   const advancedLecture = seed.chapter >= 3 ? aiEngineeringAdvancedLectures[seed.id] : undefined;
+  const bookContext = aiEngineeringSublessonBookContexts[seed.id];
   if (!teaching) throw new Error(`Missing substantive teaching content for AI Engineering lesson ${seed.id}`);
   if (seed.chapter >= 3 && !advancedLecture) throw new Error(`Missing long-form lecture for AI Engineering lesson ${seed.id}`);
+  if (!bookContext) throw new Error(`Missing book context for AI Engineering lesson ${seed.id}`);
   return {
     id: seed.id,
     displayNumber: seed.id - 99,
@@ -121,6 +124,7 @@ export const aiEngineeringPdfMaterials: Material[] = seeds.map((seed) => {
     summary: `${seed.focus} Materi ini membahas cara kerja konsep, contoh penerapannya, dan keputusan yang perlu dibuat ketika konsep tersebut digunakan dalam produk AI.`,
     analogy: `Bab ini seperti peta kerja: ${seed.title.toLowerCase()} membantu kamu memilih langkah yang masuk akal sebelum menambah kerumitan.`,
     chapterLecture: lessonNumber === 1 ? aiEngineeringChapterLectures[seed.chapter] : undefined,
+    bookContext,
     caseStudy: employeePolicyAssistantCaseStudy[seed.id],
     sections: [
       { heading: "Konsep yang perlu dipahami", body: `${seed.focus}\n\nDalam alur buku, konsep ini ditempatkan sebagai bagian dari Bab ${seed.chapter} karena keputusan pada tahap ini memengaruhi kualitas sistem pada tahap berikutnya.` },

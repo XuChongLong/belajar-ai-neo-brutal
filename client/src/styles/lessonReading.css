@@ -111,6 +111,30 @@
   font-weight: 900;
 }
 
+.material-detail-track-ai-engineering .sublesson-book-context {
+  margin: 29px 0 32px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--yellow);
+}
+
+.material-detail-track-ai-engineering .sublesson-book-context > header {
+  padding: 18px 22px 15px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper-pink);
+}
+
+.material-detail-track-ai-engineering .sublesson-book-context h2 {
+  max-width: 32ch;
+  margin: 7px 0 0;
+  font-size: clamp(22px, 2.6vw, 31px);
+  line-height: 1.08;
+}
+
+.material-detail-track-ai-engineering .sublesson-book-context > div { padding: 20px 22px 22px; }
+.material-detail-track-ai-engineering .sublesson-book-context p { max-width: 76ch; font-size: 16px; line-height: 1.76; }
+.material-detail-track-ai-engineering .sublesson-book-context p + p { margin-top: 14px; }
+
 .material-detail-track-ai-engineering .chained-case-study {
   margin: 40px 0 52px;
   border: 3px solid var(--ink);
@@ -321,6 +345,11 @@
     font-size: 15px;
     line-height: 1.68;
   }
+
+  .material-detail-track-ai-engineering .sublesson-book-context { margin: 24px 0 28px; box-shadow: 4px 4px 0 var(--yellow); }
+  .material-detail-track-ai-engineering .sublesson-book-context > header,
+  .material-detail-track-ai-engineering .sublesson-book-context > div { padding-left: 18px; padding-right: 18px; }
+  .material-detail-track-ai-engineering .sublesson-book-context p { font-size: 15px; line-height: 1.68; }
 
   .material-detail-track-ai-engineering .chained-case-study {
     margin: 30px 0 37px;

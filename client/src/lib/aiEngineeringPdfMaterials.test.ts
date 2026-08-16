@@ -6,6 +6,7 @@ import { aiEngineeringChapterLectures } from "./aiEngineeringChapterLectures";
 import { categoryMeta } from "./materials";
 import { aiEngineeringAdvancedLectures } from "./aiEngineeringAdvancedLectures";
 import { aiEngineeringChapterQuizzes } from "./aiEngineeringChapterQuizzes";
+import { aiEngineeringSublessonBookContexts } from "./aiEngineeringSublessonBookContexts";
 
 describe("PDF-led AI Engineering curriculum", () => {
   it("contains sixty small lessons ordered across the ten required chapter groups", () => {
@@ -20,6 +21,7 @@ describe("PDF-led AI Engineering curriculum", () => {
     expect(aiEngineeringPdfMaterials.slice(0, 6).every((material) => material.category.startsWith("AI Engineering · Bab 1 —"))).toBe(true);
     expect(aiEngineeringPdfMaterials.filter((material) => material.chapterLecture)).toHaveLength(10);
     expect(Object.keys(aiEngineeringChapterLectures)).toHaveLength(10);
+    expect(Object.keys(aiEngineeringSublessonBookContexts)).toHaveLength(60);
     expect(Object.keys(categoryMeta).filter((category) => category.startsWith("AI Engineering · Bab "))).toEqual(aiEngineeringPdfMaterials.filter((material, index) => index % 6 === 0).map((material) => material.category));
   });
 
@@ -57,6 +59,16 @@ describe("PDF-led AI Engineering curriculum", () => {
       expect(lecture).toBeTruthy();
       expect(lecture.length).toBeGreaterThan(700);
       expect(material.sections[1]).toMatchObject({ heading: "Penjelasan dosen: menghubungkan konsep dengan sistem nyata", body: lecture });
+    });
+  });
+
+  it("gives every sublesson its own source-aligned book context rather than limiting book context to chapter openings", () => {
+    aiEngineeringPdfMaterials.forEach((material) => {
+      const context = aiEngineeringSublessonBookContexts[material.id];
+      expect(context).toBeTruthy();
+      expect(context.title).toMatch(/Subbab \d+\.\d+/);
+      expect(context.body.length).toBeGreaterThanOrEqual(380);
+      expect(material.bookContext).toEqual(context);
     });
   });
 

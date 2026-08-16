@@ -4,6 +4,7 @@ import { specializationMaterials } from "./specializationMaterials";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
 import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import type { AiEngineeringChapterLecture } from "./aiEngineeringChapterLectures";
+import type { AiEngineeringBookContext } from "./aiEngineeringSublessonBookContexts";
 
 export type MaterialLevel = "Pemula" | "Menengah" | "Lanjut";
 
@@ -27,6 +28,7 @@ export type Material = {
   analogy: string;
   sections: { heading: string; body: string }[];
   chapterLecture?: AiEngineeringChapterLecture;
+  bookContext?: AiEngineeringBookContext;
   caseStudy?: ChainedCaseStudy;
   diagram?: { src: string; alt: string; caption: string; note: string };
   diagramQuiz?: QuizQuestion;

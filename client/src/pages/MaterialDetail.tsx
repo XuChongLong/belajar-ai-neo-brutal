@@ -147,6 +147,11 @@ export default function MaterialDetail() {
           <aside><span className="eyebrow">PERTANYAAN KUNCI BAB INI</span><ol>{material.chapterLecture.questions.map((question) => <li key={question}>{question}</li>)}</ol></aside>
         </section>}
 
+        {material.bookContext && <section className="sublesson-book-context" aria-labelledby={`book-context-${material.id}`}>
+          <header><span className="eyebrow">MULAI DARI BUKU · KONTEKS SUBBAB</span><h2 id={`book-context-${material.id}`}>{material.bookContext.title}</h2></header>
+          <div>{material.bookContext.body.split("\n\n").map((paragraph, index) => <p key={`${material.id}-book-context-${index}`}>{paragraph}</p>)}</div>
+        </section>}
+
         <div className="analogy-box"><span className="eyebrow">ANALOGI GAMPANG</span><p>{material.analogy}</p></div>
 
         {isAiEngineering && <section className="lesson-glossary" aria-labelledby="reader-glossary-title">
