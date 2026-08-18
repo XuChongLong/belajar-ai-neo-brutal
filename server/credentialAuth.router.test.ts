@@ -67,6 +67,7 @@ describe("auth local credentials", () => {
     expect(mocked.createSessionToken).toHaveBeenCalledWith("local:anne.belajar", expect.objectContaining({ name: "anne.belajar" }));
     expect(cookies).toHaveLength(1);
     expect(cookies[0]?.options).toMatchObject({ httpOnly: true, secure: true, sameSite: "none" });
+    expect(result.sessionToken).toBe("signed-local-session");
     expect(result.user).toMatchObject({ username: "anne.belajar", loginMethod: "password" });
     expect(result.user).not.toHaveProperty("passwordHash");
   });
@@ -98,6 +99,7 @@ describe("auth local credentials", () => {
     const { ctx, cookies } = createContext();
     const result = await appRouter.createCaller(ctx).auth.login({ username: "ANNE.BELAJAR", password: "aman-sekali-123" });
     expect(cookies[0]?.value).toBe("signed-local-session");
+    expect(result.sessionToken).toBe("signed-local-session");
     expect(result.user).not.toHaveProperty("passwordHash");
 
     await expect(appRouter.createCaller(ctx).auth.login({ username: "anne.belajar", password: "password-yang-salah" })).rejects.toMatchObject({ code: "UNAUTHORIZED" });

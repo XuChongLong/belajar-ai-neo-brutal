@@ -33,6 +33,7 @@ async function createLocalSession(ctx: { req: Parameters<typeof getSessionCookie
   const sessionToken = await sdk.createSessionToken(user.openId, { name: user.name ?? user.username ?? "Belajar AI", expiresInMs });
   const cookieOptions = getSessionCookieOptions(ctx.req);
   ctx.res.cookie(COOKIE_NAME, sessionToken, rememberMe ? { ...cookieOptions, maxAge: expiresInMs } : cookieOptions);
+  return sessionToken;
 }
 
 export const appRouter = router({
@@ -55,8 +56,8 @@ export const appRouter = router({
         throw new TRPCError({ code: "CONFLICT", message: "Username ini sudah digunakan. Coba masuk atau pilih username lain.", cause: error });
       }
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Akun belum dapat dibuat. Coba lagi." });
-      await createLocalSession(ctx, user, input.rememberMe);
-      return { user: safeUser(user) };
+      const sessionToken = await createLocalSession(ctx, user, input.rememberMe);
+      return { user: safeUser(user), sessionToken };
     }),
     login: publicProcedure.input(localCredentialInput).mutation(async ({ ctx, input }) => {
       const username = normalizeUsername(input.username);
@@ -68,8 +69,8 @@ export const appRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Username atau password tidak cocok." });
       }
       clearFailedLogins(username);
-      await createLocalSession(ctx, user, input.rememberMe);
-      return { user: safeUser(user) };
+      const sessionToken = await createLocalSession(ctx, user, input.rememberMe);
+      return { user: safeUser(user), sessionToken };
     }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);

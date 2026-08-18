@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { storeLocalSessionToken } from "@/lib/localSession";
 import "./Login.css";
 import "./LoginControls.css";
 
@@ -24,7 +25,8 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const continueTo = useMemo(() => getContinuePath(window.location.search), []);
-  const complete = async (result: { user: unknown }) => {
+  const complete = async (result: { user: unknown; sessionToken: string }) => {
+    storeLocalSessionToken(result.sessionToken);
     utils.auth.me.setData(undefined, result.user as never);
     await utils.auth.me.invalidate();
     setLocation(continueTo);

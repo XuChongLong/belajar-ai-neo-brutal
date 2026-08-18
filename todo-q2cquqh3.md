@@ -11,3 +11,19 @@
 - [x] Tampilkan waktu serta status sinkronisasi terakhir pada halaman Progress.
 - [x] Tambahkan aksi lanjutkan checkpoint terakhir pada beranda berdasarkan progres pengguna.
 - [x] Perkuat pengujian isolasi progres untuk dua cakupan akun yang berbeda dan verifikasi antarmuka baru.
+- [x] Tambahkan riwayat aktivitas belajar yang ikut tersimpan di akun pengguna.
+- [x] Ubah target mingguan menjadi perhitungan berbasis aktivitas akun yang nyata.
+- [x] Tambahkan pengaturan untuk mengekspor dan mereset progres melalui konfirmasi aman.
+- [x] Tambahkan test serta verifikasi visual untuk riwayat, target, ekspor, dan reset progres.
+- [x] Tambahkan test payload ekspor dan state default setelah reset progres.
+- [ ] Verifikasi dialog reset di browser untuk alur batal dan konfirmasi reset.
+- [ ] Uji ekspor progres dan validasi isi file JSON yang dihasilkan.
+- [x] Telusuri dan perbaiki alur masuk yang dilaporkan macet.
+- [x] Verifikasi ulang sesi autentikasi serta akses pengaturan progres setelah perbaikan login.
+- [ ] Verifikasi sesi lokal baru membuka Pengaturan Progres terautentikasi dan memuat data progres akun.
+- [x] Reproduksi dan perbaiki drawer Android yang tidak dapat dibuka setelah menekan tombol menu.
+- [ ] Verifikasi interaksi buka, tutup, backdrop, dan navigasi drawer Android setelah perbaikan regresi.
+- [x] Atur navigasi tertutup secara default pada semua perangkat dan perbaiki kontrol tutupnya.
+- [x] Sederhanakan struktur menu Android agar orientasi dan aksi utama lebih mudah dipahami.
+- [x] Uji buka, tutup, navigasi, dan responsivitas menu pada viewport Android.
+- [x] Tambahkan test state drawer Android untuk default tertutup, buka, tutup, backdrop, dan pindah rute.

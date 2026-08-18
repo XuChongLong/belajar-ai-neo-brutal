@@ -2,6 +2,7 @@ import { trpc } from "@/lib/trpc";
 import { localSignInPath } from "@/lib/authNavigation";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
+import { clearLocalSessionToken } from "@/lib/localSession";
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
@@ -42,6 +43,7 @@ export function useAuth(options?: UseAuthOptions) {
       try {
         sessionStorage.removeItem("manus-cookie");
       } catch {}
+      clearLocalSessionToken();
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
     }

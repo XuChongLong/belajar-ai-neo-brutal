@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { localSignInPath } from "./lib/authNavigation";
+import { getLocalSessionToken } from "./lib/localSession";
 import "./index.css";
 import "./styles/specializationThemes.css";
 import "./styles/specializationDiscovery.css";
@@ -47,6 +48,8 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       headers() {
+        const localSessionToken = getLocalSessionToken();
+        if (localSessionToken) return { Authorization: `Bearer ${localSessionToken}` };
         // Preview auto-login fallback: when the browser blocks iframe cookies
         // (Safari ITP / private browsing / WebView), the runtime mirrors the
         // session into sessionStorage so we can forward it as a Bearer token.

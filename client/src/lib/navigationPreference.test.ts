@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { getDesktopSidebarOpenPreference, serializeDesktopSidebarOpenPreference } from "./navigationPreference";
 
 describe("desktop sidebar preference", () => {
-  it("keeps the workbook spine visible by default and restores an explicit hidden choice", () => {
-    expect(getDesktopSidebarOpenPreference(null)).toBe(true);
+  it("keeps the workbook spine closed by default and restores an explicit visible choice", () => {
+    expect(getDesktopSidebarOpenPreference(null)).toBe(false);
     expect(getDesktopSidebarOpenPreference("visible")).toBe(true);
     expect(getDesktopSidebarOpenPreference("hidden")).toBe(false);
   });

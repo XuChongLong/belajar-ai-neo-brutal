@@ -14,6 +14,15 @@ export type QuizAttempt = {
   lastAttemptAt: string;
 };
 
+export type LearningActivityType = "lesson-completed" | "lesson-read" | "quiz-completed" | "flashcard-mastered";
+
+export type LearningActivity = {
+  id: string;
+  type: LearningActivityType;
+  materialId: number | null;
+  occurredAt: number;
+};
+
 export type NpcProgressSnapshot = {
   activePet: "cat" | "dog" | "unicorn" | "robot";
   xp: Record<"cat" | "dog" | "unicorn" | "robot", number>;
@@ -51,6 +60,8 @@ export type LearningProgressSnapshot = {
   current: number;
   streak: number;
   lastVisit: string;
+  activityHistory: LearningActivity[];
+  weeklyGoal: number;
 };
 
 export function createEmptyLearningProgress(): LearningProgressSnapshot {
@@ -80,5 +91,7 @@ export function createEmptyLearningProgress(): LearningProgressSnapshot {
     current: 1,
     streak: 0,
     lastVisit: "",
+    activityHistory: [],
+    weeklyGoal: 5,
   };
 }

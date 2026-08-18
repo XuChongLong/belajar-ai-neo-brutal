@@ -15,3 +15,11 @@ Punggung workbook kini tampil terbuka secara default pada desktop. Rail menampil
 ## Verifikasi tindak lanjut sinkronisasi
 
 Beranda kini menampilkan kartu checkpoint terakhir tepat setelah ringkasan statistik, dengan judul materi, durasi, level, dan tombol untuk meneruskan pembacaan. Halaman Progress menampilkan status tersimpan yang menggunakan waktu relatif serta penjelasan cakupan data akun. Kedua tambahan tetap terbaca pada desktop dan mobile; pada layar ponsel, kartu checkpoint berubah menjadi susunan vertikal dengan CTA lebar penuh.
+
+## Verifikasi riwayat dan pengaturan progres
+
+Target mingguan pada beranda dan dashboard kini dihitung dari hari yang memiliki aktivitas akun, bukan angka statis. Halaman Progress menampilkan timeline aktivitas kosong yang menjelaskan tindakan pembentuk riwayat, sedangkan halaman Pengaturan Progres menempatkan pilihan target, ekspor JSON, dan reset berkonfirmasi dalam tiga kartu yang mudah dipindai. Punggung workbook kembali tampil sebagai anchor desktop pada halaman pengaturan.
+
+## Verifikasi navigasi Android
+
+Beranda, katalog materi, dan dashboard progres diuji pada lebar 375 px. Ketiganya kini memulai halaman dengan navigasi tertutup, sehingga area belajar tidak lagi tertutup panel menu. Header menyisakan tombol menu yang jelas di kiri, pencarian, serta shortcut progres; drawer baru memakai backdrop dan tombol “Tutup” agar pengguna memiliki dua cara yang tegas untuk kembali ke konten.

@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import NpcPets from "./pages/NpcPets";
 import PrdMaker from "./pages/PrdMaker";
 import Login from "./pages/Login";
+import ProgressSettings from "./pages/ProgressSettings";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -35,6 +36,7 @@ function Router() {
       <Route path={"/flashcards"} component={Flashcards} />
       <Route path={"/files"} component={StudyFiles} />
       <Route path={"/profil"} component={Profile} />
+      <Route path={"/pengaturan"} component={ProgressSettings} />
       <Route path={"/npc"} component={NpcPets} />
       <Route path={"/prd-maker"} component={PrdMaker} />
       <Route path={"/masuk"} component={Login} />

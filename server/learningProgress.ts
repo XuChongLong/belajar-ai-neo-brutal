@@ -53,4 +53,11 @@ export const learningProgressSnapshotSchema = z.object({
   current: z.number().int().positive(),
   streak: z.number().int().min(0).max(10_000),
   lastVisit: z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
+  activityHistory: z.array(z.object({
+    id: z.string().min(1).max(160),
+    type: z.enum(["lesson-completed", "lesson-read", "quiz-completed", "flashcard-mastered"]),
+    materialId: z.number().int().positive().nullable(),
+    occurredAt: z.number().int().positive(),
+  })).max(80).default([]),
+  weeklyGoal: z.number().int().refine((value) => [3, 5, 7].includes(value), "Target mingguan harus 3, 5, atau 7 hari.").default(5),
 });
