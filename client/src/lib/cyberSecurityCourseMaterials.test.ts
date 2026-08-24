@@ -13,6 +13,14 @@ describe("Cyber Security curriculum", () => {
     });
   });
 
+  it("restarts the sublesson number at every chapter checkpoint", () => {
+    expect(cyberSecurityMaterials[0]?.title).toMatch(/^1\.1/);
+    expect(cyberSecurityMaterials[9]?.title).toMatch(/^4\.1/);
+    expect(cyberSecurityMaterials[12]?.title).toMatch(/^4\.4/);
+    expect(cyberSecurityMaterials[13]?.title).toMatch(/^5\.1/);
+    expect(cyberSecurityMaterials[30]?.title).toMatch(/^10\.3/);
+  });
+
   it("maps the user-provided courses and every important playlist family to at least one lesson", () => {
     const labels = new Set(cyberSecurityMaterials.flatMap((material) => material.resources?.map((resource) => resource.label) ?? []));
     [

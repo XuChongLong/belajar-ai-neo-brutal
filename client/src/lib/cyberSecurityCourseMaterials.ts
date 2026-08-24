@@ -82,10 +82,17 @@ function makeQuiz(seed: LessonSeed): QuizQuestion[] {
   ];
 }
 
-export const cyberSecurityMaterials: Material[] = course.map((seed, index) => ({
+const chapterNumbers = new Map(Array.from(new Set(course.map((seed) => seed.chapter))).map((chapter, index) => [chapter, index + 1]));
+const subchapterNumbers = new Map<string, number>();
+
+export const cyberSecurityMaterials: Material[] = course.map((seed, index) => {
+  const subchapterNumber = (subchapterNumbers.get(seed.chapter) ?? 0) + 1;
+  subchapterNumbers.set(seed.chapter, subchapterNumber);
+
+  return ({
   id: 200 + index,
   displayNumber: index + 1,
-  title: `${String(Math.floor(index / 3) + 1)}.${(index % 3) + 1} · ${seed.title}`,
+  title: `${chapterNumbers.get(seed.chapter)}.${subchapterNumber} · ${seed.title}`,
   category: seed.chapter,
   specialization: "ai-security",
   level: seed.level,
@@ -102,4 +109,5 @@ export const cyberSecurityMaterials: Material[] = course.map((seed, index) => ({
   ],
   resources: seed.sourceKeys.map((key) => sources[key]),
   quiz: makeQuiz(seed),
-}));
+  });
+});
