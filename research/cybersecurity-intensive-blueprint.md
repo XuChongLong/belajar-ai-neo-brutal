@@ -2,16 +2,23 @@
 
 ## Prinsip desain
 
-Jalur ini mengganti versi 31 subbab yang terlalu ringkas. Setiap bab berisi **12 subbab**, sehingga totalnya **240 subbab** dalam 20 checkpoint. Materi mengikuti urutan nyata dari dua video utama dan seluruh rumpun playlist The Cyber Mentor, tetapi topik yang di sumber berbentuk eksploitasi, credential attack, wireless capture, payload, atau privilege escalation akan dipelajari sebagai pola risiko, bukti deteksi, hardening, dan latihan dalam aset fiktif atau lab sendiri. Tidak ada subbab yang memberikan prosedur penyalahgunaan terhadap sistem nyata.
+Jalur ini mengganti versi 31 subbab yang terlalu ringkas. Ia diawali **Bab Prolog** berisi 12 subbab untuk menjelaskan apa itu security, alasan kebutuhan security, contoh kasus aman, batas legal, dan cara memakai course; kemudian dilanjutkan 20 checkpoint inti yang masing-masing berisi **12 subbab**. Totalnya menjadi **252 subbab dalam 21 checkpoint**. Materi mengikuti urutan nyata dari dua video utama dan seluruh rumpun playlist The Cyber Mentor, tetapi topik yang di sumber berbentuk eksploitasi, credential attack, wireless capture, payload, atau privilege escalation akan dipelajari sebagai pola risiko, bukti deteksi, hardening, dan latihan dalam aset fiktif atau lab sendiri. Tidak ada subbab yang memberikan prosedur penyalahgunaan terhadap sistem nyata.
 
 | Bagian | Bab | Subbab | Sumber dominan |
 |---|---:|---:|---|
+| Bab Prolog | Prolog | 12 | CS50, Hands-On, Ethical Hacking Part 1, Ethical Hacking 12 Hours |
 | Fondasi dan lingkungan | 1–5 | 60 | CS50, Hands-On, Ethical Hacking Part 1, Linux/Kali |
 | Aset, jaringan, dan aplikasi | 6–10 | 60 | Ethical Hacking Part 1–2, Web App Security, OSINT |
 | Identitas, endpoint, dan engineering | 11–14 | 48 | Linux/Windows, Active Directory, Python, Rust, Help Desk |
 | Detection dan operasi keamanan | 15–17 | 36 | SOC 101, PowerShell, Bug Bounty |
 | AI, IoT, dan capstone | 18–20 | 36 | Learn AI Fundamentals, IoT, seluruh sumber |
-| **Total** | **20** | **240** | **2 video utama + seluruh 21 video playlist** |
+| **Total** | **Prolog + 20** | **252** | **2 video utama + seluruh 21 video playlist** |
+
+## Bab Prolog — Sebelum Masuk Course Inti
+
+Prolog.1 Selamat datang: security itu sebenarnya apa; Prolog.2 Bukan soal terlihat jago, tapi mengurangi risiko; Prolog.3 Kenapa masalah kecil bisa jadi besar; Prolog.4 Contoh kasus: link invoice palsu di tim kecil; Prolog.5 Security, privacy, dan safety; Prolog.6 Siapa saja yang ikut menjaga; Prolog.7 Cara berpikir risiko sebelum panik; Prolog.8 Batas legal; Prolog.9 Apa yang akan kamu dapat dari course ini; Prolog.10 Cara memakai 20 checkpoint tanpa keburu tenggelam; Prolog.11 Jenis latihan yang akan kamu temui; Prolog.12 Kontrak belajarmu.
+
+Prolog sengaja ditempatkan sebelum Bab 1 agar pelajar memahami tujuan, dampak manusia, batas izin, dan peta belajar sebelum bertemu jaringan, Linux, Kali, ataupun konsep observabilitas. **Setelah Prolog**, course inti dimulai dari kontrak belajar, etika, dan cara berpikir risiko; lalu bergerak bertahap menuju lingkungan lab, sistem, identitas, jaringan, aplikasi, operasi, dan capstone.
 
 ## Bab 1 — Kontrak Belajar, Etika, dan Cara Berpikir Risiko
 

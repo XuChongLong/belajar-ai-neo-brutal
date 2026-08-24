@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { cyberSecurityCurriculumStats, cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
 
 describe("Cyber Security curriculum", () => {
-  it("contains a twenty-checkpoint, 240-sublesson learning path with rich reading layers", () => {
-    expect(cyberSecurityCurriculumStats).toEqual({ chapters: 20, subchaptersPerChapter: 12, totalSubchapters: 240 });
-    expect(cyberSecurityMaterials).toHaveLength(240);
-    expect(new Set(cyberSecurityMaterials.map((material) => material.category))).toHaveLength(20);
+  it("contains a prologue plus twenty core checkpoints with rich reading layers", () => {
+    expect(cyberSecurityCurriculumStats).toEqual({ chapters: 21, subchaptersPerChapter: 12, totalSubchapters: 252 });
+    expect(cyberSecurityMaterials).toHaveLength(252);
+    expect(new Set(cyberSecurityMaterials.map((material) => material.category))).toHaveLength(21);
     cyberSecurityMaterials.forEach((material) => {
       expect(material.specialization).toBe("ai-security");
       expect(material.sections).toHaveLength(5);
@@ -14,27 +14,33 @@ describe("Cyber Security curriculum", () => {
     });
   });
 
-  it("resets the sublesson number at every checkpoint and includes a chapter lecture", () => {
-    expect(cyberSecurityMaterials[0]?.title).toMatch(/^1\.1/);
-    expect(cyberSecurityMaterials[11]?.title).toMatch(/^1\.12/);
-    expect(cyberSecurityMaterials[12]?.title).toMatch(/^2\.1/);
-    expect(cyberSecurityMaterials[228]?.title).toMatch(/^20\.1/);
-    expect(cyberSecurityMaterials[239]?.title).toMatch(/^20\.12/);
-    expect(cyberSecurityMaterials.filter((material) => material.chapterLecture)).toHaveLength(20);
+  it("places the prologue before core lesson 1.1 and keeps core numbering intact", () => {
+    expect(cyberSecurityMaterials[0]?.title).toMatch(/^Prolog\.1/);
+    expect(cyberSecurityMaterials[11]?.title).toMatch(/^Prolog\.12/);
+    expect(cyberSecurityMaterials[12]?.title).toMatch(/^1\.1/);
+    expect(cyberSecurityMaterials[23]?.title).toMatch(/^1\.12/);
+    expect(cyberSecurityMaterials[24]?.title).toMatch(/^2\.1/);
+    expect(cyberSecurityMaterials[240]?.title).toMatch(/^20\.1/);
+    expect(cyberSecurityMaterials[251]?.title).toMatch(/^20\.12/);
+    expect(cyberSecurityMaterials.filter((material) => material.chapterLecture)).toHaveLength(21);
   });
 
-  it("gives every sublesson a distinct applied scenario and legal lab move", () => {
-    const scenarios = cyberSecurityMaterials.map((material) => material.sections.find((section) => section.heading === "Skenario tim")?.body ?? "");
-    const labs = cyberSecurityMaterials.map((material) => material.sections.find((section) => section.heading === "Latihan lab berizin")?.body ?? "");
+  it("gives core lessons distinct applied scenarios and gives the prologue a clear contextual bridge", () => {
+    const core = cyberSecurityMaterials.filter((material) => !material.title.startsWith("Prolog."));
+    const prologue = cyberSecurityMaterials.filter((material) => material.title.startsWith("Prolog."));
+    const scenarios = core.map((material) => material.sections.find((section) => section.heading === "Skenario tim")?.body ?? "");
+    const labs = core.map((material) => material.sections.find((section) => section.heading === "Latihan lab berizin")?.body ?? "");
     expect(new Set(scenarios).size).toBe(240);
     expect(new Set(labs).size).toBe(240);
     labs.forEach((body) => expect(body).toMatch(/data fiktif|aset sendiri/i));
+    expect(prologue).toHaveLength(12);
+    prologue.forEach((material) => expect(material.sections.some((section) => section.heading === "Jembatan ke course inti")).toBe(true));
   });
 
-  it("includes twenty distinct structured case studies, one for each checkpoint", () => {
+  it("includes twenty-one distinct structured case studies, one for every checkpoint", () => {
     const cases = cyberSecurityMaterials.flatMap((material) => material.caseStudy ? [material.caseStudy] : []);
-    expect(cases).toHaveLength(20);
-    expect(new Set(cases.map((item) => item.title)).size).toBe(20);
+    expect(cases).toHaveLength(21);
+    expect(new Set(cases.map((item) => item.title)).size).toBe(21);
     cases.forEach((item) => {
       expect(item.narrative.length).toBeGreaterThan(180);
       expect(item.guidedQuestions).toHaveLength(3);

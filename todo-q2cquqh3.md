@@ -53,3 +53,7 @@
 - [x] Tulis ulang isi Cyber Security per kelompok subbab secara spesifik terhadap topik dan sumber, bukan dari template generik berulang.
 - [x] Tambahkan studi kasus dan latihan yang berbeda untuk setiap kelompok subbab Cyber Security dengan batas legal yang eksplisit.
 - [x] Selaraskan outline riset lama dengan struktur 20 bab dan 240 subbab Cyber Security terbaru.
+- [x] Audit keselarasan urutan 20 bab Cyber Security terhadap alur sumber, konsep prasyarat, dan tujuan belajar.
+- [x] Tambahkan Bab Prolog Cyber Security sebelum course inti: definisi, contoh kasus aman, alasan kebutuhan security, etika, dan peta jalan.
+- [x] Posisikan ulang course inti agar dimulai setelah Prolog dan navigasinya menunjukkan alur belajar yang tidak acak.
+- [x] Tambahkan test urutan Prolog → fondasi → course inti serta verifikasi katalog dan pembaca pada desktop maupun Android.

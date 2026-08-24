@@ -133,13 +133,69 @@ function makeQuiz(chapter: Chapter, unit: string): QuizQuestion[] {
   ];
 }
 
-export const cyberSecurityMaterials: Material[] = chapters.flatMap((chapter, chapterIndex) => chapter.units.map((unit, unitIndex) => {
+const prologueLessons = [
+  { title: "Selamat datang: security itu sebenarnya apa?", premise: "Cyber Security adalah cara menjaga sistem digital tetap berguna dan dapat dipercaya saat ada kesalahan, gangguan, atau pihak yang berniat buruk. Ia bukan sekadar dunia 'hacker versus hacker', melainkan kebiasaan membuat keputusan yang mengurangi dampak buruk.", decision: "Tuliskan tiga hal digital yang kamu andalkan hari ini—akun, data, atau layanan—lalu jelaskan apa yang membuat masing-masing tetap layak dipercaya.", exercise: "Buat daftar aset digital pribadi tanpa menulis password, token, atau detail sensitif." },
+  { title: "Bukan soal terlihat jago, tapi mengurangi risiko", premise: "Tool bisa membantu, tetapi tool bukan tujuan. Keamanan yang matang terlihat dari scope yang jelas, bukti yang cukup, dan perbaikan yang dapat dijaga setelah rasa penasaran selesai.", decision: "Bandingkan dua tujuan: 'mencari celah' dan 'mencegah kerugian'. Pilih bukti apa yang diperlukan oleh tujuan kedua.", exercise: "Tulis satu contoh keputusan aman yang tidak membutuhkan tool apa pun." },
+  { title: "Kenapa masalah kecil bisa jadi besar?", premise: "Password yang dipakai ulang, update yang tertunda, folder terbuka, atau alert yang diabaikan sering menjadi awal masalah. Security dibutuhkan karena sistem nyata saling terhubung dan dampaknya sering mengenai orang lain juga.", decision: "Petakan satu kesalahan kecil ke dampak yang mungkin menjalar: pengguna, layanan, reputasi, dan waktu pemulihan.", exercise: "Gunakan skenario fiktif 'akun email lupa logout' untuk membuat rantai dampak tiga langkah." },
+  { title: "Contoh kasus: link invoice palsu di tim kecil", premise: "Bayangkan admin menerima invoice yang tampak normal dan hampir meneruskannya ke keuangan. Yang menyelamatkan tim bukan intuisi magis, melainkan kebiasaan verifikasi lewat kanal kedua, tidak buru-buru, dan mencatat sinyal yang muncul.", decision: "Pisahkan sinyal, asumsi, dan tindakan yang aman dari kasus invoice fiktif tersebut.", exercise: "Buat checklist verifikasi tiga langkah untuk pesan yang meminta tindakan mendesak." },
+  { title: "Security, privacy, dan safety: berteman tapi beda", premise: "Security berfokus pada menjaga sistem dan akses; privacy berfokus pada penggunaan data yang tepat; safety berfokus pada mencegah bahaya. Ketiganya sering bertemu, tetapi keputusan yang baik tidak menyamakan semuanya.", decision: "Untuk aplikasi catatan, jelaskan satu risiko security, satu risiko privacy, dan satu risiko safety.", exercise: "Buat tabel tiga kolom memakai contoh data fiktif." },
+  { title: "Siapa saja yang ikut menjaga?", premise: "Security bukan tugas satu orang atau satu tim. Developer, admin, pemilik produk, help desk, legal, dan pengguna punya keputusan yang berbeda. Owner yang jelas membuat masalah tidak berputar tanpa arah.", decision: "Ambil kasus update aplikasi fiktif dan tentukan siapa pemilik keputusan, siapa pelaksana, dan siapa yang perlu diberi tahu.", exercise: "Buat daftar peran tanpa memakai nama orang asli." },
+  { title: "Cara berpikir risiko sebelum panik", premise: "Tidak semua temuan harus diperlakukan sama. Risiko membantu menghubungkan aset, kemungkinan kejadian, dampak, kontrol, dan prioritas. Tujuannya bukan memprediksi masa depan dengan sempurna, tetapi memilih langkah berikutnya dengan sadar.", decision: "Nilai dua risiko fiktif berdasarkan dampak dan kemungkinan, lalu jelaskan mengapa urutannya demikian.", exercise: "Gunakan matriks sederhana rendah–sedang–tinggi untuk proyek latihanmu." },
+  { title: "Batas legal: rasa ingin tahu punya rem", premise: "Memahami risiko tidak memberi izin untuk menyentuh sistem orang lain. Izin tertulis, aset yang jelas, data fiktif, dan lab terisolasi adalah dasar belajar yang bertanggung jawab—bukan formalitas yang bisa dilewati.", decision: "Ubah permintaan kabur 'cek situs ini aman tidak' menjadi scope lab yang sah dan terbatas.", exercise: "Tulis scope card untuk VM atau aplikasi milik sendiri, termasuk batas berhenti." },
+  { title: "Apa yang akan kamu dapat dari course ini?", premise: "Course inti bergerak dari jaringan, lab, Linux, akun, web, OSINT defensif, vulnerability management, coding, SOC, incident response, AI, IoT, hingga capstone. Urutannya sengaja dari fondasi menuju keputusan lintas sistem.", decision: "Pilih satu alasan pribadi belajar security, lalu hubungkan ke tiga checkpoint yang paling relevan.", exercise: "Tandai apakah tujuanmu lebih dekat ke aplikasi, operasi, administrasi, atau produk." },
+  { title: "Cara memakai 20 checkpoint tanpa keburu tenggelam", premise: "Dua belas subbab dalam satu checkpoint bukan target maraton. Baca pembukaan, pilih satu subbab, buat artefak kecil, jawab kuis, lalu lanjut ketika konteksnya masih segar. Katalog dibuat bertahap supaya orientasi tidak hilang.", decision: "Pilih ritme realistis—misalnya dua atau tiga subbab per minggu—dan jelaskan alasanmu.", exercise: "Buat jadwal belajar dua minggu dengan satu hari untuk review, bukan hanya menambah materi." },
+  { title: "Jenis latihan yang akan kamu temui", premise: "Latihan di course ini memakai data fiktif, aset sendiri, catatan keputusan, diagram, register, dan runbook. Hasil terbaik bukan 'berhasil menjalankan tool', melainkan artefak yang bisa dibaca, dikritik, dan diperbaiki tim.", decision: "Bandingkan artefak yang bisa diaudit dengan screenshot hasil tool tanpa konteks.", exercise: "Siapkan folder lokal khusus untuk catatan lab dan data contoh yang aman dibuang." },
+  { title: "Sebelum masuk course inti: kontrak belajarmu", premise: "Sekarang kamu punya konteks: security dibutuhkan karena sistem, data, dan manusia saling bergantung; praktik yang dewasa dimulai dari scope, bukti, dan dampak. Bab berikutnya baru masuk ke cara berpikir risiko dan lingkungan belajar secara lebih teknis.", decision: "Tulis satu komitmen: aset apa yang akan kamu gunakan, batas apa yang tidak akan kamu lewati, dan siapa yang akan kamu tanya bila scope tidak jelas.", exercise: "Simpan kontrak belajar satu halaman sebagai artefak pertama sebelum membuka Bab 1 course inti." },
+] as const;
+
+const prologueCaseStudy = {
+  phase: "Bab Prolog · Mengapa course ini dimulai dari konteks",
+  title: "Kasus pembuka: akun komunitas yang hampir diambil alih",
+  narrative: "Sebuah komunitas kecil memakai satu akun media sosial bersama. Saat salah satu admin menerima pesan yang mendesak untuk 'verifikasi akun', ia hampir memasukkan credential di halaman yang salah. Masalahnya bukan karena ia kurang pintar; desain kerja tim belum punya password manager, MFA, kanal verifikasi, owner akun, atau aturan saat menerima pesan darurat. Mereka berhenti, memeriksa lewat kanal resmi, lalu menyusun perbaikan sederhana. Kasus ini menunjukkan alasan security dibutuhkan sebelum kita bicara tool: keputusan kecil yang tertata dapat mencegah dampak besar pada orang dan layanan.",
+  artifactTitle: "Artefak prolog: peta perlindungan akun komunitas",
+  artifact: "Akun yang dilindungi, owner, MFA, recovery, kanal verifikasi, perangkat tepercaya, jalur pelaporan, dan tanggal review.",
+  teachingPoint: "Security tidak dimulai dari menyerang sistem; ia dimulai dari memahami apa yang perlu dijaga, siapa yang terdampak, dan kebiasaan paling kecil yang mengurangi risiko.",
+  guidedQuestions: ["Apa sinyal yang membuat pesan perlu diverifikasi?", "Kontrol kecil apa yang mencegah dampak berulang?", "Siapa yang bertanggung jawab atas akses dan recovery?"],
+};
+
+function prologueSections(lesson: typeof prologueLessons[number], unitNumber: number) {
+  return [
+    { heading: "Ngobrol dulu", body: lesson.premise },
+    { heading: "Kenapa ini penting sebelum teknis", body: `Sebelum menyentuh materi inti, ${lesson.title.toLowerCase()} memberi bahasa untuk membaca masalah dengan tenang. Tanpa konteks ini, networking, Linux, web, dan log hanya berubah menjadi daftar istilah yang mudah dihafal tetapi sulit dipakai membuat keputusan.` },
+    { heading: "Contoh kasus yang aman", body: `Gunakan contoh akun komunitas dan aplikasi catatan fiktif. Fokusnya bukan mencari kelemahan pihak lain, melainkan memahami keputusan, owner, serta langkah verifikasi yang menjaga orang dan layanan.` },
+    { heading: "Latihan kecil", body: `${lesson.exercise} Simpan hasilnya sebagai catatan singkat yang bisa kamu tinjau lagi saat masuk ke checkpoint inti.` },
+    { heading: "Jembatan ke course inti", body: `${lesson.decision} Setelah itu, lanjutkan ke Bab 1 course inti untuk mengubah konteks ini menjadi cara berpikir risiko, scope, aset, bukti, dan kontrol.` },
+  ];
+}
+
+export const cyberSecurityPrologueMaterials: Material[] = prologueLessons.map((lesson, unitIndex) => ({
+  id: 180 + unitIndex,
+  displayNumber: unitIndex + 1,
+  title: `Prolog.${unitIndex + 1} · ${lesson.title}`,
+  category: "Cyber Security Intensif · Bab Prolog — Sebelum Masuk Course Inti",
+  specialization: "ai-security" as const,
+  level: "Pemula" as const,
+  minutes: 10 + (unitIndex % 4),
+  emoji: "◌",
+  summary: lesson.premise,
+  analogy: "Anggap Prolog sebagai papan peta sebelum perjalanan: kamu belum perlu menghafal semua jalan, tetapi perlu tahu kenapa perjalanan ini dilakukan dan batas mana yang tidak boleh dilewati.",
+  sections: prologueSections(lesson, unitIndex + 1),
+  chapterLecture: unitIndex === 0 ? { title: "Mulai dari konteks, bukan dari tool", body: "Bab Prolog menjawab pertanyaan yang sering dilewati: apa itu Cyber Security, siapa yang dilindungi, mengapa masalah kecil dapat meluas, dan bagaimana belajar tanpa mengubah rasa ingin tahu menjadi risiko bagi orang lain. Selesaikan prolog ini sebelum membuka course inti agar 20 checkpoint berikutnya terasa sebagai satu perjalanan, bukan daftar topik acak.", questions: ["Aset apa yang ingin kamu lindungi?", "Dampak siapa yang perlu dipertimbangkan?", "Apa batas praktikmu sebelum masuk lab?"] } : undefined,
+  caseStudy: unitIndex === 0 ? prologueCaseStudy : undefined,
+  resources: [sources.cs50, sources.handsOn, sources.ethicalOne, sources.ethicalTwelve],
+  quiz: [
+    { question: `Pada ${lesson.title}, kebiasaan yang paling tepat adalah…`, options: ["menentukan konteks, aset, dampak, dan batas aman sebelum bertindak", "langsung mencoba tool pada target yang tidak jelas", "menganggap semua masalah harus direspons sama"], answer: 0, explanation: "Security yang matang dimulai dari konteks dan tanggung jawab." },
+    { question: "Jika scope belum jelas, langkah profesional pertama adalah…", options: ["berhenti, gunakan lab atau minta persetujuan", "melanjutkan agar cepat belajar", "mengumpulkan data sebanyak mungkin"], answer: 0, explanation: "Izin dan batas aset selalu datang sebelum eksperimen." },
+  ],
+}));
+
+export const cyberSecurityMaterials: Material[] = [...cyberSecurityPrologueMaterials, ...chapters.flatMap((chapter, chapterIndex) => chapter.units.map((unit, unitIndex) => {
   const chapterNumber = chapterIndex + 1;
   const unitNumber = unitIndex + 1;
   const title = `${chapterNumber}.${unitNumber} · ${unit}`;
   return {
     id: 200 + (chapterIndex * 12) + unitIndex,
-    displayNumber: (chapterIndex * 12) + unitIndex + 1,
+    displayNumber: (chapterIndex * 12) + unitIndex + 13,
     title,
     category: `Cyber Security Intensif · Bab ${chapterNumber} — ${chapter.title}`,
     specialization: "ai-security" as const,
@@ -154,6 +210,6 @@ export const cyberSecurityMaterials: Material[] = chapters.flatMap((chapter, cha
     resources: chapter.sources.map((key) => sources[key]),
     quiz: makeQuiz(chapter, unit),
   };
-}));
+}))];
 
-export const cyberSecurityCurriculumStats = { chapters: chapters.length, subchaptersPerChapter: 12, totalSubchapters: chapters.length * 12 } as const;
+export const cyberSecurityCurriculumStats = { chapters: chapters.length + 1, subchaptersPerChapter: 12, totalSubchapters: (chapters.length + 1) * 12 } as const;
