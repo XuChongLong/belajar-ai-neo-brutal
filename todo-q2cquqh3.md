@@ -37,3 +37,10 @@
 - [x] Sederhanakan struktur menu Android agar orientasi dan aksi utama lebih mudah dipahami.
 - [x] Uji buka, tutup, navigasi, dan responsivitas menu pada viewport Android.
 - [x] Tambahkan test state drawer Android untuk default tertutup, buka, tutup, backdrop, dan pindah rute.
+- [x] Inventarisasi dan analisis seluruh video serta playlist Cyber Security yang diberikan pengguna.
+- [x] Rancang kurikulum Cyber Security mendalam menjadi bab, subbab, latihan, dan studi kasus.
+- [x] Tulis materi Cyber Security dengan bahasa santai, analogi konkret, dan sumber video per bagian.
+- [x] Integrasikan materi Cyber Security baru ke aplikasi serta perbarui katalog dan navigasi pembelajaran.
+- [x] Uji cakupan sumber, ketepatan tautan, keterbacaan, dan tampilan materi Cyber Security.
+- [ ] Lengkapi catatan terstruktur untuk dua video utama dan semua rumpun penting dari 21 video playlist Cyber Security.
+- [ ] Verifikasi langsung beberapa tautan sumber dari antarmuka materi Cyber Security serta rendering pada deployment publik Android.

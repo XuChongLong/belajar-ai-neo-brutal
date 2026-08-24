@@ -15,7 +15,7 @@ export const specializationMeta: Record<SpecializationId, SpecializationMeta> = 
   "data-engineering": { id: "data-engineering", label: "Data Analyst & Data Engineering", shortLabel: "Data", emoji: "▦", accent: "yellow", intro: "Ubah data mentah menjadi keputusan yang bisa ditelusuri, bukan sekadar angka yang terlihat rapi." },
   "ai-product": { id: "ai-product", label: "AI Product Builder", shortLabel: "AI Product", emoji: "▱", accent: "violet", intro: "Rancang solusi AI yang punya masalah jelas, kontrol manusia, dan ukuran keberhasilan yang nyata." },
   automation: { id: "automation", label: "Automation Specialist", shortLabel: "Automation", emoji: "↻", accent: "green", intro: "Bangun workflow lintas alat yang menghemat waktu tanpa menghilangkan titik pemeriksaan penting." },
-  "ai-security": { id: "ai-security", label: "Cyber Security AI", shortLabel: "Cyber Security", emoji: "◆", accent: "orange", intro: "Jaga akun, data, prompt, agent, dan keputusan AI lewat kebiasaan keamanan yang dapat diterapkan." },
+  "ai-security": { id: "ai-security", label: "Cyber Security", shortLabel: "Cyber Security", emoji: "◆", accent: "orange", intro: "Belajar menjaga akun, data, aplikasi, sistem, AI, dan perangkat terkoneksi lewat kebiasaan yang masuk akal—tanpa gaya sok hacker." },
   "creative-ai": { id: "creative-ai", label: "Creative AI & Content Systems", shortLabel: "Creative AI", emoji: "✺", accent: "magenta", intro: "Buat sistem konten yang terarah, transparan, dan tetap menghormati karya serta suara manusia." },
 };
 

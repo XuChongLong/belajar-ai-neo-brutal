@@ -2,6 +2,7 @@
 
 import { specializationMaterials } from "./specializationMaterials";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
+import { cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
 import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import type { AiEngineeringChapterLecture } from "./aiEngineeringChapterLectures";
 import type { AiEngineeringBookContext } from "./aiEngineeringSublessonBookContexts";
@@ -55,10 +56,20 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "AI Product Builder": { emoji: "▱", level: "Menengah" },
   "Automation Specialist": { emoji: "↻", level: "Menengah" },
   "Cyber Security AI": { emoji: "◆", level: "Menengah" },
+  "Bab 1 — Mulai dengan Kepala Dingin": { emoji: "◆", level: "Pemula" },
+  "Bab 2 — Akun dan Data Pribadi": { emoji: "◆", level: "Pemula" },
+  "Bab 3 — Sistem yang Tidak Bikin Kaget": { emoji: "◆", level: "Pemula" },
+  "Bab 4 — Aplikasi Web dan Rahasia": { emoji: "◆", level: "Menengah" },
+  "Bab 5 — Identitas dan Akses Organisasi": { emoji: "◆", level: "Menengah" },
+  "Bab 6 — OSINT Tanpa Jadi Kepo Liar": { emoji: "◆", level: "Menengah" },
+  "Bab 7 — Deteksi dan Respons": { emoji: "◆", level: "Menengah" },
+  "Bab 8 — Kode dan Otomasi yang Lebih Aman": { emoji: "◆", level: "Menengah" },
+  "Bab 9 — AI dan Perangkat yang Ikut Bicara": { emoji: "◆", level: "Menengah" },
+  "Bab 10 — Kerja Profesional dan Capstone": { emoji: "◆", level: "Lanjut" },
   "Creative AI & Content Systems": { emoji: "✺", level: "Menengah" },
 };
 
-export const materials: Material[] = [...aiEngineeringPdfMaterials, ...specializationMaterials];
+export const materials: Material[] = [...aiEngineeringPdfMaterials, ...specializationMaterials, ...cyberSecurityMaterials];
 
 export const categories = ["Semua kategori", ...Object.keys(categoryMeta)];
 export const levels = ["Semua level", "Pemula", "Menengah", "Lanjut"];

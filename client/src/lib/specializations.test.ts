@@ -4,12 +4,13 @@ import { getLearningRecommendations, learningGoals } from "./learningPath";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta } from "./specializations";
 
 describe("expanded specialization catalogue", () => {
-  it("adds a sixty-lesson PDF-led AI Engineering path alongside six distinct eight-lesson specialization paths", () => {
-    expect(materials).toHaveLength(108);
-    expect(new Set(materials.map((material) => material.id)).size).toBe(108);
+  it("adds a sixty-lesson AI Engineering path and a thirty-one-sublesson Cyber Security curriculum", () => {
+    expect(materials).toHaveLength(131);
+    expect(new Set(materials.map((material) => material.id)).size).toBe(131);
     expect(Object.values(specializationMeta)).toHaveLength(7);
     expect(materials.filter((material) => material.specialization === "ai-engineering")).toHaveLength(60);
-    Object.values(specializationMeta).filter((track) => track.id !== "ai-engineering").forEach((track) => expect(materials.filter((material) => material.specialization === track.id)).toHaveLength(8));
+    expect(materials.filter((material) => material.specialization === "ai-security")).toHaveLength(31);
+    Object.values(specializationMeta).filter((track) => track.id !== "ai-engineering" && track.id !== "ai-security").forEach((track) => expect(materials.filter((material) => material.specialization === track.id)).toHaveLength(8));
   });
 
   it("provides story-led sections, resources, and quizzes for every specialization lesson", () => {
@@ -33,7 +34,8 @@ describe("expanded specialization catalogue", () => {
     expect(getLearningRecommendations(materials, [], {}, "ai-engineer").some((item) => item.material.specialization === "ai-engineering")).toBe(true);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-engineering"))).toHaveLength(60);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "cloud-devops"))).toHaveLength(8);
-    expect(materials.filter((material) => materialMatchesSpecialization(material, null))).toHaveLength(108);
+    expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-security"))).toHaveLength(31);
+    expect(materials.filter((material) => materialMatchesSpecialization(material, null))).toHaveLength(131);
     expect(getFocusedCatalogueHref("ai-engineering")).toBe("/materi?jurusan=ai-engineering");
     expect(getFocusedCatalogueHref("cloud-devops")).toBe("/materi?jurusan=cloud-devops");
     expect(getFocusedCatalogueHref()).toBe("/materi");
