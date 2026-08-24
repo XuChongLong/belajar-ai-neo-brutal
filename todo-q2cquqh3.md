@@ -45,3 +45,11 @@
 - [x] Lengkapi catatan terstruktur untuk dua video utama dan semua rumpun penting dari 21 video playlist Cyber Security.
 - [ ] Verifikasi langsung beberapa tautan sumber dari antarmuka materi Cyber Security serta rendering pada deployment publik Android.
 - [x] Rapikan tata letak kartu sumber materi Cyber Security agar tautan dan deskripsinya tidak menyempit pada layar Android.
+- [x] Petakan ulang seluruh materi dua video utama dan 21 video playlist menjadi blueprint kurikulum defensif yang jauh lebih mendalam.
+- [x] Rancang struktur Cyber Security baru dengan bab bertingkat dan ratusan subbab yang dapat ditelusuri pengguna.
+- [x] Tulis dan integrasikan materi Cyber Security berisi konsep, mekanisme, studi kasus, latihan legal, pemeriksaan pemahaman, dan sumber per subbab.
+- [x] Tambahkan pengujian struktur, cakupan sumber, dan keterbacaan katalog untuk kurikulum Cyber Security skala besar.
+- [x] Optimalkan katalog Cyber Security 240 subbab dengan checkpoint yang dapat dibuka bertahap agar tetap nyaman dipakai di Android dan desktop.
+- [x] Tulis ulang isi Cyber Security per kelompok subbab secara spesifik terhadap topik dan sumber, bukan dari template generik berulang.
+- [x] Tambahkan studi kasus dan latihan yang berbeda untuk setiap kelompok subbab Cyber Security dengan batas legal yang eksplisit.
+- [x] Selaraskan outline riset lama dengan struktur 20 bab dan 240 subbab Cyber Security terbaru.

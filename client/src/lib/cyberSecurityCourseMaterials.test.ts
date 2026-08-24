@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
+import { cyberSecurityCurriculumStats, cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
 
 describe("Cyber Security curriculum", () => {
-  it("contains a ten-chapter, thirty-one-sublesson learning path with rich reading layers", () => {
-    expect(cyberSecurityMaterials).toHaveLength(31);
-    expect(new Set(cyberSecurityMaterials.map((material) => material.category))).toHaveLength(10);
+  it("contains a twenty-checkpoint, 240-sublesson learning path with rich reading layers", () => {
+    expect(cyberSecurityCurriculumStats).toEqual({ chapters: 20, subchaptersPerChapter: 12, totalSubchapters: 240 });
+    expect(cyberSecurityMaterials).toHaveLength(240);
+    expect(new Set(cyberSecurityMaterials.map((material) => material.category))).toHaveLength(20);
     cyberSecurityMaterials.forEach((material) => {
       expect(material.specialization).toBe("ai-security");
       expect(material.sections).toHaveLength(5);
@@ -13,12 +14,32 @@ describe("Cyber Security curriculum", () => {
     });
   });
 
-  it("restarts the sublesson number at every chapter checkpoint", () => {
+  it("resets the sublesson number at every checkpoint and includes a chapter lecture", () => {
     expect(cyberSecurityMaterials[0]?.title).toMatch(/^1\.1/);
-    expect(cyberSecurityMaterials[9]?.title).toMatch(/^4\.1/);
-    expect(cyberSecurityMaterials[12]?.title).toMatch(/^4\.4/);
-    expect(cyberSecurityMaterials[13]?.title).toMatch(/^5\.1/);
-    expect(cyberSecurityMaterials[30]?.title).toMatch(/^10\.3/);
+    expect(cyberSecurityMaterials[11]?.title).toMatch(/^1\.12/);
+    expect(cyberSecurityMaterials[12]?.title).toMatch(/^2\.1/);
+    expect(cyberSecurityMaterials[228]?.title).toMatch(/^20\.1/);
+    expect(cyberSecurityMaterials[239]?.title).toMatch(/^20\.12/);
+    expect(cyberSecurityMaterials.filter((material) => material.chapterLecture)).toHaveLength(20);
+  });
+
+  it("gives every sublesson a distinct applied scenario and legal lab move", () => {
+    const scenarios = cyberSecurityMaterials.map((material) => material.sections.find((section) => section.heading === "Skenario tim")?.body ?? "");
+    const labs = cyberSecurityMaterials.map((material) => material.sections.find((section) => section.heading === "Latihan lab berizin")?.body ?? "");
+    expect(new Set(scenarios).size).toBe(240);
+    expect(new Set(labs).size).toBe(240);
+    labs.forEach((body) => expect(body).toMatch(/data fiktif|aset sendiri/i));
+  });
+
+  it("includes twenty distinct structured case studies, one for each checkpoint", () => {
+    const cases = cyberSecurityMaterials.flatMap((material) => material.caseStudy ? [material.caseStudy] : []);
+    expect(cases).toHaveLength(20);
+    expect(new Set(cases.map((item) => item.title)).size).toBe(20);
+    cases.forEach((item) => {
+      expect(item.narrative.length).toBeGreaterThan(180);
+      expect(item.guidedQuestions).toHaveLength(3);
+      expect(item.artifact.length).toBeGreaterThan(60);
+    });
   });
 
   it("maps the user-provided courses and every important playlist family to at least one lesson", () => {

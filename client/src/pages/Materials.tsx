@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — the catalogue behaves like a guided workbook, with routes, chapter checkpoints, and tactile filter controls.
 
-import { ArrowRight, Bookmark, Check, CircleDotDashed, Filter, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Bookmark, Check, ChevronDown, CircleDotDashed, Filter, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import MaterialCard from "@/components/MaterialCard";
@@ -26,6 +26,7 @@ export default function Materials() {
   const [level, setLevel] = useState(levels[0]);
   const [learningFilter, setLearningFilter] = useState<LearningFilter>("all");
   const [onlySaved, setOnlySaved] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("filter") === "saved");
+  const [expandedChapters, setExpandedChapters] = useState<string[]>([]);
 
   const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => {
     if (selectedTrack === "ai-engineering") return (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id);
@@ -56,6 +57,7 @@ export default function Materials() {
   const displayPercent = selectedTrackMeta ? trackPercent : progressPercent;
   const displayCompleted = selectedTrackMeta ? trackCompletedCount : completedCount;
   const displayTotal = selectedTrackMeta ? trackMaterials.length : materials.length;
+  const isFilteredView = filtered.length !== trackMaterials.length;
 
   return <div className="page"><div className={`page-wrap catalog-page ${selectedTrack ? `catalog-track-${selectedTrack}` : ""}`}>
     <div className="page-heading catalog-heading">
@@ -83,10 +85,16 @@ export default function Materials() {
         <button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button>
       </section>
       <div className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
-      <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => <section className={`material-group chapter-checkpoint ${chapter.percent === 100 ? "checkpoint-complete" : ""} ${chapter.chapterCurrent ? "checkpoint-current" : ""}`} key={chapter.chapter}>
-        <div className="checkpoint-heading"><div className="checkpoint-number"><span>CHECKPOINT</span><strong>{String(chapter.index + 1).padStart(2, "0")}</strong></div><div className="checkpoint-copy"><span className="section-index">{categoryMeta[chapter.chapter]?.emoji ?? "✦"} · {chapter.allItems.length} LANGKAH</span><h2>{chapter.chapter}</h2><p>{chapter.doneCount === chapter.allItems.length ? "Bab ini sudah selesai. Kamu bisa meninjaunya lagi kapan saja." : `${chapter.doneCount} dari ${chapter.allItems.length} materi telah ditandai selesai.`}</p></div><div className="checkpoint-meter" aria-label={`Progres ${chapter.chapter}`}><span>{chapter.percent}%</span><div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapter.percent}><i style={{ width: `${chapter.percent}%` }} /></div>{chapter.chapterNext && <Link href={`/materi/${chapter.chapterNext.id}`} className="checkpoint-next">{chapter.percent === 100 ? "Review bab" : "Lanjutkan"} <ArrowRight size={14} /></Link>}</div></div>
-        <div className="materials-grid">{chapter.items.map((material) => <MaterialCard key={material.id} material={material} />)}</div>
-      </section>)}</section>
+      <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => {
+        const expanded = isFilteredView || chapter.index === 0 || chapter.chapterCurrent || expandedChapters.includes(chapter.chapter);
+        const visibleItems = expanded ? chapter.items : [];
+        const remainingItems = Math.max(0, chapter.items.length - visibleItems.length);
+        return <section className={`material-group chapter-checkpoint ${chapter.percent === 100 ? "checkpoint-complete" : ""} ${chapter.chapterCurrent ? "checkpoint-current" : ""} ${expanded ? "checkpoint-expanded" : ""}`} key={chapter.chapter}>
+          <div className="checkpoint-heading"><div className="checkpoint-number"><span>CHECKPOINT</span><strong>{String(chapter.index + 1).padStart(2, "0")}</strong></div><div className="checkpoint-copy"><span className="section-index">{categoryMeta[chapter.chapter]?.emoji ?? "✦"} · {chapter.allItems.length} LANGKAH</span><h2>{chapter.chapter}</h2><p>{chapter.doneCount === chapter.allItems.length ? "Bab ini sudah selesai. Kamu bisa meninjaunya lagi kapan saja." : `${chapter.doneCount} dari ${chapter.allItems.length} materi telah ditandai selesai.`}</p></div><div className="checkpoint-meter" aria-label={`Progres ${chapter.chapter}`}><span>{chapter.percent}%</span><div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapter.percent}><i style={{ width: `${chapter.percent}%` }} /></div>{chapter.chapterNext && <Link href={`/materi/${chapter.chapterNext.id}`} className="checkpoint-next">{chapter.percent === 100 ? "Review bab" : "Lanjutkan"} <ArrowRight size={14} /></Link>}</div></div>
+          {visibleItems.length > 0 && <div className="materials-grid">{visibleItems.map((material) => <MaterialCard key={material.id} material={material} />)}</div>}
+          {!isFilteredView && <button type="button" className="checkpoint-expand" onClick={() => setExpandedChapters((previous) => previous.includes(chapter.chapter) ? previous.filter((item) => item !== chapter.chapter) : [...previous, chapter.chapter])} aria-expanded={expanded}>{expanded ? "Tutup daftar subbab" : `Buka ${remainingItems || chapter.items.length} subbab`} <ChevronDown size={16} /></button>}
+        </section>;
+      })}</section>
       {filtered.length === 0 && <div className="empty-state"><span>⊙</span><h2>{onlySaved ? "Belum ada bookmark." : "Checkpoint ini belum punya materi yang cocok."}</h2><p>{onlySaved ? "Simpan beberapa materi dulu, lalu meja review-mu akan terasa lebih personal." : "Coba ubah jurusan, status, atau kata kunci pencarian."}</p><button className="brutal-button button-black" onClick={() => { resetFilters(); navigate(trackHref(selectedTrack)); }}>Reset filter</button></div>}
     </>}
   </div></div>;
