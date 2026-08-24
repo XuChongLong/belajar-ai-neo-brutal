@@ -53,3 +53,9 @@ Terdapat temuan tata letak di pembaca materi: kolom artikel dan daftar isi sempa
 Pemeriksaan domain publik tepat setelah checkpoint responsif masih memperlihatkan bundle layout lama walau URL telah memakai parameter cache-bypass. Perbaikan telah lolos typecheck, 25 berkas test/82 test, serta screenshot development pada desktop dan 375 px; propagasi domain publik perlu diperiksa kembali setelah jeda deployment.
 
 Setelah notifikasi deployment sukses, domain publik akhirnya memuat bundle responsif terbaru. Artikel tampil pada lebar baca utama, rail daftar isi berada di kanan, dan blok analogi browser-native tampak tanpa placeholder gambar.
+
+## Verifikasi Cyber Security intensif
+
+Rilis publik terbaru telah terpropagasi dan menampilkan **240 materi dalam 20 checkpoint**. Katalog hanya membuka satu checkpoint secara awal dan menyediakan kontrol “Buka 12 subbab” untuk checkpoint lain, sehingga volume materi besar tetap dapat dipindai. Detail materi pertama dan materi lanjut telah diverifikasi pada desktop serta viewport 375 px; pembukaan bab, lima lapisan materi, studi kasus checkpoint, latihan legal, sumber, dan kuis tetap terbaca.
+
+Pemeriksaan jaringan terhadap seluruh URL YouTube pada registry sumber memperoleh respons sukses untuk sebagian tautan. Beberapa tautan memperoleh HTTP 429 dari YouTube karena pembatasan permintaan otomatis, bukan respons tautan tidak ditemukan. Registry tetap berisi dua video utama, playlist sumber, dan seluruh 21 video playlist yang telah dipetakan ke checkpoint terkait.
