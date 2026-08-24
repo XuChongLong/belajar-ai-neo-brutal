@@ -43,3 +43,9 @@ Setelah pemuatan cache-bypass, halaman materi publik memuat blok “Lihat dengan
 ## Penggantian placeholder Android
 
 Ilustrasi PNG tambahan kini telah dihapus dari halaman materi. Blok analogi menggunakan visual konseptual yang dirender langsung oleh browser: kartu Data, AI, dan Hasil disertai checkpoint manusia. Pada viewport 375 px, visual tetap terbaca sebagai satu rangkaian dan tidak menampilkan placeholder PNG.
+
+## Verifikasi publik Cyber Security
+
+Domain publik kini memuat jalur **Cyber Security** berisi 31 materi dalam 10 checkpoint. Katalog menunjukkan filter bab mulai dari Bab 1 sampai Bab 10, dan detail materi pertama menampilkan bahasa percakapan, analogi, latihan defensif, pagar legal, dua pertanyaan cek pemahaman, serta tiga tautan sumber primer yang dapat dibuka dari antarmuka.
+
+Terdapat temuan tata letak di pembaca materi: kolom artikel dan daftar isi sempat tertukar pada layar lebar sehingga konten hanya selebar 240 px. Urutannya telah dikoreksi; artikel kini mendapat lebar baca utama dan daftar isi berada di rail kanan. Blok sumber juga dibuat menjadi kartu bertumpuk pada Android, sehingga judul dan catatan referensi tidak lagi bertabrakan atau menyempit.
