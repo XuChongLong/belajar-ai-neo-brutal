@@ -35,3 +35,11 @@ Pada viewport 375 px, hero kini mempertahankan komposisi visual selama aset dimu
 Ilustrasi workbook pengganti telah berhasil tersedia dan terlihat pada blok analogi di detail materi versi pengembangan. Aset yang gagal tidak lagi dirujuk oleh halaman materi; sebuah sketsa data-ke-AI-ke-hasil tetap tersedia apabila aset gambar tidak dapat dimuat.
 
 Verifikasi langsung URL aset mengonfirmasi ilustrasi workbook final berukuran 1920 × 1280 telah tersedia. Visual tersebut menampilkan robot belajar, kartu data, kartu model, hasil, serta stempel pemeriksaan manusia dengan kontras yang sesuai untuk pemakaian di Android.
+
+Pemeriksaan halaman materi publik segera setelah checkpoint masih memperlihatkan urutan materi lama tanpa blok “Lihat dengan gambar”, meskipun kode pengembangan telah merender blok tersebut. Ini menunjukkan cache atau propagasi versi publik masih perlu dipastikan sebelum item QA publik ditutup.
+
+Setelah pemuatan cache-bypass, halaman materi publik memuat blok “Lihat dengan gambar” beserta URL ilustrasi workbook final. Ini mengonfirmasi deployment terbaru telah terpropagasi; pemeriksaan perangkat Android pengguna tetap diperlukan untuk memverifikasi menu dan pemuatan aset dalam kondisi jaringan nyata.
+
+## Penggantian placeholder Android
+
+Ilustrasi PNG tambahan kini telah dihapus dari halaman materi. Blok analogi menggunakan visual konseptual yang dirender langsung oleh browser: kartu Data, AI, dan Hasil disertai checkpoint manusia. Pada viewport 375 px, visual tetap terbaca sebagai satu rangkaian dan tidak menampilkan placeholder PNG.

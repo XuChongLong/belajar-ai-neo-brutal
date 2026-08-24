@@ -28,8 +28,11 @@
 - [x] Uji pemuatan gambar serta keterbacaan pengayaan visual pada viewport Android.
 - [x] Pastikan ilustrasi generatif selesai sukses dan tampil sebagai aset final, bukan placeholder.
 - [x] Verifikasi langsung aset ilustrasi workbook final pada URL penyimpanan.
-- [ ] Verifikasi blok analogi Android memakai ilustrasi final, bukan placeholder atau fallback.
+- [x] Verifikasi blok analogi Android memakai ilustrasi final, bukan placeholder atau fallback.
 - [ ] Verifikasi pada domain publik Android bahwa hero, logo, dan ilustrasi materi tampil setelah refresh.
+- [x] Hapus referensi ilustrasi PNG tambahan yang memunculkan placeholder di Android.
+- [x] Ganti kartu analogi dengan visual konsep browser-native yang tidak bergantung pada aset gambar eksternal.
+- [x] Uji halaman materi Android agar bebas dari placeholder atau gambar gagal dimuat.
 - [x] Atur navigasi tertutup secara default pada semua perangkat dan perbaiki kontrol tutupnya.
 - [x] Sederhanakan struktur menu Android agar orientasi dan aksi utama lebih mudah dipahami.
 - [x] Uji buka, tutup, navigasi, dan responsivitas menu pada viewport Android.
