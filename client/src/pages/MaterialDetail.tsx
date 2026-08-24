@@ -10,6 +10,12 @@ import { glossaryTerms } from "@/lib/glossary";
 import { aiEngineeringChapterQuizzes } from "@/lib/aiEngineeringChapterQuizzes";
 import { getChapterCompletedCount, getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
 
+const visualAnalogies = [
+  { src: "/manus-storage/ai-workbook-visual-guide_010363a5.png", alt: "Robot menyusun kartu data, model AI, hasil, dan pemeriksaan manusia", title: "AI belajar seperti melihat banyak contoh resep.", copy: "Bayangkan kamu belajar membedakan teh dan kopi dari banyak cangkir. Makin beragam contoh yang kamu lihat, makin baik kamu mengenali polanya—tetap perlu mengecek hasilnya." },
+  { src: "/manus-storage/ai-workbook-visual-guide_010363a5.png", alt: "Robot menyusun kartu data, model AI, hasil, dan pemeriksaan manusia", title: "Sistem AI seperti persimpangan yang perlu rambu.", copy: "Data masuk, model menilai, lalu hasil keluar. Rambu, batas, dan pemeriksaan manusia menjaga keputusan tidak melaju ke arah yang salah." },
+  { src: "/manus-storage/ai-workbook-visual-guide_010363a5.png", alt: "Robot menyusun kartu data, model AI, hasil, dan pemeriksaan manusia", title: "Produk AI dibangun seperti meja kerja kecil.", copy: "Data, model, dan pengalaman pengguna adalah komponen yang dirakit satu per satu. Manusia tetap memberi pemeriksaan akhir sebelum hasil dipakai." },
+] as const;
+
 export default function MaterialDetail() {
   const [, params] = useRoute("/materi/:id");
   const [, navigate] = useLocation();
@@ -39,6 +45,7 @@ export default function MaterialDetail() {
   const [diagramZoom, setDiagramZoom] = useState(1);
   const [diagramAnswer, setDiagramAnswer] = useState<number | null>(null);
   const [diagramSubmitted, setDiagramSubmitted] = useState(false);
+  const [visualImageUnavailable, setVisualImageUnavailable] = useState(false);
 
   const isAiEngineering = material.specialization === "ai-engineering";
   const isDone = completed.includes(material.id);
@@ -55,6 +62,7 @@ export default function MaterialDetail() {
   const chapterCompletedPercent = getChapterReadPercent(chapterCompletedCount, chapterMaterials.length);
   const chapterQuiz = chapterNumber ? aiEngineeringChapterQuizzes[chapterNumber] : undefined;
   const isChapterEnd = chapterMaterials.at(-1)?.id === material.id;
+  const visualAnalogy = visualAnalogies[(material.id - 1) % visualAnalogies.length];
   const prev = materials.find((item) => item.id === material.id - 1);
   const next = materials.find((item) => item.id === material.id + 1);
   const score = useMemo(() => material.quiz.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0), [answers, material.quiz]);
@@ -155,7 +163,7 @@ export default function MaterialDetail() {
           <div>{material.bookContext.body.split("\n\n").map((paragraph, index) => <p key={`${material.id}-book-context-${index}`}>{paragraph}</p>)}</div>
         </section>}
 
-        <div className="analogy-box"><span className="eyebrow">ANALOGI GAMPANG</span><p>{material.analogy}</p></div>
+        <section className="lesson-visual-analogy" aria-labelledby={`visual-analogy-${material.id}`}><div className="lesson-visual-image">{visualImageUnavailable ? <div className="lesson-visual-fallback" aria-label="Sketsa hubungan data, model, hasil, dan pemeriksaan manusia"><span>DATA</span><i>→</i><strong>AI</strong><i>→</i><span>HASIL</span><b>✓</b></div> : <img src={visualAnalogy.src} alt={visualAnalogy.alt} width="900" height="600" loading="lazy" decoding="async" onError={() => setVisualImageUnavailable(true)} />}</div><div className="lesson-visual-copy"><span className="eyebrow">LIHAT DENGAN GAMBAR</span><h2 id={`visual-analogy-${material.id}`}>{visualAnalogy.title}</h2><p>{visualAnalogy.copy}</p><div className="analogy-box"><span className="eyebrow">ANALOGI GAMPANG</span><p>{material.analogy}</p></div></div></section>
 
         {isAiEngineering && <section className="lesson-glossary" aria-labelledby="reader-glossary-title">
           <div className="lesson-glossary-heading"><div><span className="eyebrow">BANTUAN ISTILAH</span><h2 id="reader-glossary-title">Cari definisi tanpa meninggalkan pelajaran.</h2></div><button type="button" className="glossary-toggle" onClick={() => setGlossaryOpen((value) => !value)} aria-expanded={glossaryOpen}><Search size={16} /> {glossaryOpen ? "Tutup glosarium" : "Buka glosarium"}</button></div>

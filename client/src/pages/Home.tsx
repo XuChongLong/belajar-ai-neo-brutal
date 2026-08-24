@@ -1,12 +1,14 @@
 // Style reminder: Paper Playground — editorial hero, generous paper whitespace, energetic pink actions, and concrete learning entry points.
 
-import { ArrowRight, BookMarked, BookOpen, Check, Clock3, Layers3, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, BookMarked, BookOpen, BrainCircuit, Check, Clock3, Layers3, RotateCcw, Sparkles } from "lucide-react";
 import { Link } from "wouter";
+import { useState } from "react";
 import { materials } from "@/lib/materials";
 import { specializationMeta, specializationOrder } from "@/lib/specializations";
 import { useLearning } from "@/contexts/LearningContext";
 
 export default function Home() {
+  const [heroImageStatus, setHeroImageStatus] = useState<"loading" | "ready" | "error">("loading");
   const { bookmarkCount, completed, completedCount, current, progressPercent, weeklyActivity } = useLearning();
   const materialCount = materials.length;
   const categoryCount = new Set(materials.map((material) => material.category)).size;
@@ -19,7 +21,7 @@ export default function Home() {
       <div className="top-note"><span className="eyebrow-dot" /> WORKBOOK DIGITAL UNTUK PEMULA <span className="top-note-line" /><span>dibuat supaya kamu nggak cuma ikut tren</span></div>
       <section className="hero-section">
         <div className="hero-copy reveal-on-load"><div className="sticker-label">✦ bab 01 · mulai dari nol</div><h1>Belajar AI<br /><em>jadi seru.</em></h1><p className="hero-lead">Nggak perlu jadi jenius buat paham AI. Mulai dari sini, pelan-pelan, satu materi setiap hari.</p><Link href="/materi" className="brutal-button button-pink">Buka materi pertama <ArrowRight size={19} /></Link><div className="hero-caption"><span className="scribble-arrow">↳</span> {materialCount} materi ringkas<br />yang bisa kamu cerna</div></div>
-        <div className="hero-art reveal-on-load reveal-delay-2"><div className="art-sticker star-one">✦</div><div className="art-sticker star-two">✹</div><div className="hero-image-frame"><img src="/manus-storage/belajar-ai-hero-robot_a9d1a2ea.png" alt="Robot ramah dikelilingi kartu belajar AI" /></div><div className="hero-tag"><span>AI<br />tanpa<br />ribet</span><strong>→</strong></div></div>
+        <div className="hero-art reveal-on-load reveal-delay-2"><div className="art-sticker star-one">✦</div><div className="art-sticker star-two">✹</div><div className={`hero-image-frame hero-image-${heroImageStatus}`}><div className="hero-image-fallback" aria-hidden="true"><BrainCircuit size={76} /><span>✦</span><i /><b>AI<br />mulai<br />di sini</b></div><img src="/manus-storage/belajar-ai-hero-robot_a9d1a2ea.png" alt="Robot ramah dikelilingi kartu belajar AI" width="1200" height="800" loading="eager" fetchPriority="high" decoding="async" onLoad={() => setHeroImageStatus("ready")} onError={() => setHeroImageStatus("error")} /></div><div className="hero-tag"><span>AI<br />tanpa<br />ribet</span><strong>→</strong></div></div>
       </section>
       <section className="stat-strip reveal-on-load reveal-delay-3"><div className="stat-item"><BookOpen size={20} /><div><strong>{materialCount}</strong><span>materi terstruktur</span></div></div><div className="stat-item"><Clock3 size={20} /><div><strong>~{totalHours} jam</strong><span>total waktu belajar</span></div></div><div className="stat-item"><Layers3 size={20} /><div><strong>{categoryCount}</strong><span>kategori inti AI</span></div></div><div className="stat-progress"><span>progress kamu</span><div className="mini-progress"><i style={{ width: `${progressPercent}%` }} /></div><b>{completedCount}/{materialCount}</b></div></section>
       <section className="home-checkpoint-card"><div className="home-checkpoint-stamp"><span>CHECKPOINT</span><strong>{String(checkpoint.displayNumber ?? checkpoint.id).padStart(2, "0")}</strong></div><div className="home-checkpoint-copy"><span className="eyebrow">{checkpointDone ? "ULANGI DARI TITIK TERAKHIR" : "LANJUTKAN DARI TITIK TERAKHIR"}</span><h2>{checkpoint.title}</h2><p>{checkpointDone ? "Semua langkah inti sudah kamu tandai selesai. Buka lagi untuk menguatkan ingatan atau pilih materi berikutnya." : `${checkpoint.minutes} menit · ${checkpoint.level} · ${checkpoint.summary}`}</p></div><Link href={`/materi/${checkpoint.id}`} className="brutal-button button-black">{checkpointDone ? "Buka lagi" : "Lanjut checkpoint"} <ArrowRight size={17} /></Link></section>

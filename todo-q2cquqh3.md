@@ -23,6 +23,13 @@
 - [ ] Verifikasi sesi lokal baru membuka Pengaturan Progres terautentikasi dan memuat data progres akun.
 - [x] Reproduksi dan perbaiki drawer Android yang tidak dapat dibuka setelah menekan tombol menu.
 - [ ] Verifikasi interaksi buka, tutup, backdrop, dan navigasi drawer Android setelah perbaikan regresi.
+- [x] Telusuri dan perbaiki aset gambar yang tidak muncul pada web Android.
+- [x] Tambahkan ilustrasi dan analogi visual ringan pada materi agar lebih mudah dipahami.
+- [x] Uji pemuatan gambar serta keterbacaan pengayaan visual pada viewport Android.
+- [x] Pastikan ilustrasi generatif selesai sukses dan tampil sebagai aset final, bukan placeholder.
+- [x] Verifikasi langsung aset ilustrasi workbook final pada URL penyimpanan.
+- [ ] Verifikasi blok analogi Android memakai ilustrasi final, bukan placeholder atau fallback.
+- [ ] Verifikasi pada domain publik Android bahwa hero, logo, dan ilustrasi materi tampil setelah refresh.
 - [x] Atur navigasi tertutup secara default pada semua perangkat dan perbaiki kontrol tutupnya.
 - [x] Sederhanakan struktur menu Android agar orientasi dan aksi utama lebih mudah dipahami.
 - [x] Uji buka, tutup, navigasi, dan responsivitas menu pada viewport Android.

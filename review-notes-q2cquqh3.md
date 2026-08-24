@@ -23,3 +23,15 @@ Target mingguan pada beranda dan dashboard kini dihitung dari hari yang memiliki
 ## Verifikasi navigasi Android
 
 Beranda, katalog materi, dan dashboard progres diuji pada lebar 375 px. Ketiganya kini memulai halaman dengan navigasi tertutup, sehingga area belajar tidak lagi tertutup panel menu. Header menyisakan tombol menu yang jelas di kiri, pencarian, serta shortcut progres; drawer baru memakai backdrop dan tombol “Tutup” agar pengguna memiliki dua cara yang tegas untuk kembali ke konten.
+
+## Audit aset publik Android
+
+Pada domain publik, ilustrasi hero tersedia dan endpoint aset mengembalikan respons sukses. Namun, tangkapan awal halaman sempat menunjukkan frame hero kosong sebelum gambar selesai dimuat, sedangkan pemeriksaan berikutnya menampilkan ilustrasi dengan benar. Perbaikan perlu memprioritaskan pengalaman pemuatan Android: dimensi frame yang stabil, placeholder beridentitas, decoding asinkron, dan fallback visual yang tetap informatif jika jaringan gambar lambat.
+
+## Verifikasi pengayaan visual
+
+Pada viewport 375 px, hero kini mempertahankan komposisi visual selama aset dimuat dan kemudian menampilkan ilustrasi robot tanpa lompatan tata letak. Detail materi menambahkan blok “Lihat dengan gambar” yang menyatukan ilustrasi konseptual, penjelasan sederhana, serta analogi tekstual; susunannya berubah menjadi satu kolom agar nyaman dibaca saat menggulir di Android.
+
+Ilustrasi workbook pengganti telah berhasil tersedia dan terlihat pada blok analogi di detail materi versi pengembangan. Aset yang gagal tidak lagi dirujuk oleh halaman materi; sebuah sketsa data-ke-AI-ke-hasil tetap tersedia apabila aset gambar tidak dapat dimuat.
+
+Verifikasi langsung URL aset mengonfirmasi ilustrasi workbook final berukuran 1920 × 1280 telah tersedia. Visual tersebut menampilkan robot belajar, kartu data, kartu model, hasil, serta stempel pemeriksaan manusia dengan kontras yang sesuai untuk pemakaian di Android.
