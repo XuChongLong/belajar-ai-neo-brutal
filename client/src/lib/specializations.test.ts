@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getFocusedCatalogueHref, materials } from "./materials";
+import { categoryMeta, getFocusedCatalogueHref, materials } from "./materials";
 import { getLearningRecommendations, learningGoals } from "./learningPath";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta } from "./specializations";
 
@@ -19,6 +19,13 @@ describe("expanded specialization catalogue", () => {
       expect(material.resources?.length).toBeGreaterThan(0);
       expect(material.quiz).toHaveLength(2);
     });
+  });
+
+  it("keeps the Cyber Security prologue available as the first filterable category", () => {
+    const prologue = "Cyber Security Intensif · Bab Prolog — Sebelum Masuk Course Inti";
+    expect(categoryMeta[prologue]).toEqual({ emoji: "◌", level: "Pemula" });
+    expect(materials.filter((material) => material.category === prologue)).toHaveLength(12);
+    expect(materials.findIndex((material) => material.category === prologue)).toBeLessThan(materials.findIndex((material) => material.category.includes("Bab 1 — Kontrak")));
   });
 
   it("keeps a track recommendation focused on its priority category", () => {

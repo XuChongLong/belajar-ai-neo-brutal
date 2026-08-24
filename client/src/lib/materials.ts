@@ -56,6 +56,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "AI Product Builder": { emoji: "▱", level: "Menengah" },
   "Automation Specialist": { emoji: "↻", level: "Menengah" },
   "Cyber Security AI": { emoji: "◆", level: "Menengah" },
+  "Cyber Security Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
   "Cyber Security Intensif · Bab 1 — Kontrak Belajar, Etika, dan Cara Berpikir Risiko": { emoji: "◆", level: "Pemula" },
   "Cyber Security Intensif · Bab 2 — Peta Profesi, Catatan, dan Metodologi Kerja": { emoji: "◆", level: "Pemula" },
   "Cyber Security Intensif · Bab 3 — Jaringan dari Paket ke Keputusan": { emoji: "◆", level: "Pemula" },

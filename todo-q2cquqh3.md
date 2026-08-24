@@ -57,3 +57,4 @@
 - [x] Tambahkan Bab Prolog Cyber Security sebelum course inti: definisi, contoh kasus aman, alasan kebutuhan security, etika, dan peta jalan.
 - [x] Posisikan ulang course inti agar dimulai setelah Prolog dan navigasinya menunjukkan alur belajar yang tidak acak.
 - [x] Tambahkan test urutan Prolog → fondasi → course inti serta verifikasi katalog dan pembaca pada desktop maupun Android.
+- [x] Tambahkan Bab Prolog ke filter kategori Cyber Security agar titik mulai course dapat dipilih langsung dari katalog.
