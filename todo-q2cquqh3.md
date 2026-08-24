@@ -42,6 +42,6 @@
 - [x] Tulis materi Cyber Security dengan bahasa santai, analogi konkret, dan sumber video per bagian.
 - [x] Integrasikan materi Cyber Security baru ke aplikasi serta perbarui katalog dan navigasi pembelajaran.
 - [x] Uji cakupan sumber, ketepatan tautan, keterbacaan, dan tampilan materi Cyber Security.
-- [ ] Lengkapi catatan terstruktur untuk dua video utama dan semua rumpun penting dari 21 video playlist Cyber Security.
+- [x] Lengkapi catatan terstruktur untuk dua video utama dan semua rumpun penting dari 21 video playlist Cyber Security.
 - [ ] Verifikasi langsung beberapa tautan sumber dari antarmuka materi Cyber Security serta rendering pada deployment publik Android.
 - [x] Rapikan tata letak kartu sumber materi Cyber Security agar tautan dan deskripsinya tidak menyempit pada layar Android.

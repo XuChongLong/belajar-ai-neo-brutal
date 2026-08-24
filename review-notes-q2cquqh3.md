@@ -49,3 +49,7 @@ Ilustrasi PNG tambahan kini telah dihapus dari halaman materi. Blok analogi meng
 Domain publik kini memuat jalur **Cyber Security** berisi 31 materi dalam 10 checkpoint. Katalog menunjukkan filter bab mulai dari Bab 1 sampai Bab 10, dan detail materi pertama menampilkan bahasa percakapan, analogi, latihan defensif, pagar legal, dua pertanyaan cek pemahaman, serta tiga tautan sumber primer yang dapat dibuka dari antarmuka.
 
 Terdapat temuan tata letak di pembaca materi: kolom artikel dan daftar isi sempat tertukar pada layar lebar sehingga konten hanya selebar 240 px. Urutannya telah dikoreksi; artikel kini mendapat lebar baca utama dan daftar isi berada di rail kanan. Blok sumber juga dibuat menjadi kartu bertumpuk pada Android, sehingga judul dan catatan referensi tidak lagi bertabrakan atau menyempit.
+
+Pemeriksaan domain publik tepat setelah checkpoint responsif masih memperlihatkan bundle layout lama walau URL telah memakai parameter cache-bypass. Perbaikan telah lolos typecheck, 25 berkas test/82 test, serta screenshot development pada desktop dan 375 px; propagasi domain publik perlu diperiksa kembali setelah jeda deployment.
+
+Setelah notifikasi deployment sukses, domain publik akhirnya memuat bundle responsif terbaru. Artikel tampil pada lebar baca utama, rail daftar isi berada di kanan, dan blok analogi browser-native tampak tanpa placeholder gambar.
