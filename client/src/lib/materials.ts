@@ -88,6 +88,22 @@ const productIntensiveCategoryMeta: Record<string, { emoji: string; level: Mater
   "AI Product Builder Intensif · Bab 12 — AI Product Capstone: Dari Bukti ke Launch": { emoji: "▱", level: "Lanjut" },
 };
 
+const automationIntensiveCategoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
+  "Automation Specialist Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
+  "Automation Specialist Intensif · Bab 1 — Process Discovery dan Kandidat Otomasi": { emoji: "↻", level: "Pemula" },
+  "Automation Specialist Intensif · Bab 2 — Event, Trigger, dan Desain Flow": { emoji: "↻", level: "Pemula" },
+  "Automation Specialist Intensif · Bab 3 — Data Mapping dan Kontrak Antaraplikasi": { emoji: "↻", level: "Pemula" },
+  "Automation Specialist Intensif · Bab 4 — API, Webhook, dan Credential Hygiene": { emoji: "↻", level: "Menengah" },
+  "Automation Specialist Intensif · Bab 5 — Error Handling, Retry, dan Recovery": { emoji: "↻", level: "Menengah" },
+  "Automation Specialist Intensif · Bab 6 — Human-in-the-Loop dan Approval Flow": { emoji: "↻", level: "Menengah" },
+  "Automation Specialist Intensif · Bab 7 — Dokumentasi, Observability, dan Ownership": { emoji: "↻", level: "Menengah" },
+  "Automation Specialist Intensif · Bab 8 — Testing, Versioning, dan Perubahan Aman": { emoji: "↻", level: "Menengah" },
+  "Automation Specialist Intensif · Bab 9 — Agentic Automation dan Batas Tool": { emoji: "↻", level: "Lanjut" },
+  "Automation Specialist Intensif · Bab 10 — Scale, Governance, dan Portfolio Workflow": { emoji: "↻", level: "Lanjut" },
+  "Automation Specialist Intensif · Bab 11 — Security, Privacy, dan Audit Workflow": { emoji: "↻", level: "Lanjut" },
+  "Automation Specialist Intensif · Bab 12 — Automation Capstone: Workflow yang Dapat Dipercaya": { emoji: "↻", level: "Lanjut" },
+};
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
@@ -102,7 +118,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   ...cloudIntensiveCategoryMeta,
   ...dataIntensiveCategoryMeta,
   ...productIntensiveCategoryMeta,
-  "Automation Specialist": { emoji: "↻", level: "Menengah" },
+  ...automationIntensiveCategoryMeta,
   "Cyber Security AI": { emoji: "◆", level: "Menengah" },
   "Cyber Security Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
   "Cyber Security Intensif · Bab 1 — Kontrak Belajar, Etika, dan Cara Berpikir Risiko": { emoji: "◆", level: "Pemula" },

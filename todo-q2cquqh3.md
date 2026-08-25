@@ -65,7 +65,7 @@
 - [x] Perluas Cloud Computing AI menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perluas Data Analyst & Data Engineering menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perluas AI Product Builder menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
-- [ ] Perluas Automation Specialist menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [x] Perluas Automation Specialist menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [ ] Perluas Creative AI & Content Systems menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [ ] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
 - [ ] Tambahkan test untuk struktur Prolog, checkpoint, sumber, studi kasus, dan urutan seluruh course baru.

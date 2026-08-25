@@ -67,3 +67,7 @@ Katalog jalur Data pada viewport Android menampilkan **Bab Prolog** sebelum chec
 ## Verifikasi AI Product Builder intensif
 
 Pada viewport Android, katalog AI Product menampilkan Bab Prolog sebagai titik masuk yang jelas sebelum Bab 1 discovery. Pembaca Prolog dan subbab pertama mempertahankan urutan lima lapisan, studi kasus, latihan artefak, sumber primer, kuis, dan navigasi tanpa elemen yang bertabrakan. Setelah integrasi 156 materi AI Product, typecheck dan seluruh suite otomatis lulus (30 berkas test / 94 test).
+
+## Verifikasi Automation Specialist intensif
+
+Katalog Automation pada viewport Android menampilkan Bab Prolog di depan checkpoint inti dan menggunakan kartu checkpoint yang dapat dipindai tanpa mengganggu orientasi. Detail Prolog serta Bab 1 mempertahankan lima lapisan materi, studi kasus, latihan artefak, sumber primer, dan kuis dengan tata letak satu kolom yang terbaca. Typecheck serta seluruh suite otomatis lulus (31 berkas test / 96 test) setelah integrasi 156 materi Automation.
