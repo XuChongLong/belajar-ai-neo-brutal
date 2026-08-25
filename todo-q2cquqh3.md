@@ -69,4 +69,7 @@
 - [x] Perluas Creative AI & Content Systems menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
 - [x] Tambahkan test untuk struktur Prolog, checkpoint, sumber, studi kasus, dan urutan seluruh course baru.
-- [ ] Verifikasi visual desktop dan Android, navigasi katalog, filter, pencarian, serta deployment publik untuk lima course baru.
+- [x] Verifikasi visual desktop dan Android, navigasi katalog, filter, pencarian, serta deployment publik untuk lima course baru.
+- [x] Verifikasi katalog serta detail materi Cloud Computing AI intensif pada viewport Android.
+- [x] Uji pencarian dan filter eksplisit pada Cloud, Data, AI Product, dan Automation di deployment publik.
+- [x] Uji buka checkpoint dan navigasi dari katalog ke detail materi untuk Cloud, Data, AI Product, Automation, dan Creative AI.

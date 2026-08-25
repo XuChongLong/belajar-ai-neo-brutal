@@ -75,3 +75,11 @@ Katalog Automation pada viewport Android menampilkan Bab Prolog di depan checkpo
 ## Verifikasi Creative AI & Content Systems intensif
 
 Katalog Creative AI pada viewport Android menampilkan Bab Prolog sebelum checkpoint inti dan seluruh filter bab mengikuti urutan strategi hingga capstone. Detail Prolog serta Bab 1 menunjukkan lima lapisan materi, studi kasus, latihan artefak, sumber tentang rights/provenance, dan kuis dengan susunan satu kolom yang stabil. Typecheck dan seluruh suite otomatis lulus (32 berkas test / 98 test) setelah integrasi 156 materi Creative AI.
+
+## Verifikasi publik lima course intensif
+
+Domain publik pada rilis `66da1013` berhasil menampilkan masing-masing **156 materi dalam 13 checkpoint** untuk Cloud Computing AI, Data Analyst & Data Engineering, AI Product Builder, Automation Specialist, dan Creative AI & Content Systems. Setiap katalog publik menampilkan Bab Prolog sebagai checkpoint pertama, filter bab yang memuat seluruh 13 kategori, serta kontrol pembukaan 12 subbab untuk checkpoint berikutnya. Pencarian publik Creative AI dengan kata kunci “Provenance” menyaring daftar menjadi 13 materi dalam dua checkpoint terkait, sehingga navigasi berdasarkan pencarian tetap bekerja pada volume katalog besar.
+
+QA tambahan melengkapi cakupan lintas-course: katalog serta detail Prolog dan Bab 1 Cloud Computing AI terbaca stabil pada viewport Android. Di deployment publik, pencarian dan filter kategori diuji secara eksplisit pada Cloud ("Infrastructure" / Bab 6), Data ("dbt" / Bab 6), AI Product ("Human-in-the-Loop" / Bab 10), dan Automation ("Security" / Bab 11). Masing-masing menampilkan 12 subbab checkpoint yang tepat; tidak ada hasil tercampur dari course lain.
+
+Interaksi navigasi katalog-ke-detail juga berhasil pada seluruh course: Cloud membuka `6.1 · Kenapa Klik Manual Menjadi Masalah`; Data membuka `Prolog.1 · Apa yang Dikerjakan Analyst dan Data Engineer`; AI Product membuka `Prolog.1 · Apa yang Dilakukan AI Product Builder`; Automation membuka `Prolog.1 · Apa yang Dilakukan Automation Specialist`; dan Creative membuka `Prolog.1 · Apa yang Dilakukan Creative AI Builder`. Setiap detail menunjukkan pembukaan bab, studi kasus, lima lapisan isi, latihan artefak, sumber, kuis, kontrol progres, serta daftar subbab checkpoint yang benar.
