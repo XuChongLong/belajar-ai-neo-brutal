@@ -104,6 +104,22 @@ const automationIntensiveCategoryMeta: Record<string, { emoji: string; level: Ma
   "Automation Specialist Intensif · Bab 12 — Automation Capstone: Workflow yang Dapat Dipercaya": { emoji: "↻", level: "Lanjut" },
 };
 
+const creativeIntensiveCategoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
+  "Creative AI & Content Systems Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
+  "Creative AI & Content Systems Intensif · Bab 1 — Strategi Konten, Audience, dan Nilai": { emoji: "✺", level: "Pemula" },
+  "Creative AI & Content Systems Intensif · Bab 2 — Brand Voice dan Sistem Editorial": { emoji: "✺", level: "Pemula" },
+  "Creative AI & Content Systems Intensif · Bab 3 — Riset, Fakta, dan Narrative Brief": { emoji: "✺", level: "Pemula" },
+  "Creative AI & Content Systems Intensif · Bab 4 — Ideation, Prompt System, dan Versioning": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 5 — Writing System: Outline, Draft, dan Edit": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 6 — Visual Direction, Design System, dan Accessibility": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 7 — Audio, Video, dan Storyboard": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 8 — Quality Review, Brand Safety, dan Moderation": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 9 — Rights, Consent, dan Intellectual Property": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 10 — Provenance, Content Credentials, dan Transparency": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 11 — Distribusi, Community, dan Content Learning Loop": { emoji: "✺", level: "Menengah" },
+  "Creative AI & Content Systems Intensif · Bab 12 — Creative Systems Capstone: Paket Konten Transparan": { emoji: "✺", level: "Lanjut" },
+};
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
@@ -141,7 +157,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "Cyber Security Intensif · Bab 18 — AI, Agent, dan Input yang Tidak Tepercaya": { emoji: "◆", level: "Lanjut" },
   "Cyber Security Intensif · Bab 19 — IoT, Perangkat Kecil, dan Aset Fisik": { emoji: "◆", level: "Lanjut" },
   "Cyber Security Intensif · Bab 20 — Capstone: Rencana Security yang Bisa Dipertanggungjawabkan": { emoji: "◆", level: "Lanjut" },
-  "Creative AI & Content Systems": { emoji: "✺", level: "Menengah" },
+  ...creativeIntensiveCategoryMeta,
 };
 
 export const materials: Material[] = [...aiEngineeringPdfMaterials, ...specializationMaterials, ...cyberSecurityMaterials];

@@ -71,3 +71,7 @@ Pada viewport Android, katalog AI Product menampilkan Bab Prolog sebagai titik m
 ## Verifikasi Automation Specialist intensif
 
 Katalog Automation pada viewport Android menampilkan Bab Prolog di depan checkpoint inti dan menggunakan kartu checkpoint yang dapat dipindai tanpa mengganggu orientasi. Detail Prolog serta Bab 1 mempertahankan lima lapisan materi, studi kasus, latihan artefak, sumber primer, dan kuis dengan tata letak satu kolom yang terbaca. Typecheck serta seluruh suite otomatis lulus (31 berkas test / 96 test) setelah integrasi 156 materi Automation.
+
+## Verifikasi Creative AI & Content Systems intensif
+
+Katalog Creative AI pada viewport Android menampilkan Bab Prolog sebelum checkpoint inti dan seluruh filter bab mengikuti urutan strategi hingga capstone. Detail Prolog serta Bab 1 menunjukkan lima lapisan materi, studi kasus, latihan artefak, sumber tentang rights/provenance, dan kuis dengan susunan satu kolom yang stabil. Typecheck dan seluruh suite otomatis lulus (32 berkas test / 98 test) setelah integrasi 156 materi Creative AI.
