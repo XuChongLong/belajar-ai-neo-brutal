@@ -72,6 +72,22 @@ const dataIntensiveCategoryMeta: Record<string, { emoji: string; level: Material
   "Data Analyst & Data Engineering Intensif · Bab 12 — Data Product Capstone: Dari Pertanyaan ke Keputusan": { emoji: "▦", level: "Lanjut" },
 };
 
+const productIntensiveCategoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
+  "AI Product Builder Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
+  "AI Product Builder Intensif · Bab 1 — Discovery dan Masalah yang Layak Dibantu AI": { emoji: "▱", level: "Pemula" },
+  "AI Product Builder Intensif · Bab 2 — Problem Framing dan Outcome": { emoji: "▱", level: "Pemula" },
+  "AI Product Builder Intensif · Bab 3 — Riset Pengguna dan Bukti Workflow": { emoji: "▱", level: "Pemula" },
+  "AI Product Builder Intensif · Bab 4 — UX AI, Flow, dan Ekspektasi Pengguna": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 5 — PRD AI, Scope, dan Kontrak Build": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 6 — Data, Policy, dan Risiko Produk AI": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 7 — Prototype dan Eksperimen Nilai": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 8 — Evaluasi Kualitas, Safety, dan Kepercayaan": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 9 — Metrik Produk, Eksperimen, dan Pembelajaran": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 10 — Human-in-the-Loop dan Operasi Kepercayaan": { emoji: "▱", level: "Menengah" },
+  "AI Product Builder Intensif · Bab 11 — Launch, Monitoring, dan Product Operations": { emoji: "▱", level: "Lanjut" },
+  "AI Product Builder Intensif · Bab 12 — AI Product Capstone: Dari Bukti ke Launch": { emoji: "▱", level: "Lanjut" },
+};
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
@@ -85,7 +101,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "AI Engineering · Bab 10 — Sistem Produksi dan Feedback Loop": { emoji: "✦", level: "Lanjut" },
   ...cloudIntensiveCategoryMeta,
   ...dataIntensiveCategoryMeta,
-  "AI Product Builder": { emoji: "▱", level: "Menengah" },
+  ...productIntensiveCategoryMeta,
   "Automation Specialist": { emoji: "↻", level: "Menengah" },
   "Cyber Security AI": { emoji: "◆", level: "Menengah" },
   "Cyber Security Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },

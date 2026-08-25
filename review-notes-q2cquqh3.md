@@ -63,3 +63,7 @@ Pemeriksaan jaringan terhadap seluruh URL YouTube pada registry sumber memperole
 ## Verifikasi Data Analyst & Data Engineering intensif
 
 Katalog jalur Data pada viewport Android menampilkan **Bab Prolog** sebelum checkpoint inti, dengan 12 subbab pembuka yang menjelaskan peran analyst/data engineer, pertanyaan keputusan, definisi metrik, quality, privacy, dan peta perjalanan. Detail Prolog dan Bab 1 memperlihatkan lima lapisan materi, kartu analogi browser-native, studi kasus checkpoint, latihan artefak, sumber primer, dan kuis tanpa tumpang tindih. Typecheck serta seluruh suite otomatis lulus (29 berkas test / 92 test) setelah integrasi 156 materi Data.
+
+## Verifikasi AI Product Builder intensif
+
+Pada viewport Android, katalog AI Product menampilkan Bab Prolog sebagai titik masuk yang jelas sebelum Bab 1 discovery. Pembaca Prolog dan subbab pertama mempertahankan urutan lima lapisan, studi kasus, latihan artefak, sumber primer, kuis, dan navigasi tanpa elemen yang bertabrakan. Setelah integrasi 156 materi AI Product, typecheck dan seluruh suite otomatis lulus (30 berkas test / 94 test).

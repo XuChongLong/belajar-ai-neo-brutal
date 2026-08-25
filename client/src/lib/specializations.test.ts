@@ -5,14 +5,15 @@ import { isSpecializationId, materialMatchesSpecialization, specializationMeta }
 
 describe("expanded specialization catalogue", () => {
   it("adds intensive Cloud plus the AI Engineering and Cyber Security curricula", () => {
-    expect(materials).toHaveLength(648);
-    expect(new Set(materials.map((material) => material.id)).size).toBe(648);
+    expect(materials).toHaveLength(796);
+    expect(new Set(materials.map((material) => material.id)).size).toBe(796);
     expect(Object.values(specializationMeta)).toHaveLength(7);
     expect(materials.filter((material) => material.specialization === "ai-engineering")).toHaveLength(60);
     expect(materials.filter((material) => material.specialization === "ai-security")).toHaveLength(252);
     expect(materials.filter((material) => material.specialization === "cloud-devops")).toHaveLength(156);
     expect(materials.filter((material) => material.specialization === "data-engineering")).toHaveLength(156);
-    Object.values(specializationMeta).filter((track) => !["ai-engineering", "ai-security", "cloud-devops", "data-engineering"].includes(track.id)).forEach((track) => expect(materials.filter((material) => material.specialization === track.id)).toHaveLength(8));
+    expect(materials.filter((material) => material.specialization === "ai-product")).toHaveLength(156);
+    Object.values(specializationMeta).filter((track) => !["ai-engineering", "ai-security", "cloud-devops", "data-engineering", "ai-product"].includes(track.id)).forEach((track) => expect(materials.filter((material) => material.specialization === track.id)).toHaveLength(8));
   });
 
   it("provides story-led sections, resources, and quizzes for every specialization lesson", () => {
@@ -44,8 +45,9 @@ describe("expanded specialization catalogue", () => {
     expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-engineering"))).toHaveLength(60);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "cloud-devops"))).toHaveLength(156);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "data-engineering"))).toHaveLength(156);
+    expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-product"))).toHaveLength(156);
     expect(materials.filter((material) => materialMatchesSpecialization(material, "ai-security"))).toHaveLength(252);
-    expect(materials.filter((material) => materialMatchesSpecialization(material, null))).toHaveLength(648);
+    expect(materials.filter((material) => materialMatchesSpecialization(material, null))).toHaveLength(796);
     expect(getFocusedCatalogueHref("ai-engineering")).toBe("/materi?jurusan=ai-engineering");
     expect(getFocusedCatalogueHref("cloud-devops")).toBe("/materi?jurusan=cloud-devops");
     expect(getFocusedCatalogueHref()).toBe("/materi");

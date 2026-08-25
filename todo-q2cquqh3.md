@@ -64,7 +64,7 @@
 - [x] Bangun fondasi generator course intensif bersama dengan Prolog, chapter lecture, studi kasus, sumber, dan penomoran aman.
 - [x] Perluas Cloud Computing AI menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perluas Data Analyst & Data Engineering menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
-- [ ] Perluas AI Product Builder menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [x] Perluas AI Product Builder menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [ ] Perluas Automation Specialist menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [ ] Perluas Creative AI & Content Systems menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [ ] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
