@@ -40,6 +40,22 @@ export type Material = {
 export const getFocusedCatalogueHref = (specialization?: Material["specialization"]) =>
   specialization ? `/materi?jurusan=${specialization}` : "/materi";
 
+const cloudIntensiveCategoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
+  "Cloud Computing AI Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
+  "Cloud Computing AI Intensif · Bab 1 — Peta Sistem dan Keputusan Arsitektur": { emoji: "☁", level: "Pemula" },
+  "Cloud Computing AI Intensif · Bab 2 — Environment, Runtime, dan Konfigurasi": { emoji: "☁", level: "Pemula" },
+  "Cloud Computing AI Intensif · Bab 3 — Container dan Workload yang Dapat Dipindah": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 4 — Network, Edge, dan Jalur Request": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 5 — Identity, Secret, dan Akses Minimum": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 6 — Infrastructure as Code dan Perubahan Terkendali": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 7 — CI/CD, Release, dan Rollback": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 8 — Data, Storage, dan Lifecycle": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 9 — Observability dan Sinyal Operasi": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 10 — Reliability dan Incident Response": { emoji: "☁", level: "Lanjut" },
+  "Cloud Computing AI Intensif · Bab 11 — FinOps, Kapasitas, dan Keputusan Biaya": { emoji: "☁", level: "Menengah" },
+  "Cloud Computing AI Intensif · Bab 12 — Production Capstone: Menjalankan Layanan AI": { emoji: "☁", level: "Lanjut" },
+};
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
@@ -51,7 +67,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "AI Engineering · Bab 8 — Data Engineering untuk AI": { emoji: "✦", level: "Menengah" },
   "AI Engineering · Bab 9 — Inference Cepat dan Hemat": { emoji: "✦", level: "Lanjut" },
   "AI Engineering · Bab 10 — Sistem Produksi dan Feedback Loop": { emoji: "✦", level: "Lanjut" },
-  "Cloud Computing AI": { emoji: "☁", level: "Menengah" },
+  ...cloudIntensiveCategoryMeta,
   "Data Analyst & Data Engineering": { emoji: "▦", level: "Menengah" },
   "AI Product Builder": { emoji: "▱", level: "Menengah" },
   "Automation Specialist": { emoji: "↻", level: "Menengah" },

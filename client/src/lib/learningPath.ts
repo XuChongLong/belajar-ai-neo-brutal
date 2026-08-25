@@ -47,9 +47,18 @@ function getGoal(goalId: LearningGoalId | null) {
   return learningGoals.find((goal) => goal.id === goalId) ?? learningGoals[0];
 }
 
+function priorityIndexForCategory(category: string, priorities: string[]) {
+  return priorities.findIndex((priority) => category === priority || category.startsWith(`${priority} ·`) || category.startsWith(`${priority} Intensif ·`));
+}
+
+function weightForCategory(category: string, priorities: string[]) {
+  const index = priorityIndexForCategory(category, priorities);
+  return index >= 0 ? Math.max(0.7, 1.5 - index * 0.2) : 0.7;
+}
+
 function goalScore(material: Material, goalId: LearningGoalId | null) {
   const goal = getGoal(goalId);
-  const priorityIndex = goal.priorities.findIndex((priority) => material.category === priority || material.category.startsWith(`${priority} ·`));
+  const priorityIndex = priorityIndexForCategory(material.category, goal.priorities);
   const categoryScore = priorityIndex >= 0 ? (goal.priorities.length - priorityIndex) * 10 : 0;
   const keywordScore = goal.keywords.some((keyword) => material.title.toLowerCase().includes(keyword.toLowerCase())) ? 8 : 0;
   return categoryScore + keywordScore;
@@ -110,15 +119,14 @@ export function getReviewQueue(materials: Material[], completed: number[], bookm
 
 export function getGoalProgress(materials: Material[], completed: number[], attempts: Record<string, QuizAttempt>, goalId: LearningGoalId | null = null) {
   const goal = getGoal(goalId);
-  const weights = new Map(goal.priorities.map((category, index) => [category, Math.max(0.7, 1.5 - index * 0.2)]));
-  const totalWeight = materials.reduce((sum, material) => sum + (weights.get(material.category) ?? 0.7), 0);
-  const completedWeight = materials.reduce((sum, material) => sum + (completed.includes(material.id) ? (weights.get(material.category) ?? 0.7) : 0), 0);
+  const totalWeight = materials.reduce((sum, material) => sum + weightForCategory(material.category, goal.priorities), 0);
+  const completedWeight = materials.reduce((sum, material) => sum + (completed.includes(material.id) ? weightForCategory(material.category, goal.priorities) : 0), 0);
   const completion = totalWeight ? Math.round((completedWeight / totalWeight) * 100) : 0;
   const attemptedMaterials = materials.filter((material) => attempts[material.id]);
-  const mastery = attemptedMaterials.length ? Math.round(attemptedMaterials.reduce((sum, material) => sum + attempts[material.id].percentage * (weights.get(material.category) ?? 0.7), 0) / attemptedMaterials.reduce((sum, material) => sum + (weights.get(material.category) ?? 0.7), 0)) : 0;
+  const mastery = attemptedMaterials.length ? Math.round(attemptedMaterials.reduce((sum, material) => sum + attempts[material.id].percentage * weightForCategory(material.category, goal.priorities), 0) / attemptedMaterials.reduce((sum, material) => sum + weightForCategory(material.category, goal.priorities), 0)) : 0;
   const score = Math.round(completion * 0.6 + mastery * 0.4);
-  const relevantCompleted = materials.filter((material) => completed.includes(material.id) && (weights.get(material.category) ?? 0) >= 1).length;
-  const relevantTotal = materials.filter((material) => (weights.get(material.category) ?? 0) >= 1).length;
+  const relevantCompleted = materials.filter((material) => completed.includes(material.id) && weightForCategory(material.category, goal.priorities) >= 1).length;
+  const relevantTotal = materials.filter((material) => weightForCategory(material.category, goal.priorities) >= 1).length;
   const attempted = Object.keys(attempts).length;
   const milestone = score >= 90 ? "Tinggal sedikit lagi menuju badge tujuan." : score >= 75 ? "Kamu sudah masuk fase penguatan." : score >= 50 ? "Peta belajarmu mulai terbentuk." : score >= 25 ? "Langkah awalmu sudah terlihat." : "Pilih satu materi untuk menyalakan progress pertamamu.";
   const nextAction = !attempted ? "Kerjakan quiz pertama untuk membuka sinyal mastery." : score < 50 ? `Selesaikan ${Math.max(1, Math.ceil((50 - score) / 10))} materi prioritas berikutnya.` : mastery < 80 ? "Ulangi quiz dengan skor terendah untuk mengangkat mastery." : "Lanjutkan materi prioritas agar progress tetap naik.";

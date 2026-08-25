@@ -58,3 +58,15 @@
 - [x] Posisikan ulang course inti agar dimulai setelah Prolog dan navigasinya menunjukkan alur belajar yang tidak acak.
 - [x] Tambahkan test urutan Prolog → fondasi → course inti serta verifikasi katalog dan pembaca pada desktop maupun Android.
 - [x] Tambahkan Bab Prolog ke filter kategori Cyber Security agar titik mulai course dapat dipilih langsung dari katalog.
+- [x] Audit ID materi lama dan progres tersimpan untuk lima course yang akan diperluas.
+- [x] Siapkan registry terverifikasi legacyMaterialId ke materi penerus sebelum seed course lama digantikan.
+- [x] Riset serta catat registry sumber primer per course untuk Cloud, Data, AI Product, Automation, dan Creative AI.
+- [x] Bangun fondasi generator course intensif bersama dengan Prolog, chapter lecture, studi kasus, sumber, dan penomoran aman.
+- [x] Perluas Cloud Computing AI menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [ ] Perluas Data Analyst & Data Engineering menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [ ] Perluas AI Product Builder menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [ ] Perluas Automation Specialist menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [ ] Perluas Creative AI & Content Systems menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
+- [ ] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
+- [ ] Tambahkan test untuk struktur Prolog, checkpoint, sumber, studi kasus, dan urutan seluruh course baru.
+- [ ] Verifikasi visual desktop dan Android, navigasi katalog, filter, pencarian, serta deployment publik untuk lima course baru.

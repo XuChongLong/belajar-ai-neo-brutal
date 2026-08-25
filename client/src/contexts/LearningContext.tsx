@@ -7,6 +7,7 @@ import { materials } from "@/lib/materials";
 import type { SyncStatus } from "@/lib/syncStatus";
 import { appendLearningActivity, clampWeeklyGoal, getWeeklyActivitySummary, type WeeklyActivitySummary } from "@/lib/learningActivity";
 import { createProgressExport, createResetProgressSnapshot } from "@/lib/progressData";
+import { migrateLegacyCourseProgress } from "@/lib/courseProgressMigration";
 import { addChapterReadLesson, toggleCompletedLesson } from "@/lib/chapterReading";
 import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 import type { LearningProgressSnapshot, WrongQuizQuestion } from "@shared/learningProgress";
@@ -53,23 +54,25 @@ const LEGACY_STORAGE_KEY = "belajar-ai-progress-v1";
 const accountStorageKey = (userId: number) => `belajar-ai-progress-account-${userId}-v1`;
 const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 0, lastVisit: "", activityHistory: [], weeklyGoal: 5 };
 const LearningContext = createContext<LearningContextValue | null>(null);
+const activeMaterialIds = new Set(materials.map((material) => material.id));
 
 function normalizeState(raw: Partial<LearningState> | null | undefined): LearningState {
-  const npc = raw?.npc;
+  const migrated = migrateLegacyCourseProgress(raw ?? {}, activeMaterialIds);
+  const npc = migrated.npc;
   return {
     ...initialState,
-    ...raw,
-    completed: raw?.completed ?? [],
-    bookmarks: raw?.bookmarks ?? [],
-    scores: raw?.scores ?? {},
-    quizAttempts: raw?.quizAttempts ?? {},
-    wrongQuizQuestions: raw?.wrongQuizQuestions ?? {},
-    chapterReadLessons: raw?.chapterReadLessons ?? {},
-    flashcardKnown: raw?.flashcardKnown ?? [],
-    flashcardReviewQueue: raw?.flashcardReviewQueue ?? [],
-    selectedGoal: raw?.selectedGoal ?? null,
-    activityHistory: raw?.activityHistory?.filter((activity) => typeof activity?.occurredAt === "number" && typeof activity?.id === "string").slice(0, 80) ?? [],
-    weeklyGoal: clampWeeklyGoal(raw?.weeklyGoal ?? 5),
+    ...migrated,
+    completed: migrated.completed ?? [],
+    bookmarks: migrated.bookmarks ?? [],
+    scores: migrated.scores ?? {},
+    quizAttempts: migrated.quizAttempts ?? {},
+    wrongQuizQuestions: migrated.wrongQuizQuestions ?? {},
+    chapterReadLessons: migrated.chapterReadLessons ?? {},
+    flashcardKnown: migrated.flashcardKnown ?? [],
+    flashcardReviewQueue: migrated.flashcardReviewQueue ?? [],
+    selectedGoal: migrated.selectedGoal ?? null,
+    activityHistory: migrated.activityHistory?.filter((activity) => typeof activity?.occurredAt === "number" && typeof activity?.id === "string").slice(0, 80) ?? [],
+    weeklyGoal: clampWeeklyGoal(migrated.weeklyGoal ?? 5),
     npc: {
       ...initialPetProgress,
       ...npc,
