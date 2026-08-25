@@ -67,6 +67,6 @@
 - [x] Perluas AI Product Builder menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perluas Automation Specialist menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
 - [x] Perluas Creative AI & Content Systems menjadi Prolog dan 12 checkpoint inti dengan sumber per materi.
-- [ ] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
-- [ ] Tambahkan test untuk struktur Prolog, checkpoint, sumber, studi kasus, dan urutan seluruh course baru.
+- [x] Perbarui metadata kategori, katalog, statistik, dan kompatibilitas progres untuk seluruh course intensif baru.
+- [x] Tambahkan test untuk struktur Prolog, checkpoint, sumber, studi kasus, dan urutan seluruh course baru.
 - [ ] Verifikasi visual desktop dan Android, navigasi katalog, filter, pencarian, serta deployment publik untuk lima course baru.
