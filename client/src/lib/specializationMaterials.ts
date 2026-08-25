@@ -2,6 +2,7 @@ import type { Material, MaterialLevel, QuizQuestion } from "./materials";
 import type { SpecializationId } from "./specializations";
 import { specializationMeta } from "./specializations";
 import { cloudIntensiveMaterials } from "./cloudIntensiveMaterials";
+import { dataIntensiveMaterials } from "./dataIntensiveMaterials";
 
 type Seed = { id: number; title: string; level: MaterialLevel; minutes: number; focus: string; analogy: string; story: string; practice: string; guardrail: string; check: string };
 
@@ -90,4 +91,4 @@ const creativeLessons: Seed[] = [
   { id: 87, title: "Proyek Mini: Paket Konten Transparan", level: "Lanjut", minutes: 19, focus: "Capstone kreatif menyatukan brief, aset, caption, disclosure, checklist hak, dan catatan provenance dalam paket yang siap direview.", analogy: "Seperti paket pameran: karya utama penting, tetapi label, kredit, dan konteks membuat orang dapat memahami serta mempercayainya.", story: "Nara membuat kampanye kecil dengan visual AI. Ia menyertakan brief, versi aset, caption, kredit sumber, catatan AI assistance, dan checklist sebelum posting. Review menjadi lebih mudah karena semua keputusan dapat dilacak.", practice: "Buat paket satu konten berisi brief, aset konsep, caption, sumber, disclosure AI, dan checklist publikasi", guardrail: "Jangan membuat testimonial, ulasan, atau bukti pengalaman pengguna yang direkayasa; gunakan konten representatif yang jelas statusnya.", check: "menyusun aset dan disclosure menjadi paket publikasi yang dapat direview" },
 ];
 
-export const specializationMaterials: Material[] = [...cloudIntensiveMaterials, ...makeLessons("data-engineering", dataLessons), ...makeLessons("ai-product", productLessons), ...makeLessons("automation", automationLessons), ...makeLessons("creative-ai", creativeLessons)];
+export const specializationMaterials: Material[] = [...cloudIntensiveMaterials, ...dataIntensiveMaterials, ...makeLessons("ai-product", productLessons), ...makeLessons("automation", automationLessons), ...makeLessons("creative-ai", creativeLessons)];

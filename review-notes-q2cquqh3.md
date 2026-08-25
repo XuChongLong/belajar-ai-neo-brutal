@@ -59,3 +59,7 @@ Setelah notifikasi deployment sukses, domain publik akhirnya memuat bundle respo
 Rilis publik terbaru telah terpropagasi dan menampilkan **240 materi dalam 20 checkpoint**. Katalog hanya membuka satu checkpoint secara awal dan menyediakan kontrol “Buka 12 subbab” untuk checkpoint lain, sehingga volume materi besar tetap dapat dipindai. Detail materi pertama dan materi lanjut telah diverifikasi pada desktop serta viewport 375 px; pembukaan bab, lima lapisan materi, studi kasus checkpoint, latihan legal, sumber, dan kuis tetap terbaca.
 
 Pemeriksaan jaringan terhadap seluruh URL YouTube pada registry sumber memperoleh respons sukses untuk sebagian tautan. Beberapa tautan memperoleh HTTP 429 dari YouTube karena pembatasan permintaan otomatis, bukan respons tautan tidak ditemukan. Registry tetap berisi dua video utama, playlist sumber, dan seluruh 21 video playlist yang telah dipetakan ke checkpoint terkait.
+
+## Verifikasi Data Analyst & Data Engineering intensif
+
+Katalog jalur Data pada viewport Android menampilkan **Bab Prolog** sebelum checkpoint inti, dengan 12 subbab pembuka yang menjelaskan peran analyst/data engineer, pertanyaan keputusan, definisi metrik, quality, privacy, dan peta perjalanan. Detail Prolog dan Bab 1 memperlihatkan lima lapisan materi, kartu analogi browser-native, studi kasus checkpoint, latihan artefak, sumber primer, dan kuis tanpa tumpang tindih. Typecheck serta seluruh suite otomatis lulus (29 berkas test / 92 test) setelah integrasi 156 materi Data.

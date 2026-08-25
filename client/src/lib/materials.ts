@@ -56,6 +56,22 @@ const cloudIntensiveCategoryMeta: Record<string, { emoji: string; level: Materia
   "Cloud Computing AI Intensif · Bab 12 — Production Capstone: Menjalankan Layanan AI": { emoji: "☁", level: "Lanjut" },
 };
 
+const dataIntensiveCategoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
+  "Data Analyst & Data Engineering Intensif · Bab Prolog — Sebelum Masuk Course Inti": { emoji: "◌", level: "Pemula" },
+  "Data Analyst & Data Engineering Intensif · Bab 1 — Pertanyaan, Metrik, dan Kontrak Keputusan": { emoji: "▦", level: "Pemula" },
+  "Data Analyst & Data Engineering Intensif · Bab 2 — Spreadsheet dan SQL untuk Membaca Kenyataan": { emoji: "▦", level: "Pemula" },
+  "Data Analyst & Data Engineering Intensif · Bab 3 — Statistik, Variasi, dan Eksperimen": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 4 — Modelling Data dan Warehouse": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 5 — Ingestion dan Kontrak Sumber Data": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 6 — Transformasi dengan dbt dan Data yang Dapat Ditelusuri": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 7 — Orkestrasi, Scheduling, dan Operasi Pipeline": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 8 — Kualitas Data, Lineage, dan Observability": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 9 — Privacy, Governance, dan Akses Data": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 10 — BI, Storytelling, dan Keputusan": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 11 — Performa, Biaya, dan Keberlanjutan Data": { emoji: "▦", level: "Menengah" },
+  "Data Analyst & Data Engineering Intensif · Bab 12 — Data Product Capstone: Dari Pertanyaan ke Keputusan": { emoji: "▦", level: "Lanjut" },
+};
+
 export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel }> = {
   "AI Engineering · Bab 1 — Memutuskan Apa yang Layak Dibangun": { emoji: "✦", level: "Pemula" },
   "AI Engineering · Bab 2 — Memahami Foundation Model": { emoji: "✦", level: "Pemula" },
@@ -68,7 +84,7 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   "AI Engineering · Bab 9 — Inference Cepat dan Hemat": { emoji: "✦", level: "Lanjut" },
   "AI Engineering · Bab 10 — Sistem Produksi dan Feedback Loop": { emoji: "✦", level: "Lanjut" },
   ...cloudIntensiveCategoryMeta,
-  "Data Analyst & Data Engineering": { emoji: "▦", level: "Menengah" },
+  ...dataIntensiveCategoryMeta,
   "AI Product Builder": { emoji: "▱", level: "Menengah" },
   "Automation Specialist": { emoji: "↻", level: "Menengah" },
   "Cyber Security AI": { emoji: "◆", level: "Menengah" },
