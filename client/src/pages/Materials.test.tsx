@@ -1,49 +1,39 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Materials from "./Materials";
 
-const route = vi.hoisted(() => ({ search: "?jurusan=cloud-devops&q=Production%20Readiness%20Pack" }));
+const route = vi.hoisted(() => ({ search: "" }));
 
 vi.mock("wouter", () => ({
   Link: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a href={href} {...props}>{children}</a>,
-  useLocation: () => ["/materi", vi.fn()],
   useSearch: () => route.search,
 }));
 
 vi.mock("@/contexts/LearningContext", () => ({
-  useLearning: () => ({ bookmarks: [], completed: [], completedCount: 0, current: null, progressPercent: 0 }),
+  useLearning: () => ({ completed: [], completedCount: 0, current: null, progressPercent: 0 }),
 }));
 
-vi.mock("@/components/MaterialCard", () => ({
-  default: ({ material }: { material: { id: number; title: string } }) => <article data-testid={`material-card-${material.id}`}>{material.title}</article>,
-}));
-
-function resultMeta() {
-  return screen.getByText((_, element) => element?.id === "search-results");
-}
-
-describe("Materials query q integration", () => {
+describe("Materials subject catalogue", () => {
   afterEach(cleanup);
-  beforeEach(() => { route.search = "?jurusan=cloud-devops&q=Production%20Readiness%20Pack"; });
+  beforeEach(() => { route.search = ""; });
 
-  it("renders one catalog card when q matches a Course Journey capstone", () => {
+  it("shows only subject choices on the catalogue entry page instead of a wall of sublessons", () => {
     render(<Materials />);
-    expect(resultMeta().textContent).toContain("Menampilkan 1 materi dalam 1 checkpoint");
-    expect(resultMeta().textContent).toContain("arah course");
-    expect(screen.getByTestId("material-card-5000")).toBeTruthy();
-    expect(screen.queryByTestId("material-card-5001")).toBeNull();
+    expect(screen.getByRole("heading", { name: /pilih satu hal/i })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /cloud computing ai/i }).getAttribute("href")).toBe("/materi?jurusan=cloud-devops");
+    expect(screen.queryByText(/prolog\.1: apa yang dimaksud cloud computing/i)).toBeNull();
   });
 
-  it("renders only source-linked checkpoints when q matches a source label", () => {
-    route.search = "?jurusan=cloud-devops&q=Terraform%20Documentation";
+  it("reveals sublessons only after a learner opens a selected course chapter", () => {
+    route.search = "?jurusan=cloud-devops";
     render(<Materials />);
-    expect(resultMeta().textContent).toContain("Menampilkan 36 materi dalam 3 checkpoint");
-    expect(resultMeta().textContent).toContain("sumber");
-    expect(screen.getByTestId("material-card-5072")).toBeTruthy();
-    expect(screen.getByTestId("material-card-5144")).toBeTruthy();
-    expect(screen.queryByTestId("material-card-5000")).toBeNull();
+    const chapter = screen.getByRole("button", { name: /bab prolog/i });
+    expect(chapter.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(chapter);
+    expect(chapter.getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getByRole("link", { name: /prolog\.1.*apa yang dimaksud cloud computing/i })).toBeTruthy();
   });
 });

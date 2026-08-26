@@ -113,3 +113,9 @@
 - [x] Tambahkan test integrasi MaterialDetail untuk perubahan class preset dan aksi reset pengaturan membaca.
 - [x] Catat QA eksplisit seluruh preset ukuran teks, font, dan lebar kolom pada desktop serta Android.
 - [x] Buka panel Tampilan Baca pada desktop dan Android lalu dokumentasikan pemeriksaan visual tiap preset tanpa overflow atau layout rusak.
+- [x] Audit halaman Materi & Jurusan, Progress dashboard, dan landing page untuk menghapus informasi yang tidak membantu keputusan awal pengguna.
+- [x] Ubah Materi & Jurusan menjadi katalog mata pelajaran ringkas yang membuka detail course hanya saat dipilih.
+- [x] Sederhanakan dashboard Progress agar fokus pada progres, ritme belajar, checkpoint berikutnya, dan course aktif tanpa shortcut sekunder yang bersaing.
+- [x] Tulis ulang landing page agar menjelaskan manfaat, cara kerja, dan hasil belajar Belajar AI secara jelas.
+- [x] Tambahkan visual ilmuwan dan kutipan motivasional yang terkurasi serta aman secara atribusi untuk landing page.
+- [x] Tambahkan regresi navigasi katalog ringkas dan lakukan QA desktop-Android untuk tiga halaman yang disederhanakan.

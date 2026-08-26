@@ -1,123 +1,58 @@
-// Style reminder: Paper Playground — the catalogue behaves like a guided workbook, with routes, chapter checkpoints, and tactile filter controls.
-
-import { ArrowRight, Bookmark, Check, ChevronDown, CircleDotDashed, ExternalLink, Filter, GitBranch, Map as MapIcon, Search, SlidersHorizontal, Timer } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, CircleDotDashed, Clock3, Layers3 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useSearch } from "wouter";
-import MaterialCard from "@/components/MaterialCard";
-import { categories, categoryMeta, levels, materials } from "@/lib/materials";
+import { Link, useSearch } from "wouter";
+import { categoryMeta, materials } from "@/lib/materials";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta, specializationOrder, type SpecializationId } from "@/lib/specializations";
 import { useLearning } from "@/contexts/LearningContext";
-import { getCourseJourney, getCourseSourceMap, getCourseStartRecommendation } from "@/lib/courseJourney";
-import { filterCatalogMaterials, getCatalogSearchMatches } from "@/lib/fullTextSearch";
+import { getCourseJourney, getCourseStartRecommendation } from "@/lib/courseJourney";
 
-type LearningFilter = "all" | "in-progress" | "completed" | "not-started";
-
-function trackHref(track: SpecializationId | null) {
-  return track ? `/materi?jurusan=${track}` : "/materi";
+function trackHref(track: SpecializationId) {
+  return `/materi?jurusan=${track}`;
 }
 
 export default function Materials() {
-  const { bookmarks, completed, completedCount, current, progressPercent } = useLearning();
-  const [, navigate] = useLocation();
+  const { completed, completedCount, current, progressPercent } = useLearning();
   const searchString = useSearch();
   const trackParam = new URLSearchParams(searchString).get("jurusan");
-  const searchParam = new URLSearchParams(searchString).get("q") ?? "";
   const selectedTrack = isSpecializationId(trackParam) ? trackParam : null;
+  const [openChapter, setOpenChapter] = useState<string | null>(null);
+
+  useEffect(() => { setOpenChapter(null); }, [selectedTrack]);
+
   const selectedTrackMeta = selectedTrack ? specializationMeta[selectedTrack] : null;
-  const [search, setSearch] = useState(searchParam);
-  const [category, setCategory] = useState(categories[0]);
-  const [level, setLevel] = useState(levels[0]);
-  const [learningFilter, setLearningFilter] = useState<LearningFilter>("all");
-  const [onlySaved, setOnlySaved] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("filter") === "saved");
-  const [expandedChapters, setExpandedChapters] = useState<string[]>([]);
-
-  useEffect(() => { setSearch(searchParam); }, [searchParam]);
-
-  useEffect(() => {
-    if (!searchParam || window.location.hash !== "#search-results") return;
-    const timer = window.setTimeout(() => document.getElementById("search-results")?.scrollIntoView({ block: "start" }), 0);
-    return () => window.clearTimeout(timer);
-  }, [searchParam]);
-
-  const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => {
-    if (selectedTrack === "ai-engineering") return (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id);
-    return left.id - right.id;
-  }), [selectedTrack]);
+  const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => selectedTrack === "ai-engineering" ? (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id) : left.id - right.id), [selectedTrack]);
   const trackCompletedCount = trackMaterials.filter((material) => completed.includes(material.id)).length;
   const trackPercent = trackMaterials.length ? Math.round((trackCompletedCount / trackMaterials.length) * 100) : 0;
-  const emptyReservedTrack = Boolean(selectedTrackMeta && trackMaterials.length === 0);
   const nextMaterial = trackMaterials.find((material) => !completed.includes(material.id)) ?? trackMaterials[0];
   const selectedJourney = getCourseJourney(selectedTrack ?? undefined);
   const courseStart = useMemo(() => selectedTrack ? getCourseStartRecommendation(materials, selectedTrack, completed) : null, [selectedTrack, completed]);
-  const sourceMap = useMemo(() => selectedTrack ? getCourseSourceMap(materials, selectedTrack) : [], [selectedTrack]);
-  const searchHits = useMemo(() => getCatalogSearchMatches(trackMaterials, search), [trackMaterials, search]);
-  const searchHitById = useMemo(() => new Map(searchHits.map((hit) => [hit.material.id, hit])), [searchHits]);
-
-  const filtered = useMemo(() => filterCatalogMaterials(trackMaterials, { search, category, allCategory: categories[0], level, allLevel: levels[0], onlySaved, bookmarks, learningFilter, completed, current }), [trackMaterials, search, category, level, onlySaved, bookmarks, learningFilter, completed, current]);
-
   const chapters = useMemo(() => Array.from(new Set(trackMaterials.map((material) => material.category))).map((chapter, index) => {
-    const allItems = trackMaterials.filter((material) => material.category === chapter);
-    const items = filtered.filter((material) => material.category === chapter);
-    const doneCount = allItems.filter((material) => completed.includes(material.id)).length;
-    const chapterCurrent = allItems.some((material) => material.id === current);
-    const chapterNext = allItems.find((material) => !completed.includes(material.id)) ?? allItems[0];
-    return { chapter, allItems, items, doneCount, chapterCurrent, chapterNext, index, percent: allItems.length ? Math.round((doneCount / allItems.length) * 100) : 0 };
-  }).filter((chapter) => chapter.items.length > 0), [trackMaterials, filtered, completed, current]);
+    const items = trackMaterials.filter((material) => material.category === chapter);
+    const done = items.filter((material) => completed.includes(material.id)).length;
+    const upcoming = items.find((material) => !completed.includes(material.id)) ?? items[0];
+    return { chapter, items, done, upcoming, index, percent: items.length ? Math.round((done / items.length) * 100) : 0 };
+  }), [trackMaterials, completed]);
+  const subjects = useMemo(() => specializationOrder.map((id) => {
+    const subjectMaterials = materials.filter((material) => materialMatchesSpecialization(material, id));
+    const done = subjectMaterials.filter((material) => completed.includes(material.id)).length;
+    const chapterCount = new Set(subjectMaterials.map((material) => material.category)).size;
+    const next = subjectMaterials.find((material) => !completed.includes(material.id)) ?? subjectMaterials[0];
+    return { id, meta: specializationMeta[id], materials: subjectMaterials, done, chapterCount, next };
+  }), [completed]);
 
-  const resetFilters = () => { setSearch(""); setCategory(categories[0]); setLevel(levels[0]); setLearningFilter("all"); setOnlySaved(false); };
-  const displayPercent = selectedTrackMeta ? trackPercent : progressPercent;
-  const displayCompleted = selectedTrackMeta ? trackCompletedCount : completedCount;
-  const displayTotal = selectedTrackMeta ? trackMaterials.length : materials.length;
-  const isFilteredView = filtered.length !== trackMaterials.length;
+  if (!selectedTrack) {
+    return <div className="page"><div className="page-wrap subject-catalog-page">
+      <header className="subject-catalog-hero"><span className="eyebrow">MATA PELAJARAN</span><h1>Pilih satu hal<br /><em>untuk dipahami.</em></h1><p>Belajar AI tidak perlu dimulai dari daftar panjang. Pilih mata pelajaran yang paling dekat dengan tujuanmu; kami siapkan prolog, urutan bab, latihan, dan titik lanjutnya.</p><div className="subject-global-progress"><span><BookOpen size={16} /> {completedCount} dari {materials.length} materi selesai</span><div><i style={{ width: `${progressPercent}%` }} /></div><b>{progressPercent}%</b></div></header>
+      <section className="subject-grid" aria-label="Daftar mata pelajaran">{subjects.map(({ id, meta, materials: subjectMaterials, done, chapterCount, next }) => <Link key={id} href={trackHref(id)} className={`subject-card subject-card-${meta.accent}`}><div className="subject-card-top"><span className="subject-emoji">{meta.emoji}</span><span>{subjectMaterials.length} materi</span></div><h2>{meta.label}</h2><p>{meta.intro}</p><div className="subject-card-meta"><span>{chapterCount} bab</span><span>{done}/{subjectMaterials.length} selesai</span></div><div className="subject-card-footer"><span>{done ? "Lanjutkan pelajaran" : "Lihat mata pelajaran"}</span><ArrowRight size={18} /></div>{next && <small>Mulai: {next.title}</small>}</Link>)}</section>
+      <section className="subject-method"><div><span className="eyebrow">CARA BELAJARNYA</span><h2>Bukan katalog tanpa ujung.</h2></div><div><article><strong>01</strong><p><b>Pilih mata pelajaran.</b> Mulai dari tujuan yang kamu kenal.</p></article><article><strong>02</strong><p><b>Buka satu bab.</b> Materi berikutnya muncul saat kamu butuh.</p></article><article><strong>03</strong><p><b>Tutup dengan bukti.</b> Simpan jawaban dan artefak kecilmu.</p></article></div></section>
+    </div></div>;
+  }
 
-  return <div className="page"><div className={`page-wrap catalog-page ${selectedTrack ? `catalog-track-${selectedTrack}` : ""}`}>
-    <div className="page-heading catalog-heading">
-      <div><span className="eyebrow">{selectedTrackMeta ? `JALUR ${selectedTrackMeta.label.toUpperCase()} · ${trackMaterials.length} MATERI` : `KATALOG BELAJAR · ${materials.length} MATERI`}</span><h1>{selectedTrackMeta ? <>{selectedTrackMeta.label},<br /><em>berprogres per bab.</em></> : <>Pilih jurusan,<br /><em>ikuti checkpoint.</em></>}</h1></div>
-      <div className="heading-note"><span className="scribble-arrow">↗</span><p>{selectedTrackMeta ? "Setiap bab punya garis finish kecil. Selesaikan satu demi satu, bukan semuanya sekaligus." : "Pilih jalur yang paling dekat dengan tujuanmu. Katalog akan menata langkah berikutnya."}</p></div>
-    </div>
-
-    <section className="catalog-track-picker catalog-track-picker-workbook" aria-label="Pilih jurusan">
-      <div className="track-picker-copy"><span className="section-index">01 · PILIH JURUSAN</span><strong>Masuk lewat satu pintu, bukan daftar campuran.</strong></div>
-      <div className="track-picker-options"><Link href="/materi" className={`track-picker-option ${!selectedTrack ? "track-picker-active" : ""}`}><span>✦</span> Semua jurusan</Link>{specializationOrder.map((track) => <Link key={track} href={trackHref(track)} className={`track-picker-option track-option-${specializationMeta[track].accent} ${selectedTrack === track ? "track-picker-active" : ""}`}><span>{specializationMeta[track].emoji}</span> {specializationMeta[track].shortLabel}</Link>)}</div>
-    </section>
-
-    <section className="progress-tracker catalog-progress-tracker"><div className="tracker-copy"><span className="section-index">PROGRESS JALUR</span><strong>{emptyReservedTrack ? "Menunggu materi baru dari PDF" : `${displayCompleted} dari ${displayTotal} materi selesai`}</strong></div><div className="tracker-bar"><i style={{ width: `${displayPercent}%` }} /></div><b>{emptyReservedTrack ? "—" : `${displayPercent}%`}</b></section>
-
-    {!emptyReservedTrack && selectedTrack && selectedJourney && courseStart && <section className="course-start-card" aria-label={`Mulai ${selectedTrackMeta?.label}`}>
-      <div className="course-start-stamp"><MapIcon size={22} /><span>COURSE<br />START</span></div>
-      <div className="course-start-main"><div className="course-start-heading"><div><span className="eyebrow">01 · PETA SEBELUM MULAI</span><h2>{selectedJourney.fitFor}</h2></div><span className={`course-readiness ${courseStart.readyForCorePath ? "course-readiness-ready" : ""}`}>{courseStart.readyForCorePath ? "SIAP MASUK JALUR" : "ADA SETUP RINGAN"}</span></div>
-        <div className="course-start-grid"><div><span className="course-start-label">PRASYARAT PRAKTIS</span><ul>{selectedJourney.prerequisites.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul></div><div><span className="course-start-label">SETELAH JALUR INI</span><ul>{selectedJourney.outcomes.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul></div><div className="course-capstone"><span className="course-start-label">ARTEFAK CAPSTONE</span><strong>{selectedJourney.capstone.title}</strong><p>{selectedJourney.capstone.prompt}</p><small>{selectedJourney.capstone.evidence.join(" · ")}</small></div></div>
-        <div className="course-start-footer"><span><Timer size={16} /> Estimasi {selectedJourney.estimatedHours} jam · dikerjakan bertahap</span>{courseStart.primary && <Link className="brutal-button button-black" href={`/materi/${courseStart.primary.id}`}>{trackCompletedCount ? "Lanjutkan checkpoint" : "Mulai dari Prolog"} <ArrowRight size={17} /></Link>}</div>
-      </div>
-      <div className="course-prerequisite-map"><div><span className="course-start-label"><GitBranch size={14} /> PETA KESIAPAN</span><p>{courseStart.readyForCorePath ? "Pengantar yang direkomendasikan sudah tersentuh. Lanjut dengan ritme course ini." : "Ini bukan kunci akses. Satu pengantar singkat di bawah akan membuat istilah dan keputusan awal lebih nyambung."}</p></div>{courseStart.preparation.length > 0 ? <div className="prerequisite-links">{courseStart.preparation.map((item) => <Link key={item.course} href={`/materi/${item.material.id}`}><span>SEBELUMNYA · {item.journey.capstone.title}</span><strong>{item.material.title}</strong><small>{item.reason}</small><ArrowRight size={15} /></Link>)}</div> : <div className="prerequisite-ready"><Check size={16} /> Pengantar terkait sudah selesai. Kamu tetap bebas meninjau ulang kapan saja.</div>}</div>
-    </section>}
-
-    {!emptyReservedTrack && selectedTrack && sourceMap.length > 0 && <section className="course-source-map" aria-label={`Source Map ${selectedTrackMeta?.label}`}><div className="source-map-heading"><div><span className="section-index">02 · SOURCE MAP</span><h2>Sumber tidak disembunyikan di ujung materi.</h2><p>Gunakan peta ini untuk melihat referensi yang dipakai dan checkpoint yang dibantu oleh tiap sumber.</p></div><span>{sourceMap.length} REFERENSI</span></div><div className="source-map-grid">{sourceMap.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span>{source.label}</span><strong>{source.note}</strong><small>{source.checkpoints.slice(0, 3).join(" · ")}{source.checkpoints.length > 3 ? ` +${source.checkpoints.length - 3} checkpoint` : ""}</small><ExternalLink size={15} /></a>)}</div></section>}
-
-    {!emptyReservedTrack && nextMaterial && <section className="catalog-resume-card"><div className="resume-stamp"><CircleDotDashed size={20} /><span>CHECKPOINT<br />BERIKUTNYA</span></div><div><span className="eyebrow">LANJUTKAN JALURMU</span><strong>{nextMaterial.title}</strong><p>{completed.includes(nextMaterial.id) ? "Kamu sudah menutup semua checkpoint di jalur ini." : `${nextMaterial.minutes} menit · ${nextMaterial.level} · satu langkah kecil untuk menjaga ritme.`}</p></div><Link className="brutal-button button-pink" href={`/materi/${nextMaterial.id}`}>Buka checkpoint <ArrowRight size={17} /></Link></section>}
-
-    {emptyReservedTrack ? <section className="empty-track-state"><span className="empty-track-mark">✦</span><div><span className="eyebrow">MATERI BARU SEDANG DISIAPKAN</span><h2>{selectedTrackMeta?.label} akan dibangun ulang dari PDF.</h2><p>Judul jalurnya tetap ada, tetapi materi lama sengaja dikosongkan agar tidak tercampur dengan kurikulum baru. Tambahkan PDF saat siap, lalu jalur ini akan diisi kembali secara runtut.</p><Link href="/materi" className="brutal-button button-black">Lihat jurusan lain <ArrowRight size={17} /></Link></div></section> : <>
-      <section className="catalog-toolbar catalog-toolbar-workbook" aria-label="Filter katalog">
-        <div className="search-box"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={selectedTrackMeta ? `Cari di ${selectedTrackMeta.shortLabel}...` : "Cari materi, misalnya: RAG..."} aria-label="Cari materi" /></div>
-        <div className="filter-label"><SlidersHorizontal size={16} /> FILTER</div>
-        <select value={selectedTrack ?? "all"} onChange={(event) => { const nextTrack = event.target.value; navigate(nextTrack === "all" ? "/materi" : trackHref(nextTrack as SpecializationId)); }} aria-label="Filter jurusan"><option value="all">Semua jurusan</option>{specializationOrder.map((track) => <option key={track} value={track}>{specializationMeta[track].shortLabel}</option>)}</select>
-        <select value={learningFilter} onChange={(event) => setLearningFilter(event.target.value as LearningFilter)} aria-label="Filter status belajar"><option value="all">Semua status</option><option value="in-progress">Sedang berjalan</option><option value="not-started">Belum dimulai</option><option value="completed">Sudah selesai</option></select>
-        <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Filter bab atau kategori">{categories.filter((item) => item === categories[0] || trackMaterials.some((material) => material.category === item)).map((item) => <option key={item}>{item}</option>)}</select>
-        <select value={level} onChange={(event) => setLevel(event.target.value)} aria-label="Filter level">{levels.map((item) => <option key={item}>{item}</option>)}</select>
-        <button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button>
-      </section>
-      <div id="search-results" className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint{search.trim() ? ` · mencari juga dari ${Array.from(new Set(searchHits.map((hit) => hit.matchLabel).filter(Boolean))).join(", ") || "isi course"}` : ""}</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
-      <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => {
-        const expanded = isFilteredView || chapter.index === 0 || chapter.chapterCurrent || expandedChapters.includes(chapter.chapter);
-        const visibleItems = expanded ? chapter.items : [];
-        const remainingItems = Math.max(0, chapter.items.length - visibleItems.length);
-        return <section className={`material-group chapter-checkpoint ${chapter.percent === 100 ? "checkpoint-complete" : ""} ${chapter.chapterCurrent ? "checkpoint-current" : ""} ${expanded ? "checkpoint-expanded" : ""}`} key={chapter.chapter}>
-          <div className="checkpoint-heading"><div className="checkpoint-number"><span>CHECKPOINT</span><strong>{String(chapter.index + 1).padStart(2, "0")}</strong></div><div className="checkpoint-copy"><span className="section-index">{categoryMeta[chapter.chapter]?.emoji ?? "✦"} · {chapter.allItems.length} LANGKAH</span><h2>{chapter.chapter}</h2><p>{chapter.doneCount === chapter.allItems.length ? "Bab ini sudah selesai. Kamu bisa meninjaunya lagi kapan saja." : `${chapter.doneCount} dari ${chapter.allItems.length} materi telah ditandai selesai.`}</p></div><div className="checkpoint-meter" aria-label={`Progres ${chapter.chapter}`}><span>{chapter.percent}%</span><div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapter.percent}><i style={{ width: `${chapter.percent}%` }} /></div>{chapter.chapterNext && <Link href={`/materi/${chapter.chapterNext.id}`} className="checkpoint-next">{chapter.percent === 100 ? "Review bab" : "Lanjutkan"} <ArrowRight size={14} /></Link>}</div></div>
-          {visibleItems.length > 0 && <div className="materials-grid">{visibleItems.map((material) => <MaterialCard key={material.id} material={material} />)}</div>}
-          {!isFilteredView && <button type="button" className="checkpoint-expand" onClick={() => setExpandedChapters((previous) => previous.includes(chapter.chapter) ? previous.filter((item) => item !== chapter.chapter) : [...previous, chapter.chapter])} aria-expanded={expanded}>{expanded ? "Tutup daftar subbab" : `Buka ${remainingItems || chapter.items.length} subbab`} <ChevronDown size={16} /></button>}
-        </section>;
-      })}</section>
-      {filtered.length === 0 && <div className="empty-state"><span>⊙</span><h2>{onlySaved ? "Belum ada bookmark." : "Checkpoint ini belum punya materi yang cocok."}</h2><p>{onlySaved ? "Simpan beberapa materi dulu, lalu meja review-mu akan terasa lebih personal." : "Coba ubah jurusan, status, atau kata kunci pencarian."}</p><button className="brutal-button button-black" onClick={() => { resetFilters(); navigate(trackHref(selectedTrack)); }}>Reset filter</button></div>}
-    </>}
+  return <div className="page"><div className={`page-wrap subject-detail-page subject-detail-${selectedTrack}`}>
+    <Link href="/materi" className="subject-back"><ArrowLeft size={16} /> Semua mata pelajaran</Link>
+    <header className="subject-detail-hero"><span className="subject-emoji">{selectedTrackMeta?.emoji}</span><div><span className="eyebrow">MATA PELAJARAN</span><h1>{selectedTrackMeta?.label}</h1><p>{selectedTrackMeta?.intro}</p><div className="subject-detail-stats"><span>{trackMaterials.length} materi · {chapters.length} bab</span><span>{trackCompletedCount} selesai</span><b>{trackPercent}%</b></div></div></header>
+    {nextMaterial && <section className="subject-next-card"><div><span className="eyebrow">LANGKAH BERIKUTNYA</span><h2>{nextMaterial.title}</h2><p>{nextMaterial.minutes} menit · {nextMaterial.level}. Satu pembuka kecil untuk melanjutkan ritme.</p></div><Link href={`/materi/${nextMaterial.id}`} className="brutal-button button-pink">{trackCompletedCount ? "Lanjut belajar" : "Mulai dari Prolog"} <ArrowRight size={17} /></Link></section>}
+    {selectedJourney && courseStart && <details className="subject-course-note"><summary>Tentang mata pelajaran ini <ChevronDown size={16} /></summary><div><p><strong>Cocok untuk:</strong> {selectedJourney.fitFor}</p><p><strong>Hasil belajar:</strong> {selectedJourney.outcomes.join(" · ")}</p><p><strong>Artefak akhir:</strong> {selectedJourney.capstone.title}</p>{!courseStart.readyForCorePath && courseStart.preparation[0] && <Link href={`/materi/${courseStart.preparation[0].material.id}`}>Pengantar yang direkomendasikan: {courseStart.preparation[0].material.title} <ArrowRight size={14} /></Link>}</div></details>}
+    <section className="subject-chapter-list" aria-label={`Daftar bab ${selectedTrackMeta?.label}`}><div className="subject-chapter-heading"><span className="eyebrow">DAFTAR BAB</span><p>Pilih satu bab untuk melihat subbabnya. Kami tidak menaruh seluruh materi di satu layar.</p></div>{chapters.map((chapter) => { const open = openChapter === chapter.chapter; return <article className={`subject-chapter ${open ? "subject-chapter-open" : ""}`} key={chapter.chapter}><button type="button" onClick={() => setOpenChapter(open ? null : chapter.chapter)} aria-expanded={open}><span className="subject-chapter-number">{String(chapter.index + 1).padStart(2, "0")}</span><span className="subject-chapter-copy"><small>{categoryMeta[chapter.chapter]?.emoji ?? "✦"} · {chapter.items.length} subbab · {chapter.done} selesai</small><strong>{chapter.chapter}</strong></span><span className="subject-chapter-progress"><i style={{ width: `${chapter.percent}%` }} /></span><ChevronDown size={18} /></button>{open && <div className="subject-sublesson-list">{chapter.items.map((material) => <Link href={`/materi/${material.id}`} key={material.id}><span>{completed.includes(material.id) ? <Check size={15} /> : String(material.displayNumber ?? material.id).padStart(2, "0")}</span><div><strong>{material.title}</strong><small>{material.minutes} menit · {material.level}</small></div><ArrowRight size={15} /></Link>)}{chapter.upcoming && <Link className="subject-chapter-cta" href={`/materi/${chapter.upcoming.id}`}><CircleDotDashed size={16} /> {chapter.percent === 100 ? "Tinjau bab ini" : "Buka langkah berikutnya"}</Link>}</div>}</article>; })}</section>
   </div></div>;
 }
