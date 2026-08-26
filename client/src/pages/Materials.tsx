@@ -1,12 +1,14 @@
 // Style reminder: Paper Playground — the catalogue behaves like a guided workbook, with routes, chapter checkpoints, and tactile filter controls.
 
-import { ArrowRight, Bookmark, Check, ChevronDown, CircleDotDashed, Filter, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Bookmark, Check, ChevronDown, CircleDotDashed, ExternalLink, Filter, GitBranch, Map as MapIcon, Search, SlidersHorizontal, Timer } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import MaterialCard from "@/components/MaterialCard";
 import { categories, categoryMeta, levels, materials } from "@/lib/materials";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta, specializationOrder, type SpecializationId } from "@/lib/specializations";
 import { useLearning } from "@/contexts/LearningContext";
+import { getCourseJourney, getCourseSourceMap, getCourseStartRecommendation } from "@/lib/courseJourney";
+import { searchMaterialContent } from "@/lib/fullTextSearch";
 
 type LearningFilter = "all" | "in-progress" | "completed" | "not-started";
 
@@ -36,9 +38,14 @@ export default function Materials() {
   const trackPercent = trackMaterials.length ? Math.round((trackCompletedCount / trackMaterials.length) * 100) : 0;
   const emptyReservedTrack = Boolean(selectedTrackMeta && trackMaterials.length === 0);
   const nextMaterial = trackMaterials.find((material) => !completed.includes(material.id)) ?? trackMaterials[0];
+  const selectedJourney = getCourseJourney(selectedTrack ?? undefined);
+  const courseStart = useMemo(() => selectedTrack ? getCourseStartRecommendation(materials, selectedTrack, completed) : null, [selectedTrack, completed]);
+  const sourceMap = useMemo(() => selectedTrack ? getCourseSourceMap(materials, selectedTrack) : [], [selectedTrack]);
+  const searchHits = useMemo(() => search.trim() ? searchMaterialContent(trackMaterials, search, trackMaterials.length) : [], [trackMaterials, search]);
+  const searchHitById = useMemo(() => new Map(searchHits.map((hit) => [hit.material.id, hit])), [searchHits]);
 
   const filtered = useMemo(() => trackMaterials.filter((material) => {
-    const matchesSearch = `${material.title} ${material.category}`.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = !search.trim() || searchHitById.has(material.id);
     const matchesFilters = (category === categories[0] || material.category === category) && (level === levels[0] || material.level === level) && (!onlySaved || bookmarks.includes(material.id));
     const matchesLearning = learningFilter === "all" || (learningFilter === "completed" && completed.includes(material.id)) || (learningFilter === "in-progress" && material.id === current && !completed.includes(material.id)) || (learningFilter === "not-started" && !completed.includes(material.id) && material.id !== current);
     return matchesSearch && matchesFilters && matchesLearning;
@@ -72,6 +79,17 @@ export default function Materials() {
 
     <section className="progress-tracker catalog-progress-tracker"><div className="tracker-copy"><span className="section-index">PROGRESS JALUR</span><strong>{emptyReservedTrack ? "Menunggu materi baru dari PDF" : `${displayCompleted} dari ${displayTotal} materi selesai`}</strong></div><div className="tracker-bar"><i style={{ width: `${displayPercent}%` }} /></div><b>{emptyReservedTrack ? "—" : `${displayPercent}%`}</b></section>
 
+    {!emptyReservedTrack && selectedTrack && selectedJourney && courseStart && <section className="course-start-card" aria-label={`Mulai ${selectedTrackMeta?.label}`}>
+      <div className="course-start-stamp"><MapIcon size={22} /><span>COURSE<br />START</span></div>
+      <div className="course-start-main"><div className="course-start-heading"><div><span className="eyebrow">01 · PETA SEBELUM MULAI</span><h2>{selectedJourney.fitFor}</h2></div><span className={`course-readiness ${courseStart.readyForCorePath ? "course-readiness-ready" : ""}`}>{courseStart.readyForCorePath ? "SIAP MASUK JALUR" : "ADA SETUP RINGAN"}</span></div>
+        <div className="course-start-grid"><div><span className="course-start-label">PRASYARAT PRAKTIS</span><ul>{selectedJourney.prerequisites.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul></div><div><span className="course-start-label">SETELAH JALUR INI</span><ul>{selectedJourney.outcomes.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul></div><div className="course-capstone"><span className="course-start-label">ARTEFAK CAPSTONE</span><strong>{selectedJourney.capstone.title}</strong><p>{selectedJourney.capstone.prompt}</p><small>{selectedJourney.capstone.evidence.join(" · ")}</small></div></div>
+        <div className="course-start-footer"><span><Timer size={16} /> Estimasi {selectedJourney.estimatedHours} jam · dikerjakan bertahap</span>{courseStart.primary && <Link className="brutal-button button-black" href={`/materi/${courseStart.primary.id}`}>{trackCompletedCount ? "Lanjutkan checkpoint" : "Mulai dari Prolog"} <ArrowRight size={17} /></Link>}</div>
+      </div>
+      <div className="course-prerequisite-map"><div><span className="course-start-label"><GitBranch size={14} /> PETA KESIAPAN</span><p>{courseStart.readyForCorePath ? "Pengantar yang direkomendasikan sudah tersentuh. Lanjut dengan ritme course ini." : "Ini bukan kunci akses. Satu pengantar singkat di bawah akan membuat istilah dan keputusan awal lebih nyambung."}</p></div>{courseStart.preparation.length > 0 ? <div className="prerequisite-links">{courseStart.preparation.map((item) => <Link key={item.course} href={`/materi/${item.material.id}`}><span>SEBELUMNYA · {item.journey.capstone.title}</span><strong>{item.material.title}</strong><small>{item.reason}</small><ArrowRight size={15} /></Link>)}</div> : <div className="prerequisite-ready"><Check size={16} /> Pengantar terkait sudah selesai. Kamu tetap bebas meninjau ulang kapan saja.</div>}</div>
+    </section>}
+
+    {!emptyReservedTrack && selectedTrack && sourceMap.length > 0 && <section className="course-source-map" aria-label={`Source Map ${selectedTrackMeta?.label}`}><div className="source-map-heading"><div><span className="section-index">02 · SOURCE MAP</span><h2>Sumber tidak disembunyikan di ujung materi.</h2><p>Gunakan peta ini untuk melihat referensi yang dipakai dan checkpoint yang dibantu oleh tiap sumber.</p></div><span>{sourceMap.length} REFERENSI</span></div><div className="source-map-grid">{sourceMap.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span>{source.label}</span><strong>{source.note}</strong><small>{source.checkpoints.slice(0, 3).join(" · ")}{source.checkpoints.length > 3 ? ` +${source.checkpoints.length - 3} checkpoint` : ""}</small><ExternalLink size={15} /></a>)}</div></section>}
+
     {!emptyReservedTrack && nextMaterial && <section className="catalog-resume-card"><div className="resume-stamp"><CircleDotDashed size={20} /><span>CHECKPOINT<br />BERIKUTNYA</span></div><div><span className="eyebrow">LANJUTKAN JALURMU</span><strong>{nextMaterial.title}</strong><p>{completed.includes(nextMaterial.id) ? "Kamu sudah menutup semua checkpoint di jalur ini." : `${nextMaterial.minutes} menit · ${nextMaterial.level} · satu langkah kecil untuk menjaga ritme.`}</p></div><Link className="brutal-button button-pink" href={`/materi/${nextMaterial.id}`}>Buka checkpoint <ArrowRight size={17} /></Link></section>}
 
     {emptyReservedTrack ? <section className="empty-track-state"><span className="empty-track-mark">✦</span><div><span className="eyebrow">MATERI BARU SEDANG DISIAPKAN</span><h2>{selectedTrackMeta?.label} akan dibangun ulang dari PDF.</h2><p>Judul jalurnya tetap ada, tetapi materi lama sengaja dikosongkan agar tidak tercampur dengan kurikulum baru. Tambahkan PDF saat siap, lalu jalur ini akan diisi kembali secara runtut.</p><Link href="/materi" className="brutal-button button-black">Lihat jurusan lain <ArrowRight size={17} /></Link></div></section> : <>
@@ -84,7 +102,7 @@ export default function Materials() {
         <select value={level} onChange={(event) => setLevel(event.target.value)} aria-label="Filter level">{levels.map((item) => <option key={item}>{item}</option>)}</select>
         <button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button>
       </section>
-      <div className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
+      <div className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint{search.trim() ? ` · mencari juga dari ${Array.from(new Set(searchHits.map((hit) => hit.matchLabel))).join(", ") || "isi course"}` : ""}</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
       <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => {
         const expanded = isFilteredView || chapter.index === 0 || chapter.chapterCurrent || expandedChapters.includes(chapter.chapter);
         const visibleItems = expanded ? chapter.items : [];

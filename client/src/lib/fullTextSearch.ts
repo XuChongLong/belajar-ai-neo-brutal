@@ -1,4 +1,5 @@
 import type { Material } from "./materials";
+import { getCourseJourney } from "./courseJourney";
 
 export type MaterialSearchResult = {
   material: Material;
@@ -34,6 +35,9 @@ export function searchMaterialContent(materials: Material[], rawQuery: string, l
     if (material.bookContext) fields.push({ label: "konteks buku", value: `${material.bookContext.title} ${material.bookContext.body}`, weight: 72 });
     if (material.chapterLecture) fields.push({ label: "pembukaan bab", value: `${material.chapterLecture.title} ${material.chapterLecture.body} ${material.chapterLecture.questions.join(" ")}`, weight: 64 });
     if (material.caseStudy) fields.push({ label: "studi kasus", value: `${material.caseStudy.title} ${material.caseStudy.narrative} ${material.caseStudy.artifact} ${material.caseStudy.teachingPoint} ${material.caseStudy.guidedQuestions.join(" ")}`, weight: 52 });
+    if (material.resources?.length) fields.push({ label: "sumber", value: material.resources.map((resource) => `${resource.label} ${resource.note ?? ""}`).join(" "), weight: 46 });
+    const journey = getCourseJourney(material.specialization);
+    if (journey) fields.push({ label: "arah course", value: `${journey.fitFor} ${journey.outcomes.join(" ")} ${journey.capstone.title} ${journey.capstone.prompt} ${journey.capstone.evidence.join(" ")}`, weight: 42 });
 
     const ranked = fields.map((field) => {
       const haystack = normalize(field.value);

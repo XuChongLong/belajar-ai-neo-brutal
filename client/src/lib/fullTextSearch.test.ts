@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
+import { materials } from "./materials";
 import { searchMaterialContent } from "./fullTextSearch";
 
 describe("full-text material search", () => {
@@ -14,5 +15,12 @@ describe("full-text material search", () => {
     expect(results[0].material.id).toBe(129);
     expect(["penjelasan", "konteks buku"]).toContain(results[0].matchLabel);
     expect(searchMaterialContent(aiEngineeringPdfMaterials, "kata-yang-tidak-ada")).toEqual([]);
+  });
+
+  it("finds active intensive courses through capstone outcomes and source metadata", () => {
+    const capstoneResults = searchMaterialContent(materials, "Production Readiness Pack", materials.length);
+    expect(capstoneResults.some((result) => result.material.specialization === "cloud-devops" && result.matchLabel === "arah course")).toBe(true);
+    const sourceResults = searchMaterialContent(materials, "Well Architected", materials.length);
+    expect(sourceResults.some((result) => result.material.specialization === "cloud-devops" && result.matchLabel === "sumber")).toBe(true);
   });
 });

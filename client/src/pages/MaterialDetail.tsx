@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — reading view prioritizes calm paper space, strong article rhythm, and quiz feedback that feels encouraging.
 
-import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, Clock3, Database, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, ClipboardCheck, Clock3, Database, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useRoute } from "wouter";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { useLearning } from "@/contexts/LearningContext";
 import { glossaryTerms } from "@/lib/glossary";
 import { aiEngineeringChapterQuizzes } from "@/lib/aiEngineeringChapterQuizzes";
 import { getChapterCompletedCount, getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
+import { getEvidenceChecklist, getEvidenceKey } from "@/lib/courseJourney";
 
 const visualAnalogies = [
   { title: "AI belajar seperti melihat banyak contoh resep.", copy: "Bayangkan kamu belajar membedakan teh dan kopi dari banyak cangkir. Makin beragam contoh yang kamu lihat, makin baik kamu mengenali polanya—tetap perlu mengecek hasilnya." },
@@ -32,6 +33,9 @@ export default function MaterialDetail() {
     markChapterLessonRead,
     saveQuizAttempt,
     toggleBookmark,
+    projectEvidence,
+    setProjectEvidence,
+    syncStatus,
   } = useLearning();
 
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -62,6 +66,10 @@ export default function MaterialDetail() {
   const chapterQuiz = chapterNumber ? aiEngineeringChapterQuizzes[chapterNumber] : undefined;
   const isChapterEnd = chapterMaterials.at(-1)?.id === material.id;
   const visualAnalogy = visualAnalogies[(material.id - 1) % visualAnalogies.length];
+  const isEvidenceAnchor = Boolean(material.specialization) && materials.filter((item) => item.specialization === material.specialization && item.category === material.category).sort((left, right) => left.id - right.id)[0]?.id === material.id;
+  const evidenceKey = getEvidenceKey(material);
+  const evidenceChecklist = isEvidenceAnchor ? getEvidenceChecklist(material) : [];
+  const evidence = projectEvidence[evidenceKey] ?? { checked: [], reflection: "", updatedAt: "" };
   const prev = materials.find((item) => item.id === material.id - 1);
   const next = materials.find((item) => item.id === material.id + 1);
   const score = useMemo(() => material.quiz.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0), [answers, material.quiz]);
@@ -178,7 +186,14 @@ export default function MaterialDetail() {
 
         {material.sections.map((section, index) => <section className="article-section" id={`section-${material.id}-${index + 1}`} key={section.heading}><span className="section-index">{String(index + 1).padStart(2, "0")}</span><div className="article-section-copy"><h2>{section.heading}</h2>{section.body.split("\n\n").map((paragraph, paragraphIndex) => <p key={`${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}
 
+        {material.deepDive && <section className="priority-deep-dive" aria-labelledby={`deep-dive-${material.id}`}><header><span className="eyebrow">CONTOH KERJA · MATERI PRIORITAS</span><h2 id={`deep-dive-${material.id}`}>{material.deepDive.exampleTitle}</h2></header><div className="deep-dive-example"><p>{material.deepDive.example}</p></div><div className="deep-dive-grid"><section><span className="eyebrow">KESALAHAN UMUM</span><p>{material.deepDive.commonMistake}</p></section><section><span className="eyebrow">RUBRIK ARTEFAK</span><ol>{material.deepDive.rubric.map((item) => <li key={item}>{item}</li>)}</ol></section></div></section>}
+
         {!isAiEngineering && <div className="article-callout"><span>✦</span><div><strong>Catatan singkat.</strong><p>Coba jelaskan konsep ini dengan satu contoh dari aplikasi yang kamu gunakan sehari-hari.</p></div></div>}
+
+        {evidenceChecklist.length > 0 && <section className="project-evidence-box" aria-labelledby={`project-evidence-${material.id}`}>
+          <header><div><span className="eyebrow">PROJECT EVIDENCE · PRIVAT</span><h2 id={`project-evidence-${material.id}`}>Buat jejak keputusan, bukan sekadar centang selesai.</h2><p>Jawaban ini tersimpan di progres akunmu dan menjadi bahan rangkuman capstone. Tidak dipublikasikan sebagai testimonial atau profil umum.</p></div><Link href="/portfolio" className="project-evidence-link"><ClipboardCheck size={16} /> Lihat portfolio</Link></header>
+          <div className="project-evidence-grid"><div className="evidence-checklist">{evidenceChecklist.map((item) => { const checked = evidence.checked.includes(item); return <label key={item}><input type="checkbox" checked={checked} onChange={() => setProjectEvidence(evidenceKey, checked ? evidence.checked.filter((current) => current !== item) : [...evidence.checked, item], evidence.reflection)} /><span><Check size={13} /></span>{item}</label>; })}</div><div className="evidence-reflection"><label htmlFor={`evidence-reflection-${material.id}`}>REFLEKSI SINGKAT</label><textarea id={`evidence-reflection-${material.id}`} value={evidence.reflection} onChange={(event) => setProjectEvidence(evidenceKey, evidence.checked, event.target.value)} maxLength={4000} placeholder="Apa keputusan, batas, atau bukti yang kamu pilih di checkpoint ini?" /><small>{evidence.reflection.length}/4000 · {syncStatus === "syncing" ? "menyimpan…" : syncStatus === "offline" ? "tersimpan lokal, sinkronkan lagi saat online" : "tersimpan otomatis"}</small></div></div>
+        </section>}
 
         {material.diagram && <>
           <figure className="lesson-diagram"><div className="diagram-label"><span className="eyebrow">PETA VISUAL</span><button type="button" className="diagram-expand-button" onClick={() => { setDiagramOpen(true); setDiagramZoom(1); }} aria-label={`Perbesar diagram: ${material.diagram.caption}`}><Maximize2 size={14} /> <span>Lihat layar penuh</span></button></div><button type="button" className="diagram-frame diagram-frame-button" onClick={() => { setDiagramOpen(true); setDiagramZoom(1); }} aria-label={`Buka diagram dalam mode layar penuh: ${material.diagram.caption}`}><img src={material.diagram.src} alt={material.diagram.alt} /></button><figcaption><strong>{material.diagram.caption}</strong><p>{material.diagram.note}</p></figcaption></figure>

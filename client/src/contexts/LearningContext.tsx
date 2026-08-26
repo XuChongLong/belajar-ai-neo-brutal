@@ -8,6 +8,7 @@ import type { SyncStatus } from "@/lib/syncStatus";
 import { appendLearningActivity, clampWeeklyGoal, getWeeklyActivitySummary, type WeeklyActivitySummary } from "@/lib/learningActivity";
 import { createProgressExport, createResetProgressSnapshot } from "@/lib/progressData";
 import { migrateLegacyCourseProgress } from "@/lib/courseProgressMigration";
+import { normalizeCoursePortfolio, normalizeProjectEvidence } from "@/lib/projectEvidence";
 import { addChapterReadLesson, toggleCompletedLesson } from "@/lib/chapterReading";
 import { buyNpcFood, buyNpcShopItem, claimNpcDailyQuest, claimNpcMiniGameReward, ensureNpcDaily, equipNpcAccessory, feedNpcPet, initialPetProgress, normalizeNpcPopupPosition, playWithNpcPet, rewardNpcLearningActivity, type AccessoryId, type DailyQuestId, type PetActionResult, type PetId, type PetPopupPosition, type PetProgress } from "@/lib/npcPets";
 import type { LearningProgressSnapshot, WrongQuizQuestion } from "@shared/learningProgress";
@@ -35,6 +36,8 @@ type LearningContextValue = LearningState & {
   markFlashcardReview: (id: string) => void;
   setSelectedGoal: (goal: string) => void;
   setWeeklyGoal: (goal: number) => void;
+  setProjectEvidence: (key: string, checked: string[], reflection: string) => void;
+  setCoursePortfolio: (courseId: string, narrative: string, selectedEvidence: string[]) => void;
   selectNpcPet: (petId: PetId) => void;
   setNpcPopupEnabled: (enabled: boolean) => void;
   setNpcPopupPosition: (position: PetPopupPosition) => void;
@@ -52,7 +55,7 @@ type LearningContextValue = LearningState & {
 
 const LEGACY_STORAGE_KEY = "belajar-ai-progress-v1";
 const accountStorageKey = (userId: number) => `belajar-ai-progress-account-${userId}-v1`;
-const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 0, lastVisit: "", activityHistory: [], weeklyGoal: 5 };
+const initialState: LearningState = { completed: [], bookmarks: [], scores: {}, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: {}, flashcardKnown: [], flashcardReviewQueue: [], selectedGoal: null, npc: initialPetProgress, current: 1, streak: 0, lastVisit: "", activityHistory: [], weeklyGoal: 5, projectEvidence: {}, coursePortfolio: {} };
 const LearningContext = createContext<LearningContextValue | null>(null);
 const activeMaterialIds = new Set(materials.map((material) => material.id));
 
@@ -73,6 +76,8 @@ function normalizeState(raw: Partial<LearningState> | null | undefined): Learnin
     selectedGoal: migrated.selectedGoal ?? null,
     activityHistory: migrated.activityHistory?.filter((activity) => typeof activity?.occurredAt === "number" && typeof activity?.id === "string").slice(0, 80) ?? [],
     weeklyGoal: clampWeeklyGoal(migrated.weeklyGoal ?? 5),
+    projectEvidence: normalizeProjectEvidence(migrated.projectEvidence),
+    coursePortfolio: normalizeCoursePortfolio(migrated.coursePortfolio),
     npc: {
       ...initialPetProgress,
       ...npc,
@@ -95,7 +100,7 @@ function readState(key: string) {
 
 function toSnapshot(state: LearningState): LearningProgressSnapshot {
   return {
-    completed: state.completed, bookmarks: state.bookmarks, scores: state.scores, quizAttempts: state.quizAttempts, wrongQuizQuestions: state.wrongQuizQuestions, chapterReadLessons: state.chapterReadLessons, flashcardKnown: state.flashcardKnown, flashcardReviewQueue: state.flashcardReviewQueue, selectedGoal: state.selectedGoal, npc: state.npc, current: state.current, streak: state.streak, lastVisit: state.lastVisit, activityHistory: state.activityHistory, weeklyGoal: state.weeklyGoal,
+    completed: state.completed, bookmarks: state.bookmarks, scores: state.scores, quizAttempts: state.quizAttempts, wrongQuizQuestions: state.wrongQuizQuestions, chapterReadLessons: state.chapterReadLessons, flashcardKnown: state.flashcardKnown, flashcardReviewQueue: state.flashcardReviewQueue, selectedGoal: state.selectedGoal, npc: state.npc, current: state.current, streak: state.streak, lastVisit: state.lastVisit, activityHistory: state.activityHistory, weeklyGoal: state.weeklyGoal, projectEvidence: state.projectEvidence, coursePortfolio: state.coursePortfolio,
   };
 }
 
@@ -188,6 +193,8 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     markFlashcardReview: (id) => setState((prev) => ({ ...prev, flashcardKnown: prev.flashcardKnown.filter((knownId) => knownId !== id), flashcardReviewQueue: prev.flashcardReviewQueue.includes(id) ? prev.flashcardReviewQueue : [id, ...prev.flashcardReviewQueue] })),
     setSelectedGoal: (goal) => setState((prev) => ({ ...prev, selectedGoal: goal })),
     setWeeklyGoal: (goal) => setState((prev) => ({ ...prev, weeklyGoal: clampWeeklyGoal(goal) })),
+    setProjectEvidence: (key, checked, reflection) => setState((prev) => ({ ...prev, projectEvidence: { ...prev.projectEvidence, [key]: { checked: Array.from(new Set(checked)).slice(0, 20), reflection: reflection.slice(0, 4_000), updatedAt: new Date().toISOString() } } })),
+    setCoursePortfolio: (courseId, narrative, selectedEvidence) => setState((prev) => ({ ...prev, coursePortfolio: { ...prev.coursePortfolio, [courseId]: { narrative: narrative.slice(0, 4_000), selectedEvidence: Array.from(new Set(selectedEvidence)).slice(0, 20), updatedAt: new Date().toISOString() } } })),
     selectNpcPet: (petId) => setState((prev) => ({ ...prev, npc: { ...prev.npc, activePet: petId } })),
     setNpcPopupEnabled: (enabled) => setState((prev) => ({ ...prev, npc: { ...prev.npc, popupEnabled: enabled } })),
     setNpcPopupPosition: (position) => setState((prev) => ({ ...prev, npc: { ...prev.npc, popupPosition: normalizeNpcPopupPosition(position) } })),

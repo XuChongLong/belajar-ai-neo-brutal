@@ -1,5 +1,6 @@
 import type { Material, MaterialLevel, QuizQuestion } from "./materials";
 import type { SpecializationId } from "./specializations";
+import { priorityIntensiveDeepening } from "./priorityIntensiveDeepening";
 
 export type IntensiveSource = { label: string; url: string; note: string };
 
@@ -68,6 +69,7 @@ const materialFrom = (course: IntensiveCourseDefinition, chapter: IntensiveChapt
     summary: `${unit.title} dibahas sebagai keputusan nyata dalam ${chapter.focus}. Kamu akan meninggalkan subbab ini dengan artefak kecil, pertanyaan review, dan batas kerja yang jelas.`,
     analogy: `Anggap ${unit.title.toLowerCase()} sebagai satu titik pemeriksaan dalam sistem yang lebih besar: pilihan kecil di sini memengaruhi kualitas, biaya, kepercayaan, dan kemampuan tim untuk memperbaiki masalah nanti.`,
     sections: fiveLayers(chapter, unit, `${chapterDisplay}.${unitIndex + 1}`),
+    deepDive: priorityIntensiveDeepening[id],
     chapterLecture: unitIndex === 0 ? { title: isPrologue ? `Mulai dari konteks ${course.label}` : `Pembukaan Bab ${chapterIndex}: ${chapter.title}`, body: chapter.opening, questions: ["Keputusan apa yang menjadi fokus checkpoint ini?", "Artefak apa yang akan kamu buat?", "Batas apa yang perlu dijaga sebelum mulai praktik?"] } : undefined,
     caseStudy: unitIndex === 0 ? { phase: `${course.label} · ${isPrologue ? "Bab Prolog" : `Bab ${chapterIndex}`}`, title: chapter.caseStudy.title, narrative: chapter.caseStudy.narrative, artifactTitle: `Artefak checkpoint: ${chapter.artifact}`, artifact: chapter.caseStudy.artifact, teachingPoint: chapter.caseStudy.teachingPoint, guidedQuestions: [...chapter.caseStudy.questions] } : undefined,
     resources: [...chapter.sources],

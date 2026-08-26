@@ -23,6 +23,18 @@ export type LearningActivity = {
   occurredAt: number;
 };
 
+export type ProjectEvidence = {
+  checked: string[];
+  reflection: string;
+  updatedAt: string;
+};
+
+export type CoursePortfolio = {
+  narrative: string;
+  selectedEvidence: string[];
+  updatedAt: string;
+};
+
 export type NpcProgressSnapshot = {
   activePet: "cat" | "dog" | "unicorn" | "robot";
   xp: Record<"cat" | "dog" | "unicorn" | "robot", number>;
@@ -62,6 +74,8 @@ export type LearningProgressSnapshot = {
   lastVisit: string;
   activityHistory: LearningActivity[];
   weeklyGoal: number;
+  projectEvidence: Record<string, ProjectEvidence>;
+  coursePortfolio: Record<string, CoursePortfolio>;
 };
 
 export function createEmptyLearningProgress(): LearningProgressSnapshot {
@@ -93,5 +107,7 @@ export function createEmptyLearningProgress(): LearningProgressSnapshot {
     lastVisit: "",
     activityHistory: [],
     weeklyGoal: 5,
+    projectEvidence: {},
+    coursePortfolio: {},
   };
 }

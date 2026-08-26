@@ -16,7 +16,7 @@ function createContext(id = 12): TrpcContext {
 }
 
 const snapshot = {
-  completed: [1, 2], bookmarks: [2], scores: { 2: 3 }, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: { 1: [1, 2] }, flashcardKnown: ["glossary-foundation-model"], flashcardReviewQueue: [], selectedGoal: "AI Explorer", npc: { activePet: "cat", xp: { cat: 80, dog: 0, unicorn: 0, robot: 0 }, earnedMilestones: { cat: ["bayi"], dog: ["bayi"], unicorn: ["bayi"], robot: ["bayi"] }, popupEnabled: false, popupPosition: { x: 0.83, y: 0.76 }, foodInventory: 1, snackCoins: 2, ownedAccessories: [], equippedAccessory: null, audioEnabled: true, daily: { date: "2026-08-17", feedings: 0, plays: 0, miniGameRounds: 0, miniGameBestScore: 0, miniGameCoinsClaimed: 0, questProgress: { lessons: 1, quizCorrect: 2, flashcards: 0 }, claimedQuestIds: ["lesson"] } }, current: 3, streak: 2, lastVisit: "2026-08-17", activityHistory: [], weeklyGoal: 5,
+  completed: [1, 2], bookmarks: [2], scores: { 2: 3 }, quizAttempts: {}, wrongQuizQuestions: {}, chapterReadLessons: { 1: [1, 2] }, flashcardKnown: ["glossary-foundation-model"], flashcardReviewQueue: [], selectedGoal: "AI Explorer", npc: { activePet: "cat", xp: { cat: 80, dog: 0, unicorn: 0, robot: 0 }, earnedMilestones: { cat: ["bayi"], dog: ["bayi"], unicorn: ["bayi"], robot: ["bayi"] }, popupEnabled: false, popupPosition: { x: 0.83, y: 0.76 }, foodInventory: 1, snackCoins: 2, ownedAccessories: [], equippedAccessory: null, audioEnabled: true, daily: { date: "2026-08-17", feedings: 0, plays: 0, miniGameRounds: 0, miniGameBestScore: 0, miniGameCoinsClaimed: 0, questProgress: { lessons: 1, quizCorrect: 2, flashcards: 0 }, claimedQuestIds: ["lesson"] } }, current: 3, streak: 2, lastVisit: "2026-08-17", activityHistory: [], weeklyGoal: 5, projectEvidence: { "cloud-devops:Cloud": { checked: ["Tulis konteks"], reflection: "Saya memilih risiko paling penting.", updatedAt: "2026-08-17T10:00:00.000Z" } }, coursePortfolio: { "cloud-devops": { narrative: "Saya memilih desain yang dapat dirollback.", selectedEvidence: ["cloud-devops:Cloud"], updatedAt: "2026-08-17T10:00:00.000Z" } },
 };
 
 describe("learning router", () => {
@@ -63,6 +63,12 @@ describe("learning router", () => {
   it("rejects weekly goals outside the learner-facing choices", async () => {
     const caller = appRouter.createCaller(createContext());
     await expect(caller.learning.save({ ...snapshot, weeklyGoal: 6 })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.saveLearningProgressByUser).not.toHaveBeenCalled();
+  });
+
+  it("rejects evidence reflections that exceed the learner-facing safety limit", async () => {
+    const caller = appRouter.createCaller(createContext());
+    await expect(caller.learning.save({ ...snapshot, projectEvidence: { sample: { checked: [], reflection: "x".repeat(4_001), updatedAt: "2026-08-17T10:00:00.000Z" } } })).rejects.toMatchObject({ code: "BAD_REQUEST" });
     expect(mocks.saveLearningProgressByUser).not.toHaveBeenCalled();
   });
 });

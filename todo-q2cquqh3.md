@@ -73,3 +73,25 @@
 - [x] Verifikasi katalog serta detail materi Cloud Computing AI intensif pada viewport Android.
 - [x] Uji pencarian dan filter eksplisit pada Cloud, Data, AI Product, dan Automation di deployment publik.
 - [x] Uji buka checkpoint dan navigasi dari katalog ke detail materi untuk Cloud, Data, AI Product, Automation, dan Creative AI.
+- [x] Audit kualitas pembeda antar-subbab dan kedalaman materi setelah ekspansi katalog besar.
+- [x] Audit discovery, orientasi, dan rekomendasi belajar agar pengguna tidak kewalahan oleh 1.092 materi.
+- [x] Audit latihan, evaluasi, dan bukti kompetensi lintas-course untuk menentukan tahap pembelajaran berikutnya.
+- [x] Rumuskan backlog prioritas produk beserta urutan implementasi yang realistis.
+- [x] Dokumentasikan temuan formulaik pada subbab intensif beserta contoh konkret dan prioritas perbaikannya.
+- [x] Dokumentasikan gap discovery/orientasi katalog 1.092 materi serta mitigasi rasa kewalahan pengguna.
+- [x] Dokumentasikan gap latihan/evaluasi kompetensi lintas-course dan tahapan solusi berikutnya.
+- [x] Rancang kontrak data Course Start, prerequisite, Project Evidence, dan portfolio yang kompatibel dengan progres akun saat ini.
+- [x] Perbaiki prioritas AI Safety Builder agar mengenali jalur Cyber Security intensif yang baru.
+- [x] Tambahkan peta prasyarat lintas-course dan rekomendasi langkah berikutnya berbasis kesiapan pengguna.
+- [x] Bangun Course Start Card untuk semua course aktif berisi persona, prasyarat, outcome, estimasi, source map, dan checkpoint awal.
+- [x] Tambahkan Project Evidence checklist per checkpoint, refleksi terstruktur, dan ringkasan portfolio capstone yang tersimpan ke akun.
+- [x] Tampilkan Source Map per course serta perluas pencarian ke ringkasan, isi, artefak, dan sumber.
+- [x] Perkaya 36 materi prioritas dengan contoh kerja, kesalahan umum, rubrik artefak, dan penjelasan spesifik domain.
+- [x] Tambahkan test regresi untuk rekomendasi, peta prasyarat, evidence, source map, pencarian, dan progres akun.
+- [ ] Verifikasi pengalaman Course Start, evidence, portfolio, source map, pencarian, dan responsivitas pada desktop/Android.
+- [x] Tambahkan kontrak portfolio/capstone evidence per akun pada snapshot, validasi server, dan normalisasi progres lama.
+- [x] Simpan serta jalankan test eksplisit untuk Course Journey, Project Evidence, dan kompatibilitas portfolio.
+- [x] Tambahkan test snapshot progres lama tanpa Project Evidence/portfolio serta round-trip evidence pada normalisasi client dan validasi server.
+- [x] Hubungkan graph prerequisite dengan indikator kesiapan progres serta tampilkan rekomendasi lintas-course pada Course Start.
+- [x] Tambahkan test rekomendasi prerequisite sebelum dan sesudah pengguna menyelesaikan materi pengantar course terkait.
+- [x] Tambahkan test Source Map valid untuk setiap course aktif dan QA visual pada track tambahan selain Cloud.

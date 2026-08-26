@@ -6,6 +6,7 @@ import { cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
 import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import type { AiEngineeringChapterLecture } from "./aiEngineeringChapterLectures";
 import type { AiEngineeringBookContext } from "./aiEngineeringSublessonBookContexts";
+import type { PriorityDeepDive } from "./priorityIntensiveDeepening";
 
 export type MaterialLevel = "Pemula" | "Menengah" | "Lanjut";
 
@@ -33,6 +34,7 @@ export type Material = {
   caseStudy?: ChainedCaseStudy;
   diagram?: { src: string; alt: string; caption: string; note: string };
   diagramQuiz?: QuizQuestion;
+  deepDive?: PriorityDeepDive;
   resources?: { label: string; url: string; note?: string }[];
   quiz: QuizQuestion[];
 };

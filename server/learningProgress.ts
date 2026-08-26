@@ -60,4 +60,14 @@ export const learningProgressSnapshotSchema = z.object({
     occurredAt: z.number().int().positive(),
   })).max(80).default([]),
   weeklyGoal: z.number().int().refine((value) => [3, 5, 7].includes(value), "Target mingguan harus 3, 5, atau 7 hari.").default(5),
+  projectEvidence: z.record(z.string().min(1).max(400), z.object({
+    checked: z.array(z.string().min(1).max(400)).max(20),
+    reflection: z.string().max(4_000),
+    updatedAt: z.string().datetime(),
+  })).refine((value) => Object.keys(value).length <= 200, "Maksimal 200 bukti project.").default({}),
+  coursePortfolio: z.record(z.string().min(1).max(120), z.object({
+    narrative: z.string().max(4_000),
+    selectedEvidence: z.array(z.string().min(1).max(400)).max(20),
+    updatedAt: z.string().datetime(),
+  })).refine((value) => Object.keys(value).length <= 20, "Maksimal 20 portfolio course.").default({}),
 });

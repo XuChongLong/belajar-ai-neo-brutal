@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowUpRight, BookMarked, BookOpen, ChevronDown, FilePenLine, Flame, FolderUp, Gamepad2, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, Settings2, UserRound, X } from "lucide-react";
+import { ArrowUpRight, BookMarked, BookOpen, ChevronDown, FilePenLine, Flame, FolderKanban, FolderUp, Gamepad2, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, Settings2, UserRound, X } from "lucide-react";
 import { useLearning } from "@/contexts/LearningContext";
 import { materials } from "@/lib/materials";
 import { glossaryTerms } from "@/lib/glossary";
@@ -16,7 +16,7 @@ const logo = "/manus-storage/belajar-ai-logo_ce2158e2.png";
 
 const navGroups = [
   { label: "BELAJAR", items: [{ href: "/", label: "Beranda", icon: Home }, { href: "/materi", label: "Materi & jurusan", icon: BookOpen }, { href: "/progress", label: "Progress", icon: LayoutDashboard }, { href: "/review", label: "Mode Review", icon: RotateCcw }, { href: "/flashcards", label: "Flashcards", icon: Layers3 }, { href: "/glosarium", label: "Glosarium", icon: BookMarked }] },
-  { label: "MEJA KERJA", items: [{ href: "/files", label: "Study Files", icon: FolderUp }, { href: "/prd-maker", label: "PRD Maker", icon: FilePenLine }, { href: "/npc", label: "NPC Pet", icon: Gamepad2 }] },
+  { label: "MEJA KERJA", items: [{ href: "/portfolio", label: "Portfolio Capstone", icon: FolderKanban }, { href: "/files", label: "Study Files", icon: FolderUp }, { href: "/prd-maker", label: "PRD Maker", icon: FilePenLine }, { href: "/npc", label: "NPC Pet", icon: Gamepad2 }] },
   { label: "AKUN", items: [{ href: "/profil", label: "Profil", icon: UserRound }, { href: "/pengaturan", label: "Pengaturan progres", icon: Settings2 }, { href: "/tentang", label: "Tentang", icon: Info }] },
 ];
 
