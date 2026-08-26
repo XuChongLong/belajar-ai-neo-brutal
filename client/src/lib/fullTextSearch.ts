@@ -23,6 +23,11 @@ export function searchMaterialContent(materials: Material[], rawQuery: string, l
   const query = normalize(rawQuery);
   const words = query.split(" ").filter(Boolean);
   if (!words.length) return [];
+  const courseStartIds = new Set(Object.values(materials.reduce<Record<string, Material>>((starts, material) => {
+    if (!material.specialization || starts[material.specialization] || material.id > (starts[material.specialization]?.id ?? Infinity)) return starts;
+    starts[material.specialization] = material;
+    return starts;
+  }, {})).map((material) => material.id));
 
   return materials.flatMap((material) => {
     const fields: { label: string; value: string; weight: number }[] = [
@@ -37,7 +42,7 @@ export function searchMaterialContent(materials: Material[], rawQuery: string, l
     if (material.caseStudy) fields.push({ label: "studi kasus", value: `${material.caseStudy.title} ${material.caseStudy.narrative} ${material.caseStudy.artifact} ${material.caseStudy.teachingPoint} ${material.caseStudy.guidedQuestions.join(" ")}`, weight: 52 });
     if (material.resources?.length) fields.push({ label: "sumber", value: material.resources.map((resource) => `${resource.label} ${resource.note ?? ""}`).join(" "), weight: 46 });
     const journey = getCourseJourney(material.specialization);
-    if (journey) fields.push({ label: "arah course", value: `${journey.fitFor} ${journey.outcomes.join(" ")} ${journey.capstone.title} ${journey.capstone.prompt} ${journey.capstone.evidence.join(" ")}`, weight: 42 });
+    if (journey && courseStartIds.has(material.id)) fields.push({ label: "arah course", value: `${journey.fitFor} ${journey.outcomes.join(" ")} ${journey.capstone.title} ${journey.capstone.prompt} ${journey.capstone.evidence.join(" ")}`, weight: 42 });
 
     const ranked = fields.map((field) => {
       const haystack = normalize(field.value);
@@ -49,4 +54,9 @@ export function searchMaterialContent(materials: Material[], rawQuery: string, l
 
     return ranked.length ? [ranked.sort((left, right) => right.score - left.score)[0]] : [];
   }).sort((left, right) => right.score - left.score || (left.material.displayNumber ?? left.material.id) - (right.material.displayNumber ?? right.material.id)).slice(0, limit);
+}
+
+export function getCatalogSearchMatches(materials: Material[], rawQuery: string) {
+  if (!normalize(rawQuery)) return materials.map((material) => ({ material, matchLabel: "" }));
+  return searchMaterialContent(materials, rawQuery, materials.length).map(({ material, matchLabel }) => ({ material, matchLabel }));
 }

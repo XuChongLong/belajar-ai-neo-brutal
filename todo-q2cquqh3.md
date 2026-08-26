@@ -95,3 +95,5 @@
 - [x] Hubungkan graph prerequisite dengan indikator kesiapan progres serta tampilkan rekomendasi lintas-course pada Course Start.
 - [x] Tambahkan test rekomendasi prerequisite sebelum dan sesudah pengguna menyelesaikan materi pengantar course terkait.
 - [x] Tambahkan test Source Map valid untuk setiap course aktif dan QA visual pada track tambahan selain Cloud.
+- [ ] Uji hasil pencarian kaya yang benar-benar memfilter katalog pada desktop dan Android, termasuk query artefak capstone serta nama sumber.
+- [ ] Verifikasi DOM publik untuk query artefak capstone dan nama sumber, lalu tambah helper test yang membuktikan daftar katalog terfilter.
