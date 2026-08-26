@@ -11,6 +11,7 @@ import { aiEngineeringChapterQuizzes } from "@/lib/aiEngineeringChapterQuizzes";
 import { getChapterCompletedCount, getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
 import { getEvidenceChecklist, getEvidenceKey } from "@/lib/courseJourney";
 import { defaultReadingPreferences, loadReadingPreferences, normalizeReadingPreferences, readingPreferenceClassNames, saveReadingPreferences, type ReadingColumnWidth, type ReadingFont, type ReadingPreferences, type ReadingTextScale } from "@/lib/readingPreferences";
+import WorkbookInspiration from "@/components/WorkbookInspiration";
 
 const visualAnalogies = [
   { title: "AI belajar seperti melihat banyak contoh resep.", copy: "Bayangkan kamu belajar membedakan teh dan kopi dari banyak cangkir. Makin beragam contoh yang kamu lihat, makin baik kamu mengenali polanya—tetap perlu mengecek hasilnya." },
@@ -61,6 +62,7 @@ export default function MaterialDetail() {
     });
   });
   const [readingSettingsOpen, setReadingSettingsOpen] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("reading-settings") === "open");
+  const [pageTurnDirection, setPageTurnDirection] = useState<"forward" | "back">("forward");
 
   const isAiEngineering = material.specialization === "ai-engineering";
   const isDone = completed.includes(material.id);
@@ -153,10 +155,16 @@ export default function MaterialDetail() {
   const updateReadingPreference = <Key extends keyof ReadingPreferences>(key: Key, value: ReadingPreferences[Key]) => {
     setReadingPreferences((current) => ({ ...current, [key]: value }));
   };
+  const turnPage = (target: typeof material, direction: "forward" | "back") => {
+    setPageTurnDirection(direction);
+    markCurrent(target.id);
+    navigate(`/materi/${target.id}`);
+  };
 
   return <div className={`page material-detail-track-${material.specialization ?? "core"}`}>
     <div className="detail-layout page-wrap">
-      <article key={material.id} className={`lesson-article lesson-article-enter ${readingPreferenceClassNames(readingPreferences)}`}>
+      <article key={material.id} className={`lesson-article lesson-article-enter binder-sheet binder-turn-${pageTurnDirection} ${readingPreferenceClassNames(readingPreferences)}`}>
+        <div className="binder-page-tabs" aria-hidden="true"><span>Bab {chapterNumber ?? "✦"}</span><span>Halaman {visibleNumber}</span><span>{material.level}</span></div>
         <div className="article-meta">
           <span className="sticker-label">{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</span>
           <span><Clock3 size={15} /> {material.minutes} menit baca</span>
@@ -170,6 +178,13 @@ export default function MaterialDetail() {
           <h1>{material.title}</h1>
           <p>{material.summary}</p>
         </div>
+
+        <nav className="binder-page-turner" aria-label="Balik halaman materi">
+          {prev ? <button type="button" onClick={() => turnPage(prev, "back")}><ArrowLeft size={16} /><span>Balik<br />{prev.title}</span></button> : <span />}
+          {next ? <button type="button" onClick={() => turnPage(next, "forward")}><span>Lembar berikutnya<br />{next.title}</span><ArrowRight size={16} /></button> : <span />}
+        </nav>
+
+        <WorkbookInspiration specialization={material.specialization} materialId={material.id} />
 
         <section className="reader-preferences" aria-label="Pengaturan membaca">
           <div className="reader-preferences-bar"><div><span className="eyebrow">TAMPILAN BACA</span><p>Atur agar materi terasa pas di matamu. Tersimpan di perangkat ini.</p></div><button type="button" className="reader-preferences-trigger" aria-expanded={readingSettingsOpen} onClick={() => setReadingSettingsOpen((open) => !open)}><SlidersHorizontal size={16} /> {readingSettingsOpen ? "Tutup pengaturan" : "Atur bacaan"}</button></div>
@@ -238,7 +253,6 @@ export default function MaterialDetail() {
 
         <div className="lesson-complete"><div><span className="eyebrow">PROGRES SUBBAB</span><h2>{isDone ? "Subbab ini sudah masuk progresmu." : "Tandai subbab ini setelah selesai belajar."}</h2><p>{isDone ? `Skor terbaikmu ${scores[material.id] ?? 0}/${material.quiz.length}. Kamu dapat membatalkan penanda bila ingin mengulang.` : "Gunakan penanda ini untuk melacak perjalanan dari Bab 1.1 sampai Bab 10.6."}</p></div><button type="button" className={`brutal-button ${isDone ? "button-white" : "button-black"}`} onClick={finish} aria-pressed={isDone}>{isDone ? <><Check size={17} /> Selesai · batalkan</> : <>Tandai selesai <Check size={17} /></>}</button></div>
 
-        <div className="prev-next">{prev ? <button type="button" className="lesson-nav prev" onClick={() => { markCurrent(prev.id); navigate(`/materi/${prev.id}`); }}><ArrowLeft size={17} /><span><small>MATERI SEBELUMNYA</small>{prev.title}</span></button> : <span />}{next ? <button type="button" className="lesson-nav next" onClick={() => { markCurrent(next.id); navigate(`/materi/${next.id}`); }}><span><small>MATERI BERIKUTNYA</small>{next.title}</span><ArrowRight size={17} /></button> : <span />}</div>
       </article>
 
       <aside className={`lesson-sidebar lesson-outline-rail ${sidebarOpen ? "lesson-sidebar-open" : ""}`}>

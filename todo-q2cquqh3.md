@@ -141,3 +141,11 @@
 - [x] Tambahkan test sinkronisasi bookmark serta QA desktop-Android untuk daftar Simpan Materi.
 - [x] Tambahkan regresi sinkronisasi bookmark pada LearningContext/snapshot yang membuktikan bookmark tersimpan, dimuat kembali, dan tetap kompatibel dengan sinkronisasi akun yang sudah ada.
 - [x] Tambahkan test integrasi yang memverifikasi status sinkronisasi bookmark di UI berubah sesuai state `syncStatus` setelah aksi simpan/hapus materi.
+- [x] Audit struktur pembaca, katalog, dan landing page untuk titik redesign workbook binder yang tidak mengganggu progres atau aksesibilitas.
+- [x] Rancang sistem visual binder untuk laptop dan Android: garis kertas, tab bab, lubang ring, penanda, serta detail alat tulis yang tidak mengganggu teks.
+- [x] Kurasi dan integrasikan visual ilmuwan serta kutipan beratribusi yang relevan untuk halaman pembelajaran dan mata pelajaran.
+- [x] Ubah pembaca materi menjadi pengalaman halaman workbook dengan navigasi bab–subbab yang jelas, bukan sekadar tombol lanjut di bagian bawah.
+- [x] Perkaya halaman materi dan course dengan komposisi visual, orientasi belajar, serta micro-interaction yang membantu fokus.
+- [x] Tambahkan regresi untuk navigasi halaman materi dan lakukan QA visual desktop-Android pada redesign binder.
+- [x] Perjelas mana kutipan ilmuwan terverifikasi dan mana catatan editorial agar atribusi visual tetap akurat.
+- [x] Tambahkan regresi klik kontrol balik halaman binder untuk memverifikasi arah navigasi dan pembaruan materi aktif.

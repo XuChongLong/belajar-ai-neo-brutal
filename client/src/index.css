@@ -4,6 +4,7 @@
 @import "tw-animate-css";
 @import "./styles/editorialRedesign.css";
 @import "./styles/savedMaterials.css";
+@import "./styles/binderWorkbook.css";
 
 :root {
   --paper: #fffdf9;
