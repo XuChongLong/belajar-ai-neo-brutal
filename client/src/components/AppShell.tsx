@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — a tactile workbook shell with a strong navigation rail, ink borders, and playful micro-feedback.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowUpRight, BookMarked, BookOpen, ChevronDown, FilePenLine, Flame, FolderKanban, FolderUp, Gamepad2, Home, Info, LayoutDashboard, Layers3, Menu, RotateCcw, Search, Settings2, UserRound, X } from "lucide-react";
 import { useLearning } from "@/contexts/LearningContext";
@@ -8,6 +8,7 @@ import { materials } from "@/lib/materials";
 import { glossaryTerms } from "@/lib/glossary";
 import { searchMaterialContent } from "@/lib/fullTextSearch";
 import { getInitialMobileDrawerOpen, resolveMobileDrawerOpen } from "@/lib/mobileNavigation";
+import { usesReadingFocusShell } from "@/lib/readingFocus";
 import PageAtmosphereCanvas from "@/components/PageAtmosphereCanvas";
 import NpcPetPopup from "@/components/NpcPetPopup";
 import { DESKTOP_SIDEBAR_PREFERENCE_KEY, serializeDesktopSidebarOpenPreference } from "@/lib/navigationPreference";
@@ -24,6 +25,7 @@ type Spark = { id: string; x: number; y: number; glyph: string };
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const focusLearningMode = usesReadingFocusShell(location);
   const [mobileOpen, setMobileOpen] = useState(getInitialMobileDrawerOpen);
   const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches);
@@ -46,6 +48,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, [searchQuery]);
 
   useEffect(() => {
+    if (focusLearningMode) return;
     const onMove = (event: MouseEvent) => {
       setCursor({ x: event.clientX, y: event.clientY });
       trailRef.current = { x: trailRef.current.x + (event.clientX - trailRef.current.x) * 0.18, y: trailRef.current.y + (event.clientY - trailRef.current.y) * 0.18 };
@@ -59,7 +62,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     window.addEventListener("mousemove", onMove);
     window.addEventListener("click", onClick);
     return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("click", onClick); };
-  }, []);
+  }, [focusLearningMode]);
 
   useEffect(() => {
     setMobileOpen((open) => resolveMobileDrawerOpen(open, "route-change"));
@@ -90,10 +93,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const navigationVisible = isMobileLayout ? mobileOpen : desktopSidebarOpen;
 
   return (
-    <div className={`app-shell ${desktopSidebarOpen ? "desktop-sidebar-open" : ""} ${mobileOpen ? "mobile-nav-open" : ""}`}>
-      <div className="cursor-dot" style={{ left: cursor.x, top: cursor.y }} aria-hidden="true" />
+    <div className={`app-shell ${desktopSidebarOpen ? "desktop-sidebar-open" : ""} ${mobileOpen ? "mobile-nav-open" : ""} ${focusLearningMode ? "app-shell-focus-learning" : ""}`}>
+      {!focusLearningMode && <><div className="cursor-dot" style={{ left: cursor.x, top: cursor.y }} aria-hidden="true" />
       <div className="cursor-trail" style={{ left: trail.x, top: trail.y }} aria-hidden="true" />
-      <div className="spark-layer" aria-hidden="true">{sparks.map((spark) => <span key={spark.id} className="spark" style={{ left: spark.x, top: spark.y }}>{spark.glyph}</span>)}</div>
+      <div className="spark-layer" aria-hidden="true">{sparks.map((spark) => <span key={spark.id} className="spark" style={{ left: spark.x, top: spark.y }}>{spark.glyph}</span>)}</div></>}
       {searchOpen && <div className="global-search-overlay" role="dialog" aria-modal="true" aria-label="Pencarian global" onMouseDown={(event) => { if (event.target === event.currentTarget) setSearchOpen(false); }}><div className="global-search-panel"><div className="global-search-head"><div><span className="eyebrow">CARI DI BELAJAR.AI</span><h2>Temukan langkah berikutnya.</h2></div><button type="button" className="icon-button" onClick={() => setSearchOpen(false)} aria-label="Tutup pencarian"><X size={20} /></button></div><div className="global-search-input"><Search size={19} /><input ref={searchInputRef} value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Cari isi materi, kuis, atau istilah..." aria-label="Cari isi materi, kuis, atau istilah" /><kbd>ESC</kbd></div>{searchQuery.trim() ? <div className="global-search-results">{searchResults.length ? searchResults.map((result) => <Link href={result.href} className="global-search-result" key={`${result.type}-${result.title}`} onClick={() => setSearchOpen(false)}><span className="search-result-type">{result.type}</span><div><strong>{result.title}</strong><small>{result.meta}</small></div><ArrowUpRight size={16} /></Link>) : <div className="global-search-empty"><span>⊙</span><p>Belum ada yang cocok. Coba kata yang lebih pendek.</p></div>}</div> : <div className="global-search-hint"><span>TIP CEPAT</span><p>Tekan <kbd>/</kbd> kapan pun untuk membuka pencarian. Cari kata spesifik dari penjelasan, konteks buku, studi kasus, kuis, atau istilah AI.</p></div>}</div></div>}
       <button type="button" className="desktop-nav-toggle" onClick={() => setDesktopSidebarOpen((open) => !open)} aria-controls="primary-navigation" aria-expanded={desktopSidebarOpen} aria-label={desktopSidebarOpen ? "Sembunyikan navigasi" : "Tampilkan navigasi"}>{desktopSidebarOpen ? <X size={20} /> : <Menu size={21} />}</button>
       {mobileOpen && <button type="button" className="mobile-nav-backdrop" aria-label="Tutup menu navigasi" onClick={() => setMobileOpen((open) => resolveMobileDrawerOpen(open, "backdrop"))} />}
@@ -123,7 +126,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="main-column">
         <div className="desktop-brand-rail"><Link href="/" className="desktop-brand-link"><img src={logo} alt="" /><span>belajar<span>.ai</span></span></Link><button type="button" className="global-search-trigger" onClick={() => setSearchOpen(true)}><Search size={15} /> <span>Cari isi materi, kuis, istilah...</span><kbd>/</kbd></button><span>AI TANPA RIBET <i /> WORKBOOK DIGITAL</span></div>
         <header className="mobile-header"><button type="button" className="icon-button mobile-menu-trigger" onClick={() => setMobileOpen((open) => resolveMobileDrawerOpen(open, "toggle"))} aria-controls="primary-navigation" aria-expanded={mobileOpen} aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}>{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button><Link href="/" className="mobile-brand"><img src={logo} alt="" /> <span>belajar<span>.ai</span></span></Link><button type="button" className="mobile-search-trigger" onClick={() => setSearchOpen(true)} aria-label="Buka pencarian"><Search size={18} /></button><Link href="/progress" className="mobile-progress">{streak}<Flame size={15} fill="currentColor" /></Link></header>
-        <main><PageAtmosphereCanvas path={location} />{children}<NpcPetPopup /></main>
+        <main>{!focusLearningMode && <PageAtmosphereCanvas path={location} />}{children}{!focusLearningMode && <NpcPetPopup />}</main>
       </div>
     </div>
   );

@@ -16,20 +16,20 @@
 - [x] Tambahkan pengaturan untuk mengekspor dan mereset progres melalui konfirmasi aman.
 - [x] Tambahkan test serta verifikasi visual untuk riwayat, target, ekspor, dan reset progres.
 - [x] Tambahkan test payload ekspor dan state default setelah reset progres.
-- [ ] Verifikasi dialog reset di browser untuk alur batal dan konfirmasi reset.
-- [ ] Uji ekspor progres dan validasi isi file JSON yang dihasilkan.
+- [x] Ditutup atas instruksi pengguna tanpa eksekusi reset destruktif: verifikasi dialog reset untuk alur batal dan konfirmasi reset.
+- [x] Ditutup atas instruksi pengguna: uji ekspor progres dan validasi isi file JSON yang dihasilkan.
 - [x] Telusuri dan perbaiki alur masuk yang dilaporkan macet.
 - [x] Verifikasi ulang sesi autentikasi serta akses pengaturan progres setelah perbaikan login.
-- [ ] Verifikasi sesi lokal baru membuka Pengaturan Progres terautentikasi dan memuat data progres akun.
+- [x] Ditutup atas instruksi pengguna: verifikasi sesi lokal baru membuka Pengaturan Progres terautentikasi dan memuat data progres akun.
 - [x] Reproduksi dan perbaiki drawer Android yang tidak dapat dibuka setelah menekan tombol menu.
-- [ ] Verifikasi interaksi buka, tutup, backdrop, dan navigasi drawer Android setelah perbaikan regresi.
+- [x] Ditutup atas instruksi pengguna: verifikasi interaksi buka, tutup, backdrop, dan navigasi drawer Android setelah perbaikan regresi.
 - [x] Telusuri dan perbaiki aset gambar yang tidak muncul pada web Android.
 - [x] Tambahkan ilustrasi dan analogi visual ringan pada materi agar lebih mudah dipahami.
 - [x] Uji pemuatan gambar serta keterbacaan pengayaan visual pada viewport Android.
 - [x] Pastikan ilustrasi generatif selesai sukses dan tampil sebagai aset final, bukan placeholder.
 - [x] Verifikasi langsung aset ilustrasi workbook final pada URL penyimpanan.
 - [x] Verifikasi blok analogi Android memakai ilustrasi final, bukan placeholder atau fallback.
-- [ ] Verifikasi pada domain publik Android bahwa hero, logo, dan ilustrasi materi tampil setelah refresh.
+- [x] Ditutup atas instruksi pengguna: verifikasi pada domain publik Android bahwa hero, logo, dan ilustrasi materi tampil setelah refresh.
 - [x] Hapus referensi ilustrasi PNG tambahan yang memunculkan placeholder di Android.
 - [x] Ganti kartu analogi dengan visual konsep browser-native yang tidak bergantung pada aset gambar eksternal.
 - [x] Uji halaman materi Android agar bebas dari placeholder atau gambar gagal dimuat.
@@ -43,7 +43,7 @@
 - [x] Integrasikan materi Cyber Security baru ke aplikasi serta perbarui katalog dan navigasi pembelajaran.
 - [x] Uji cakupan sumber, ketepatan tautan, keterbacaan, dan tampilan materi Cyber Security.
 - [x] Lengkapi catatan terstruktur untuk dua video utama dan semua rumpun penting dari 21 video playlist Cyber Security.
-- [ ] Verifikasi langsung beberapa tautan sumber dari antarmuka materi Cyber Security serta rendering pada deployment publik Android.
+- [x] Ditutup atas instruksi pengguna: verifikasi langsung beberapa tautan sumber dari antarmuka materi Cyber Security serta rendering pada deployment publik Android.
 - [x] Rapikan tata letak kartu sumber materi Cyber Security agar tautan dan deskripsinya tidak menyempit pada layar Android.
 - [x] Petakan ulang seluruh materi dua video utama dan 21 video playlist menjadi blueprint kurikulum defensif yang jauh lebih mendalam.
 - [x] Rancang struktur Cyber Security baru dengan bab bertingkat dan ratusan subbab yang dapat ditelusuri pengguna.
@@ -98,3 +98,10 @@
 - [x] Uji hasil pencarian kaya yang benar-benar memfilter katalog pada desktop dan Android, termasuk query artefak capstone serta nama sumber.
 - [x] Verifikasi DOM publik untuk query artefak capstone dan nama sumber, lalu tambah helper test yang membuktikan daftar katalog terfilter.
 - [x] Tambahkan test integrasi halaman katalog untuk query q dan lengkapi bukti hasil pencarian responsif pada viewport Android.
+- [x] Audit elemen visual yang mengalihkan fokus pada katalog dan pembaca materi saat ini.
+- [x] Riset serta dokumentasikan referensi Awwwards berkarakter editorial yang relevan untuk platform course panjang.
+- [x] Rancang sistem desain editorial baru: hierarki tipografi, warna, ritme ruang, navigasi course, dan mode fokus membaca.
+- [x] Terapkan redesign prioritas pada beranda, katalog course, pembaca materi, dan shell navigasi tanpa merusak progres pengguna.
+- [x] Tambahkan test regresi untuk interaksi navigasi yang berubah akibat redesign editorial.
+- [x] Lakukan QA visual desktop dan Android untuk keterbacaan serta fokus membaca pada layout baru.
+- [x] Tambahkan test integrasi AppShell pada rute course dan non-course untuk memastikan mode fokus, rail/header, drawer, serta pencarian tetap aman.
