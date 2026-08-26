@@ -160,4 +160,4 @@
 - [x] Tambahkan nomor halaman pada setiap section materi untuk pembaca binder laptop.
 - [x] Tambahkan transisi kertas saat pengguna berpindah submateri melalui rail atau kontrol halaman.
 - [x] Tambahkan toggle mode fokus untuk menyembunyikan/menampilkan rail pembaca dengan akses keyboard yang jelas.
-- [ ] Tambahkan regresi pemuatan gambar, mode fokus, nomor section, dan navigasi transisi; lakukan QA browser publik desktop-Android.
+- [x] Tambahkan regresi pemuatan gambar, mode fokus, nomor section, dan navigasi transisi; lakukan QA browser publik desktop-Android.
