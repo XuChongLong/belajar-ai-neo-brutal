@@ -86,6 +86,7 @@ export default function MaterialDetail() {
   const evidence = projectEvidence[evidenceKey] ?? { checked: [], reflection: "", updatedAt: "" };
   const prev = materials.find((item) => item.id === material.id - 1);
   const next = materials.find((item) => item.id === material.id + 1);
+  const outlinePreview = (chapterMaterials.length ? chapterMaterials : materials.filter((item) => item.category === material.category)).slice(0, 5);
   const score = useMemo(() => material.quiz.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0), [answers, material.quiz]);
   const chapterScore = useMemo(() => chapterQuiz?.questions.reduce((total, question, index) => total + (chapterAnswers[index] === question.answer ? 1 : 0), 0) ?? 0, [chapterAnswers, chapterQuiz]);
   const glossaryMatches = useMemo(() => glossaryTerms
@@ -163,6 +164,8 @@ export default function MaterialDetail() {
 
   return <div className={`page material-detail-track-${material.specialization ?? "core"}`}>
     <div className="detail-layout page-wrap">
+      <div className="open-book-spread" aria-label="Buku terbuka dua halaman">
+      <aside className="open-book-left-page" aria-label="Halaman kiri buku"><span className="eyebrow">CATATAN SEBELUM LANJUT</span><h2>{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</h2><p>Kamu lagi ada di lembar {visibleNumber}. Lihat dulu potongan daftar isi ini, lalu lanjut baca halaman kanan dengan santai.</p><nav className="open-book-outline" aria-label="Preview daftar isi bab">{outlinePreview.map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "active" : ""} onClick={() => { markCurrent(item.id); if (chapterNumber) markChapterLessonRead(chapterNumber, item.id); }}><span>{String(item.displayNumber ?? item.id).padStart(2, "0")}</span><strong>{item.title}</strong>{completed.includes(item.id) && <Check size={14} />}</Link>)}</nav><WorkbookInspiration specialization={material.specialization} materialId={material.id} compact /><span className="open-book-page-number">{visibleNumber} · BUKU BELAJAR.AI</span></aside>
       <article key={material.id} className={`lesson-article lesson-article-enter binder-sheet binder-turn-${pageTurnDirection} ${readingPreferenceClassNames(readingPreferences)}`}>
         <div className="binder-page-tabs" aria-hidden="true"><span>Bab {chapterNumber ?? "✦"}</span><span>Halaman {visibleNumber}</span><span>{material.level}</span></div>
         <div className="article-meta">
@@ -184,7 +187,7 @@ export default function MaterialDetail() {
           {next ? <button type="button" onClick={() => turnPage(next, "forward")}><span>Lembar berikutnya<br />{next.title}</span><ArrowRight size={16} /></button> : <span />}
         </nav>
 
-        <WorkbookInspiration specialization={material.specialization} materialId={material.id} />
+        <div className="spread-mobile-inspiration"><WorkbookInspiration specialization={material.specialization} materialId={material.id} /></div>
 
         <section className="reader-preferences" aria-label="Pengaturan membaca">
           <div className="reader-preferences-bar"><div><span className="eyebrow">TAMPILAN BACA</span><p>Atur agar materi terasa pas di matamu. Tersimpan di perangkat ini.</p></div><button type="button" className="reader-preferences-trigger" aria-expanded={readingSettingsOpen} onClick={() => setReadingSettingsOpen((open) => !open)}><SlidersHorizontal size={16} /> {readingSettingsOpen ? "Tutup pengaturan" : "Atur bacaan"}</button></div>
@@ -254,6 +257,7 @@ export default function MaterialDetail() {
         <div className="lesson-complete"><div><span className="eyebrow">PROGRES SUBBAB</span><h2>{isDone ? "Subbab ini sudah masuk progresmu." : "Tandai subbab ini setelah selesai belajar."}</h2><p>{isDone ? `Skor terbaikmu ${scores[material.id] ?? 0}/${material.quiz.length}. Kamu dapat membatalkan penanda bila ingin mengulang.` : "Gunakan penanda ini untuk melacak perjalanan dari Bab 1.1 sampai Bab 10.6."}</p></div><button type="button" className={`brutal-button ${isDone ? "button-white" : "button-black"}`} onClick={finish} aria-pressed={isDone}>{isDone ? <><Check size={17} /> Selesai · batalkan</> : <>Tandai selesai <Check size={17} /></>}</button></div>
 
       </article>
+      </div>
 
       <aside className={`lesson-sidebar lesson-outline-rail ${sidebarOpen ? "lesson-sidebar-open" : ""}`}>
         <button type="button" className="lesson-mobile-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>Lihat daftar isi bab <ChevronDown size={17} /></button>

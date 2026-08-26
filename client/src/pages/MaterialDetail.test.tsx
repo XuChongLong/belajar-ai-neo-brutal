@@ -57,9 +57,11 @@ describe("MaterialDetail reading settings", () => {
 
   it("keeps page turning controls at the top of the binder reader", () => {
     render(<MaterialDetail />);
+    expect(screen.getByLabelText("Buku terbuka dua halaman")).toBeTruthy();
+    expect(screen.getByLabelText("Halaman kiri buku")).toBeTruthy();
     expect(screen.getByRole("navigation", { name: "Balik halaman materi" })).toBeTruthy();
     expect(screen.getByRole("button", { name: /lembar berikutnya/i })).toBeTruthy();
-    expect(screen.getByText(/kutipan ilmuwan.*sumber nasa/i)).toBeTruthy();
+    expect(screen.getAllByText(/kutipan ilmuwan.*sumber nasa/i).length).toBeGreaterThan(0);
   });
 
   it("turns to the next binder page through the existing material route and progress state", () => {

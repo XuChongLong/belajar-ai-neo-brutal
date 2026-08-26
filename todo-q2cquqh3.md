@@ -149,3 +149,6 @@
 - [x] Tambahkan regresi untuk navigasi halaman materi dan lakukan QA visual desktop-Android pada redesign binder.
 - [x] Perjelas mana kutipan ilmuwan terverifikasi dan mana catatan editorial agar atribusi visual tetap akurat.
 - [x] Tambahkan regresi klik kontrol balik halaman binder untuk memverifikasi arah navigasi dan pembaruan materi aktif.
+- [x] Audit struktur pembaca binder dan breakpoint laptop untuk mode buku terbuka dua halaman.
+- [x] Bangun mode dua halaman laptop dengan lipatan tengah, pasangan halaman, dan fallback pembaca tunggal di Android.
+- [x] Tambahkan regresi serta QA desktop-Android untuk mode buku terbuka.

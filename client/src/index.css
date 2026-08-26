@@ -5,6 +5,7 @@
 @import "./styles/editorialRedesign.css";
 @import "./styles/savedMaterials.css";
 @import "./styles/binderWorkbook.css";
+@import "./styles/twoPageSpread.css";
 
 :root {
   --paper: #fffdf9;
