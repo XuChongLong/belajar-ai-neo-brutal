@@ -22,7 +22,7 @@ describe("Materials subject catalogue", () => {
 
   it("shows only subject choices on the catalogue entry page instead of a wall of sublessons", () => {
     render(<Materials />);
-    expect(screen.getByRole("heading", { name: /pilih satu hal/i })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /jangan buka semua jalan/i })).toBeTruthy();
     expect(screen.getByRole("link", { name: /cloud computing ai/i }).getAttribute("href")).toBe("/materi?jurusan=cloud-devops");
     expect(screen.queryByText(/prolog\.1: apa yang dimaksud cloud computing/i)).toBeNull();
   });

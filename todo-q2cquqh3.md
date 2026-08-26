@@ -119,3 +119,7 @@
 - [x] Tulis ulang landing page agar menjelaskan manfaat, cara kerja, dan hasil belajar Belajar AI secara jelas.
 - [x] Tambahkan visual ilmuwan dan kutipan motivasional yang terkurasi serta aman secara atribusi untuk landing page.
 - [x] Tambahkan regresi navigasi katalog ringkas dan lakukan QA desktop-Android untuk tiga halaman yang disederhanakan.
+- [x] Audit copy landing page, katalog mata pelajaran, detail course, dan dashboard yang masih generik atau berpotensi membingungkan.
+- [x] Susun pedoman suara bahasa santai-sistematis beserta pola analogi yang menjelaskan alasan, arah, dan aksi berikutnya.
+- [x] Tulis ulang copy utama landing page, katalog, detail course, dan dashboard dengan contoh konkret yang mudah dibaca anak muda.
+- [x] Uji regresi halaman serta QA visual untuk memastikan copy baru tidak merusak tata letak desktop maupun Android.
