@@ -88,12 +88,13 @@
 - [x] Tampilkan Source Map per course serta perluas pencarian ke ringkasan, isi, artefak, dan sumber.
 - [x] Perkaya 36 materi prioritas dengan contoh kerja, kesalahan umum, rubrik artefak, dan penjelasan spesifik domain.
 - [x] Tambahkan test regresi untuk rekomendasi, peta prasyarat, evidence, source map, pencarian, dan progres akun.
-- [ ] Verifikasi pengalaman Course Start, evidence, portfolio, source map, pencarian, dan responsivitas pada desktop/Android.
+- [x] Verifikasi pengalaman Course Start, evidence, portfolio, source map, pencarian, dan responsivitas pada desktop/Android.
 - [x] Tambahkan kontrak portfolio/capstone evidence per akun pada snapshot, validasi server, dan normalisasi progres lama.
 - [x] Simpan serta jalankan test eksplisit untuk Course Journey, Project Evidence, dan kompatibilitas portfolio.
 - [x] Tambahkan test snapshot progres lama tanpa Project Evidence/portfolio serta round-trip evidence pada normalisasi client dan validasi server.
 - [x] Hubungkan graph prerequisite dengan indikator kesiapan progres serta tampilkan rekomendasi lintas-course pada Course Start.
 - [x] Tambahkan test rekomendasi prerequisite sebelum dan sesudah pengguna menyelesaikan materi pengantar course terkait.
 - [x] Tambahkan test Source Map valid untuk setiap course aktif dan QA visual pada track tambahan selain Cloud.
-- [ ] Uji hasil pencarian kaya yang benar-benar memfilter katalog pada desktop dan Android, termasuk query artefak capstone serta nama sumber.
-- [ ] Verifikasi DOM publik untuk query artefak capstone dan nama sumber, lalu tambah helper test yang membuktikan daftar katalog terfilter.
+- [x] Uji hasil pencarian kaya yang benar-benar memfilter katalog pada desktop dan Android, termasuk query artefak capstone serta nama sumber.
+- [x] Verifikasi DOM publik untuk query artefak capstone dan nama sumber, lalu tambah helper test yang membuktikan daftar katalog terfilter.
+- [x] Tambahkan test integrasi halaman katalog untuk query q dan lengkapi bukti hasil pencarian responsif pada viewport Android.

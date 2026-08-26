@@ -60,3 +60,27 @@ export function getCatalogSearchMatches(materials: Material[], rawQuery: string)
   if (!normalize(rawQuery)) return materials.map((material) => ({ material, matchLabel: "" }));
   return searchMaterialContent(materials, rawQuery, materials.length).map(({ material, matchLabel }) => ({ material, matchLabel }));
 }
+
+export function filterCatalogMaterials(materials: Material[], options: {
+  search: string;
+  category?: string;
+  allCategory?: string;
+  level?: string;
+  allLevel?: string;
+  onlySaved?: boolean;
+  bookmarks?: number[];
+  learningFilter?: "all" | "in-progress" | "completed" | "not-started";
+  completed?: number[];
+  current?: number | null;
+}) {
+  const searchIds = new Set(getCatalogSearchMatches(materials, options.search).map((hit) => hit.material.id));
+  return materials.filter((material) => {
+    const matchesCategory = !options.category || options.category === options.allCategory || material.category === options.category;
+    const matchesLevel = !options.level || options.level === options.allLevel || material.level === options.level;
+    const matchesSaved = !options.onlySaved || (options.bookmarks ?? []).includes(material.id);
+    const completed = options.completed ?? [];
+    const learning = options.learningFilter ?? "all";
+    const matchesLearning = learning === "all" || (learning === "completed" && completed.includes(material.id)) || (learning === "in-progress" && material.id === options.current && !completed.includes(material.id)) || (learning === "not-started" && !completed.includes(material.id) && material.id !== options.current);
+    return searchIds.has(material.id) && matchesCategory && matchesLevel && matchesSaved && matchesLearning;
+  });
+}

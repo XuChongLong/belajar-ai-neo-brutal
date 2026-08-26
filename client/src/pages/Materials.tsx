@@ -1,14 +1,14 @@
 // Style reminder: Paper Playground — the catalogue behaves like a guided workbook, with routes, chapter checkpoints, and tactile filter controls.
 
 import { ArrowRight, Bookmark, Check, ChevronDown, CircleDotDashed, ExternalLink, Filter, GitBranch, Map as MapIcon, Search, SlidersHorizontal, Timer } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import MaterialCard from "@/components/MaterialCard";
 import { categories, categoryMeta, levels, materials } from "@/lib/materials";
 import { isSpecializationId, materialMatchesSpecialization, specializationMeta, specializationOrder, type SpecializationId } from "@/lib/specializations";
 import { useLearning } from "@/contexts/LearningContext";
 import { getCourseJourney, getCourseSourceMap, getCourseStartRecommendation } from "@/lib/courseJourney";
-import { getCatalogSearchMatches } from "@/lib/fullTextSearch";
+import { filterCatalogMaterials, getCatalogSearchMatches } from "@/lib/fullTextSearch";
 
 type LearningFilter = "all" | "in-progress" | "completed" | "not-started";
 
@@ -33,6 +33,12 @@ export default function Materials() {
 
   useEffect(() => { setSearch(searchParam); }, [searchParam]);
 
+  useEffect(() => {
+    if (!searchParam || window.location.hash !== "#search-results") return;
+    const timer = window.setTimeout(() => document.getElementById("search-results")?.scrollIntoView({ block: "start" }), 0);
+    return () => window.clearTimeout(timer);
+  }, [searchParam]);
+
   const trackMaterials = useMemo(() => materials.filter((material) => materialMatchesSpecialization(material, selectedTrack)).sort((left, right) => {
     if (selectedTrack === "ai-engineering") return (left.displayNumber ?? left.id) - (right.displayNumber ?? right.id);
     return left.id - right.id;
@@ -47,12 +53,7 @@ export default function Materials() {
   const searchHits = useMemo(() => getCatalogSearchMatches(trackMaterials, search), [trackMaterials, search]);
   const searchHitById = useMemo(() => new Map(searchHits.map((hit) => [hit.material.id, hit])), [searchHits]);
 
-  const filtered = useMemo(() => trackMaterials.filter((material) => {
-    const matchesSearch = searchHitById.has(material.id);
-    const matchesFilters = (category === categories[0] || material.category === category) && (level === levels[0] || material.level === level) && (!onlySaved || bookmarks.includes(material.id));
-    const matchesLearning = learningFilter === "all" || (learningFilter === "completed" && completed.includes(material.id)) || (learningFilter === "in-progress" && material.id === current && !completed.includes(material.id)) || (learningFilter === "not-started" && !completed.includes(material.id) && material.id !== current);
-    return matchesSearch && matchesFilters && matchesLearning;
-  }), [trackMaterials, search, category, level, onlySaved, bookmarks, learningFilter, completed, current]);
+  const filtered = useMemo(() => filterCatalogMaterials(trackMaterials, { search, category, allCategory: categories[0], level, allLevel: levels[0], onlySaved, bookmarks, learningFilter, completed, current }), [trackMaterials, search, category, level, onlySaved, bookmarks, learningFilter, completed, current]);
 
   const chapters = useMemo(() => Array.from(new Set(trackMaterials.map((material) => material.category))).map((chapter, index) => {
     const allItems = trackMaterials.filter((material) => material.category === chapter);
@@ -105,7 +106,7 @@ export default function Materials() {
         <select value={level} onChange={(event) => setLevel(event.target.value)} aria-label="Filter level">{levels.map((item) => <option key={item}>{item}</option>)}</select>
         <button type="button" className={`saved-filter ${onlySaved ? "saved-filter-active" : ""}`} onClick={() => setOnlySaved((value) => !value)} aria-pressed={onlySaved}><Bookmark size={15} fill={onlySaved ? "currentColor" : "none"} /> Disimpan <b>{bookmarks.length}</b></button>
       </section>
-      <div className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint{search.trim() ? ` · mencari juga dari ${Array.from(new Set(searchHits.map((hit) => hit.matchLabel).filter(Boolean))).join(", ") || "isi course"}` : ""}</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
+      <div id="search-results" className="results-meta"><span><Filter size={13} /> Menampilkan <strong>{filtered.length}</strong> materi dalam <strong>{chapters.length}</strong> checkpoint{search.trim() ? ` · mencari juga dari ${Array.from(new Set(searchHits.map((hit) => hit.matchLabel).filter(Boolean))).join(", ") || "isi course"}` : ""}</span><span className="results-tip">✦ pilih kartu checkpoint untuk meneruskan ritme belajarmu</span></div>
       <section className="materials-groups checkpoint-groups">{chapters.map((chapter) => {
         const expanded = isFilteredView || chapter.index === 0 || chapter.chapterCurrent || expandedChapters.includes(chapter.chapter);
         const visibleItems = expanded ? chapter.items : [];

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
 import { materials } from "./materials";
-import { getCatalogSearchMatches, searchMaterialContent } from "./fullTextSearch";
+import { filterCatalogMaterials, getCatalogSearchMatches, searchMaterialContent } from "./fullTextSearch";
 
 describe("full-text material search", () => {
   it("finds specific words from the deep instruction and source context of all sixty AI Engineering lessons", () => {
@@ -35,5 +35,14 @@ describe("full-text material search", () => {
     expect(source.length).toBeGreaterThan(0);
     expect(source.length).toBeLessThan(cloud.length);
     expect(source.every((result) => result.matchLabel === "sumber")).toBe(true);
+  });
+
+  it("applies query q through the same catalogue filter used by the Materials page", () => {
+    const cloud = materials.filter((material) => material.specialization === "cloud-devops");
+    const capstone = filterCatalogMaterials(cloud, { search: "Production Readiness Pack" });
+    const source = filterCatalogMaterials(cloud, { search: "Terraform Documentation" });
+    expect(capstone.map((material) => material.id)).toEqual([5000]);
+    expect(source).toHaveLength(36);
+    expect(source.every((material) => material.category.includes("Bab 6") || material.category.includes("Bab 7") || material.category.includes("Bab 12"))).toBe(true);
   });
 });
