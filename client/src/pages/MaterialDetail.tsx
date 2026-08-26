@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — reading view prioritizes calm paper space, strong article rhythm, and quiz feedback that feels encouraging.
 
-import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, ClipboardCheck, Clock3, Database, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, ClipboardCheck, Clock3, Database, Eye, EyeOff, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useRoute } from "wouter";
 import { toast } from "sonner";
@@ -63,6 +63,7 @@ export default function MaterialDetail() {
   });
   const [readingSettingsOpen, setReadingSettingsOpen] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("reading-settings") === "open");
   const [pageTurnDirection, setPageTurnDirection] = useState<"forward" | "back">("forward");
+  const [focusMode, setFocusMode] = useState(false);
 
   const isAiEngineering = material.specialization === "ai-engineering";
   const isDone = completed.includes(material.id);
@@ -162,10 +163,10 @@ export default function MaterialDetail() {
     navigate(`/materi/${target.id}`);
   };
 
-  return <div className={`page material-detail-track-${material.specialization ?? "core"}`}>
+  return <div className={`page material-detail-track-${material.specialization ?? "core"} ${focusMode ? "reader-focus-mode" : ""}`}>
     <div className="detail-layout page-wrap">
       <div className="open-book-spread" aria-label="Buku terbuka dua halaman">
-      <aside className="open-book-left-page" aria-label="Halaman kiri buku"><span className="eyebrow">MATERI DI HALAMAN KIRI</span>{material.chapterLecture && <section className="spread-left-chapter-lecture"><span className="eyebrow">MULAI DARI BUKU</span><h2>{material.chapterLecture.title}</h2>{material.chapterLecture.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-lecture-${material.id}-${index}`}>{paragraph}</p>)}</section>}{material.bookContext && <section className="spread-left-context"><span className="eyebrow">KONTEKS SUBBAB</span><h2>{material.bookContext.title}</h2>{material.bookContext.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-context-${material.id}-${index}`}>{paragraph}</p>)}</section>}<div className="spread-left-sections">{material.sections.slice(0, spreadSectionCount).map((section, index) => <section key={`spread-left-${section.heading}`}><span>{String(index + 1).padStart(2, "0")}</span><div><h2>{section.heading}</h2>{section.body.split("\n\n").slice(0, 2).map((paragraph, paragraphIndex) => <p key={`spread-left-${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}</div><span className="open-book-page-number">{visibleNumber} · BUKU BELAJAR.AI</span></aside>
+      <aside className="open-book-left-page" aria-label="Halaman kiri buku"><span className="eyebrow">MATERI DI HALAMAN KIRI</span>{material.chapterLecture && <section className="spread-left-chapter-lecture"><span className="eyebrow">MULAI DARI BUKU</span><h2>{material.chapterLecture.title}</h2>{material.chapterLecture.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-lecture-${material.id}-${index}`}>{paragraph}</p>)}</section>}{material.bookContext && <section className="spread-left-context"><span className="eyebrow">KONTEKS SUBBAB</span><h2>{material.bookContext.title}</h2>{material.bookContext.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-context-${material.id}-${index}`}>{paragraph}</p>)}</section>}<div className="spread-left-sections">{material.sections.slice(0, spreadSectionCount).map((section, index) => <section key={`spread-left-${section.heading}`}><span>{String(index + 1).padStart(2, "0")}</span><div><small className="section-page-number">Lembar {visibleNumber} · bagian {String(index + 1).padStart(2, "0")}</small><h2>{section.heading}</h2>{section.body.split("\n\n").slice(0, 2).map((paragraph, paragraphIndex) => <p key={`spread-left-${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}</div><span className="open-book-page-number">{visibleNumber} · BUKU BELAJAR.AI</span></aside>
       <article key={material.id} className={`lesson-article lesson-article-enter binder-sheet binder-turn-${pageTurnDirection} ${readingPreferenceClassNames(readingPreferences)}`}>
         <div className="binder-page-tabs" aria-hidden="true"><span>Bab {chapterNumber ?? "✦"}</span><span>Halaman {visibleNumber}</span><span>{material.level}</span></div>
         <div className="article-meta">
@@ -174,6 +175,7 @@ export default function MaterialDetail() {
           <span>·</span>
           <span>{material.level}</span>
           <button type="button" className={`article-save-material ${isBookmarked ? "saved" : ""}`} onClick={() => toggleBookmark(material.id)} aria-pressed={isBookmarked}><Bookmark size={14} fill={isBookmarked ? "currentColor" : "none"} /> {isBookmarked ? "Tersimpan" : "Simpan materi"}</button>
+          <button type="button" className="reader-focus-toggle" onClick={() => setFocusMode((active) => !active)} aria-pressed={focusMode} aria-label={focusMode ? "Tampilkan daftar isi" : "Sembunyikan daftar isi untuk fokus"}>{focusMode ? <Eye size={14} /> : <EyeOff size={14} />} {focusMode ? "Tampilkan rail" : "Fokus baca"}</button>
         </div>
 
         <div className="article-heading">
@@ -230,7 +232,7 @@ export default function MaterialDetail() {
           <div className="case-study-questions"><span className="eyebrow">PERTANYAAN BIMBINGAN</span><h3>Berhenti sejenak dan jawab sebelum melanjutkan.</h3><ol>{material.caseStudy.guidedQuestions.map((question) => <li key={question}>{question}</li>)}</ol></div>
         </section>}
 
-        {material.sections.map((section, index) => <section className={`article-section ${index < spreadSectionCount ? "spread-right-desktop-hidden" : ""}`} id={`section-${material.id}-${index + 1}`} key={section.heading}><span className="section-index">{String(index + 1).padStart(2, "0")}</span><div className="article-section-copy"><h2>{section.heading}</h2>{section.body.split("\n\n").map((paragraph, paragraphIndex) => <p key={`${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}
+        {material.sections.map((section, index) => <section className={`article-section ${index < spreadSectionCount ? "spread-right-desktop-hidden" : ""}`} id={`section-${material.id}-${index + 1}`} key={section.heading}><span className="section-index">{String(index + 1).padStart(2, "0")}</span><div className="article-section-copy"><small className="section-page-number">Lembar {visibleNumber} · bagian {String(index + 1).padStart(2, "0")}/{String(material.sections.length).padStart(2, "0")}</small><h2>{section.heading}</h2>{section.body.split("\n\n").map((paragraph, paragraphIndex) => <p key={`${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}
 
         {material.deepDive && <section className="priority-deep-dive" aria-labelledby={`deep-dive-${material.id}`}><header><span className="eyebrow">CONTOH KERJA · MATERI PRIORITAS</span><h2 id={`deep-dive-${material.id}`}>{material.deepDive.exampleTitle}</h2></header><div className="deep-dive-example"><p>{material.deepDive.example}</p></div><div className="deep-dive-grid"><section><span className="eyebrow">KESALAHAN UMUM</span><p>{material.deepDive.commonMistake}</p></section><section><span className="eyebrow">RUBRIK ARTEFAK</span><ol>{material.deepDive.rubric.map((item) => <li key={item}>{item}</li>)}</ol></section></div></section>}
 
@@ -266,7 +268,7 @@ export default function MaterialDetail() {
           <span className="lesson-sidebar-label">{chapterNumber ? `DAFTAR ISI BAB ${chapterNumber}` : "DAFTAR SUB-BAB"}</span>
           <strong className="lesson-sidebar-title">{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</strong>
           {chapterNumber && <div className="sidebar-chapter-progress"><div><span>Subbab selesai</span><b>{chapterCompletedCount}/{chapterMaterials.length}</b></div><div role="progressbar" aria-label={`Progres penyelesaian Bab ${chapterNumber}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={chapterCompletedPercent}><i style={{ width: `${chapterCompletedPercent}%` }} /></div><small>{chapterCompletedPercent}% bab ini sudah ditandai selesai · {chapterReadCount}/{chapterMaterials.length} dibuka</small></div>}
-          <div className="lesson-list">{(chapterNumber ? chapterMaterials : materials.filter((item) => item.category === material.category)).map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "lesson-active" : ""} onClick={() => { markCurrent(item.id); if (chapterNumber) markChapterLessonRead(chapterNumber, item.id); }}><span>{item.specialization === "ai-engineering" ? item.title.match(/^Bab\s+(\d+\.\d+)/)?.[1] ?? "✦" : String(item.displayNumber ?? item.id).padStart(2, "0")}</span><b>{item.title}</b>{completed.includes(item.id) && <Check size={14} />}</Link>)}</div>
+          <div className="lesson-list">{(chapterNumber ? chapterMaterials : materials.filter((item) => item.category === material.category)).map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "lesson-active" : ""} onClick={() => { setPageTurnDirection(item.id >= material.id ? "forward" : "back"); markCurrent(item.id); if (chapterNumber) markChapterLessonRead(chapterNumber, item.id); }}><span>{item.specialization === "ai-engineering" ? item.title.match(/^Bab\s+(\d+\.\d+)/)?.[1] ?? "✦" : String(item.displayNumber ?? item.id).padStart(2, "0")}</span><b>{item.title}</b>{completed.includes(item.id) && <Check size={14} />}</Link>)}</div>
         </div>
       </aside>
     </div>

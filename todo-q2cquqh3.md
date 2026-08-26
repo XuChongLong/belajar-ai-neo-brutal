@@ -155,3 +155,9 @@
 - [x] Audit pembagian isi materi agar spread laptop memuat konten baca berkelanjutan tanpa menduplikasi navigasi submateri.
 - [x] Ganti halaman kiri mode buku terbuka menjadi materi/penjelasan lanjutan dan pertahankan daftar isi hanya pada rail yang sudah ada.
 - [x] Tambahkan regresi serta QA laptop-Android untuk koreksi isi spread dua halaman.
+- [x] Audit semua jalur aset foto dan respons browser publik untuk mengidentifikasi penyebab gambar gagal termuat di HP/laptop pengguna.
+- [x] Pindahkan atau ganti aset gambar yang tidak reliabel ke jalur publik yang konsisten serta tambahkan fallback yang bermakna.
+- [x] Tambahkan nomor halaman pada setiap section materi untuk pembaca binder laptop.
+- [x] Tambahkan transisi kertas saat pengguna berpindah submateri melalui rail atau kontrol halaman.
+- [x] Tambahkan toggle mode fokus untuk menyembunyikan/menampilkan rail pembaca dengan akses keyboard yang jelas.
+- [ ] Tambahkan regresi pemuatan gambar, mode fokus, nomor section, dan navigasi transisi; lakukan QA browser publik desktop-Android.

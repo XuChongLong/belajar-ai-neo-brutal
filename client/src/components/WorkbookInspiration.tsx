@@ -1,4 +1,7 @@
 import React from "react";
+import PublicArchiveImage from "@/components/PublicArchiveImage";
+
+const katherineFallback = "/manus-storage/katherine-johnson-nasa-1962_c6b966c1.jpg";
 
 type WorkbookInspirationProps = {
   specialization?: string | null;
@@ -60,7 +63,7 @@ const figureFor = (specialization?: string | null, materialId = 0) => {
 export default function WorkbookInspiration({ specialization, materialId, compact = false }: WorkbookInspirationProps) {
   const figure = figureFor(specialization, materialId);
   return <aside className={`workbook-inspiration workbook-inspiration-${figure.rotation} ${compact ? "workbook-inspiration-compact" : ""}`}>
-    <div className="workbook-photo-clip"><img src={figure.image} alt={`${figure.name}, ${figure.role}`} /></div>
+    <div className="workbook-photo-clip"><PublicArchiveImage src={figure.image} fallbackSrc={katherineFallback} alt={`${figure.name}, ${figure.role}`} /></div>
     <div className="workbook-inspiration-copy"><span className="eyebrow">{figure.isVerifiedQuote ? "KUTIPAN ILMUWAN · SUMBER NASA" : "CATATAN BELAJAR · TERINSPIRASI KISAHNYA"}</span>{figure.isVerifiedQuote ? <blockquote>{figure.quote}</blockquote> : <p className="workbook-editorial-note">{figure.quote}</p>}<p>{figure.note}</p><a href={figure.source} target="_blank" rel="noreferrer">{figure.name} · NASA ↗</a></div>
   </aside>;
 }

@@ -72,4 +72,13 @@ describe("MaterialDetail reading settings", () => {
     expect(learning.markCurrent).toHaveBeenCalledWith(5001);
     expect(navigation.navigate).toHaveBeenCalledWith("/materi/5001");
   });
+
+  it("toggles focus mode while retaining the section page markers", () => {
+    const { container } = render(<MaterialDetail />);
+    expect(screen.getAllByText(/Lembar 01/i).length).toBeGreaterThan(0);
+    const focusButton = screen.getByRole("button", { name: "Sembunyikan daftar isi untuk fokus" });
+    fireEvent.click(focusButton);
+    expect(container.querySelector(".reader-focus-mode")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Tampilkan daftar isi" })).toBeTruthy();
+  });
 });
