@@ -3,6 +3,7 @@
 import { specializationMaterials } from "./specializationMaterials";
 import { aiEngineeringPdfMaterials } from "./aiEngineeringPdfMaterials";
 import { cyberSecurityMaterials } from "./cyberSecurityCourseMaterials";
+import { applyCasualIndonesianTone } from "./learningTone";
 import type { ChainedCaseStudy } from "./employeePolicyAssistantCaseStudy";
 import type { AiEngineeringChapterLecture } from "./aiEngineeringChapterLectures";
 import type { AiEngineeringBookContext } from "./aiEngineeringSublessonBookContexts";
@@ -162,7 +163,9 @@ export const categoryMeta: Record<string, { emoji: string; level: MaterialLevel 
   ...creativeIntensiveCategoryMeta,
 };
 
-export const materials: Material[] = [...aiEngineeringPdfMaterials, ...specializationMaterials, ...cyberSecurityMaterials];
+export const rawMaterials: Material[] = [...aiEngineeringPdfMaterials, ...specializationMaterials, ...cyberSecurityMaterials];
+
+export const materials: Material[] = applyCasualIndonesianTone(rawMaterials);
 
 export const categories = ["Semua kategori", ...Object.keys(categoryMeta)];
 export const levels = ["Semua level", "Pemula", "Menengah", "Lanjut"];

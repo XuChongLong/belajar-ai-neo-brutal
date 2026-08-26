@@ -123,3 +123,14 @@
 - [x] Susun pedoman suara bahasa santai-sistematis beserta pola analogi yang menjelaskan alasan, arah, dan aksi berikutnya.
 - [x] Tulis ulang copy utama landing page, katalog, detail course, dan dashboard dengan contoh konkret yang mudah dibaca anak muda.
 - [x] Uji regresi halaman serta QA visual untuk memastikan copy baru tidak merusak tata letak desktop maupun Android.
+- [x] Audit sumber seluruh materi, Prolog, subbab, latihan, dan kuis untuk memetakan pola bahasa yang perlu disantai-kan.
+- [x] Tetapkan aturan gaya bahasa slang yang aman untuk semua course, dengan pembatas khusus pada Cyber Security dan hak/provenance Creative AI.
+- [x] Terapkan lapisan gaya bahasa Indonesia santai pada seluruh materi tanpa mengubah konsep, tautan sumber, urutan, atau batas legal.
+- [x] Tulis ulang intro Prolog dan pembuka chapter lintas course agar setiap jalur terasa seperti diajak ngobrol dari awal.
+- [x] Tambahkan test cakupan transformasi bahasa dan verifikasi tidak ada sumber, latihan, atau pagar keamanan yang hilang.
+- [x] Lakukan QA pembaca materi desktop dan Android untuk memastikan bahasa baru enak dibaca pada subbab panjang.
+- [x] Tambahkan validasi khusus Creative AI agar rights, consent, dan provenance tetap aman setelah tone santai diterapkan.
+- [x] Bandingkan materi sebelum dan sesudah transformasi pada AI Engineering, intensif, Cyber, dan Creative untuk memastikan latihan, sumber, serta guardrail penting tetap utuh.
+- [x] Tambahkan aturan eksplisit pada prose Creative sensitif dan Cyber agar batas consent, rights, provenance, izin, scope, serta lab sendiri tetap terlihat dalam bahasa santai.
+- [x] Tambahkan comparison guardrail dan latihan per track serta regresi terpisah untuk Creative Rights/Consent dan Creative Provenance.
+- [x] Perluas regresi integritas untuk memeriksa seluruh materi: resources identik, latihan tetap terpetakan, dan guardrail penting tetap ada setelah transformasi.

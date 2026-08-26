@@ -4,9 +4,9 @@ export function topics(...items: readonly string[]): IntensiveUnit[] {
   if (items.length !== 12) throw new Error("Setiap checkpoint intensif harus memiliki tepat 12 topik.");
   return items.map((title) => ({
     title,
-    decision: `Untuk “${title}”, jangan mulai dari tool atau template. Nyatakan tujuan, pengguna/owner yang terkena dampak, bukti yang tersedia, batas yang tidak boleh dilanggar, lalu bandingkan pilihan berdasarkan trade-off yang benar-benar relevan.`,
-    scenario: `Dalam latihan tim, sebuah keputusan tentang “${title}” tampak mudah sampai ada data tidak lengkap, perubahan kebutuhan, atau risiko yang tidak tertulis. Tim menghentikan asumsi, menyusun fakta yang dapat diperiksa, lalu memilih langkah kecil yang dapat di-review dan dibatalkan bila perlu.`,
-    exercise: `Buat satu kartu keputusan “${title}”: masalah, konteks, asumsi, tiga pilihan, bukti, owner, risiko, dan kriteria kapan keputusan perlu ditinjau ulang.`,
+    decision: `Di topik “${title}”, jangan langsung kepincut tool atau template, bro. Cek dulu tujuannya apa, siapa yang kena dampak, bukti apa yang kamu punya, dan batas mana yang nggak boleh diterobos. Baru bandingkan pilihannya dengan kepala dingin.`,
+    scenario: `Di tim beneran, keputusan soal “${title}” sering kelihatan gampang sampai datanya bolong, kebutuhan berubah, atau risikonya belum ditulis. Jadi jangan ngarang asumsi: kumpulkan fakta yang bisa dicek, pilih langkah kecil, lalu sisakan jalan buat review atau rollback kalau ternyata meleset.`,
+    exercise: `Bikin kartu keputusan “${title}” versi kamu: masalahnya apa, konteksnya gimana, asumsi, tiga pilihan, bukti, owner, risiko, dan kapan keputusan ini perlu dicek ulang.`,
   }));
 }
 
@@ -33,7 +33,7 @@ export function checkpoint(input: {
     sources: input.sources,
     units: topics(...input.topics),
     opening: input.opening,
-    caseStudy: { title: input.caseTitle, narrative: input.caseNarrative, artifact: `Buat ${input.artifact} dalam format yang dapat dibaca rekan tim: sertakan konteks, fakta, asumsi, pilihan, owner, dan indikator review.`, teachingPoint: input.teachingPoint, questions: input.questions },
+    caseStudy: { title: input.caseTitle, narrative: input.caseNarrative, artifact: `Bikin ${input.artifact} yang gampang dibaca teman tim: tulis konteks, fakta, asumsi, pilihan, owner, dan tanda kapan perlu dicek lagi.`, teachingPoint: input.teachingPoint, questions: input.questions },
   };
 }
 

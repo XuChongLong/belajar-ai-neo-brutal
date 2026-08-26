@@ -39,11 +39,11 @@ export type IntensiveCourseDefinition = {
 };
 
 const fiveLayers = (chapter: IntensiveChapter, unit: IntensiveUnit, ordinal: string) => [
-  { heading: "Ngobrol dulu", body: `${unit.title} adalah bagian dari cara kerja ${chapter.focus}. Subbab ${ordinal} tidak meminta kamu menghafal istilah, tetapi membantu kamu memahami keputusan apa yang sedang dibuat dan dampak apa yang ikut berubah.` },
+  { heading: "Ngobrol dulu", body: `Oke bro, ${unit.title} itu nyambung ke cara kerja ${chapter.focus}. Di subbab ${ordinal} kamu nggak diminta jadi kamus berjalan; yang penting ngerti keputusan apa yang lagi dibuat dan dampak apa yang ikut kebawa.` },
   { heading: "Bedah mekanisme dan trade-off", body: unit.decision },
   { heading: "Skenario tim", body: unit.scenario },
-  { heading: "Latihan berbasis artefak", body: `${unit.exercise} Simpan hasilnya sebagai bagian dari ${chapter.artifact}, sehingga orang lain bisa meninjau asumsi, pilihan, dan langkah berikutnya.` },
-  { heading: "Batas aman dan pemeriksaan", body: `${chapter.guardrail} Sebelum lanjut, tanyakan: bukti apa yang mendukung keputusan ini, siapa owner-nya, dan apa jalan mundurnya jika asumsi ternyata salah?` },
+  { heading: "Latihan berbasis artefak", body: `${unit.exercise} Simpan hasilnya jadi bagian dari ${chapter.artifact}, biar teman tim juga bisa ngerti asumsi, pilihan, dan langkah lanjutnya.` },
+  { heading: "Batas aman dan pemeriksaan", body: `${chapter.guardrail} Sebelum lanjut, coba tanya: buktinya apa, siapa owner-nya, dan kalau asumsi ternyata salah, jalan mundurnya lewat mana?` },
 ];
 
 const quiz = (unit: IntensiveUnit, chapter: IntensiveChapter): QuizQuestion[] => [
@@ -66,11 +66,11 @@ const materialFrom = (course: IntensiveCourseDefinition, chapter: IntensiveChapt
     level: chapter.level,
     minutes: 12 + ((chapterIndex + unitIndex) % 8),
     emoji: isPrologue ? "◌" : course.emoji,
-    summary: `${unit.title} dibahas sebagai keputusan nyata dalam ${chapter.focus}. Kamu akan meninggalkan subbab ini dengan artefak kecil, pertanyaan review, dan batas kerja yang jelas.`,
-    analogy: `Anggap ${unit.title.toLowerCase()} sebagai satu titik pemeriksaan dalam sistem yang lebih besar: pilihan kecil di sini memengaruhi kualitas, biaya, kepercayaan, dan kemampuan tim untuk memperbaiki masalah nanti.`,
+    summary: `Santai, kita bahas ${unit.title} lewat contoh keputusan nyata di ${chapter.focus}. Habis ini kamu nggak cuma tahu istilahnya: kamu punya artefak kecil, pertanyaan buat ngecek ulang, dan batas kerja yang jelas.`,
+    analogy: `Anggap ${unit.title.toLowerCase()} kayak pos cek di perjalanan yang lebih panjang: pilihan kecil di sini bisa ngaruh ke kualitas, biaya, kepercayaan, dan kemampuan tim buat benerin masalah nanti.`,
     sections: fiveLayers(chapter, unit, `${chapterDisplay}.${unitIndex + 1}`),
     deepDive: priorityIntensiveDeepening[id],
-    chapterLecture: unitIndex === 0 ? { title: isPrologue ? `Mulai dari konteks ${course.label}` : `Pembukaan Bab ${chapterIndex}: ${chapter.title}`, body: chapter.opening, questions: ["Keputusan apa yang menjadi fokus checkpoint ini?", "Artefak apa yang akan kamu buat?", "Batas apa yang perlu dijaga sebelum mulai praktik?"] } : undefined,
+    chapterLecture: unitIndex === 0 ? { title: isPrologue ? `Sebelum gas: kenalan dulu sama konteks ${course.label}` : `Sebelum gas: Bab ${chapterIndex} ini ngomongin ${chapter.title}`, body: `Bayangin kamu lagi buka peta sebelum jalan. ${chapter.opening} Jadi, ambil satu ide dulu, jangan lompat ke semua tool sekaligus.`, questions: ["Keputusan apa yang lagi kita bahas di checkpoint ini?", "Bukti atau hasil kecil apa yang bakal kamu bikin?", "Batas apa yang wajib dijaga sebelum praktik?"] } : undefined,
     caseStudy: unitIndex === 0 ? { phase: `${course.label} · ${isPrologue ? "Bab Prolog" : `Bab ${chapterIndex}`}`, title: chapter.caseStudy.title, narrative: chapter.caseStudy.narrative, artifactTitle: `Artefak checkpoint: ${chapter.artifact}`, artifact: chapter.caseStudy.artifact, teachingPoint: chapter.caseStudy.teachingPoint, guidedQuestions: [...chapter.caseStudy.questions] } : undefined,
     resources: [...chapter.sources],
     quiz: quiz(unit, chapter),

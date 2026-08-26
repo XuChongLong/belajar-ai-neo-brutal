@@ -28,14 +28,14 @@ describe("PDF-led AI Engineering curriculum", () => {
   it("keeps every lesson original, practical, quiz-backed, and connected to the primary source", () => {
     aiEngineeringPdfMaterials.forEach((material) => {
       const expectedHeadings = [
-        "Konsep yang perlu dipahami",
+        "Ngobrol dulu: konsep intinya",
         ...(material.id >= 112 ? ["Penjelasan dosen: menghubungkan konsep dengan sistem nyata"] : []),
-        "Bagaimana konsep ini bekerja",
-        "Kasus di dunia kerja",
-        "Contoh langkah demi langkah",
-        "Aturan pengambilan keputusan",
-        "Latihan terarah",
-        "Batasan dan risiko",
+        "Cara kerjanya, kita bedah pelan-pelan",
+        "Biar kebayang di dunia nyata",
+        "Coba lihat alurnya satu-satu",
+        "Sebelum mutusin, cek ini dulu",
+        "Sekarang giliran kamu nyoba",
+        "Jangan kelewatan batasnya, ya",
       ];
       expect(material.sections.map((section) => section.heading)).toEqual(expectedHeadings);
       expect(material.sections[1]?.body.length).toBeGreaterThan(180);

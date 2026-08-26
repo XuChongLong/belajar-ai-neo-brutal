@@ -108,9 +108,9 @@ const caseStudies = [
 
 function introduction(chapter: Chapter, chapterNumber: number) {
   return {
-    title: `Pembukaan Bab ${chapterNumber} · ${chapter.title}`,
-    body: `Bab ini membedah ${chapter.focus}. Fokusnya bukan menghafal tool atau mengejar jargon, tetapi mampu menjelaskan apa yang sedang dilindungi, bukti apa yang diperlukan, siapa yang bertanggung jawab, dan keputusan kecil apa yang dapat mengurangi risiko secara nyata. Setiap contoh sengaja diposisikan pada aplikasi sendiri, data fiktif, atau lab berizin agar skill teknis tumbuh tanpa meninggalkan jejak buruk.\n\nDua belas subbab berikut membentuk urutan kerja: mulai dari model mental, lanjut ke bukti dan artefak, lalu ditutup dengan keputusan yang dapat ditinjau teman satu tim. Catat hal yang belum pasti; security yang dewasa tidak berpura-pura tahu semuanya. ${chapter.guardrail}`,
-    questions: ["Aset atau keputusan apa yang sebenarnya sedang dilindungi?", "Bukti minimum apa yang perlu dikumpulkan sebelum membuat klaim?", "Siapa owner tindakan perbaikan dan kapan ia ditinjau ulang?"],
+    title: `Sebelum gas: Bab ${chapterNumber} · ${chapter.title}`,
+    body: `Oke bro, bab ini ngebahas ${chapter.focus}. Kita nggak lagi lomba hafal tool atau jargon. Yang kita cari: sebenarnya apa yang lagi dijaga, bukti apa yang masuk akal, siapa yang pegang tanggung jawab, dan keputusan kecil mana yang beneran bisa nurunin risiko. Semua contoh tetap di aplikasi sendiri, data fiktif, atau lab berizin—skill boleh naik, tapi jangan sampai ninggalin jejak buruk.\n\nDua belas subbab ini adalah rute kerja, bukan target maraton: mulai dari model mental, lanjut ke bukti dan artefak, lalu tutup dengan keputusan yang bisa direview teman tim. Kalau ada yang belum pasti, catat saja; orang security yang dewasa nggak pura-pura tahu semuanya. ${chapter.guardrail}`,
+    questions: ["Sebenarnya aset atau keputusan apa yang lagi dijaga?", "Bukti minimum apa yang perlu ada sebelum bikin klaim?", "Siapa yang pegang perbaikan, dan kapan perlu dicek lagi?"],
   };
 }
 
@@ -118,11 +118,11 @@ function sections(chapter: Chapter, unit: string, chapterNumber: number, unitNum
   const label = `${chapterNumber}.${unitNumber} · ${unit}`;
   const move = chapterMoves[chapterNumber - 1]?.[unitNumber - 1] ?? "Tuliskan keputusan, bukti, owner, dan batas aman untuk topik ini.";
   return [
-    { heading: "Bedah konsepnya", body: `${label} bukan sekadar istilah. Ia adalah bagian dari rantai keputusan ketika ${chapter.focus}. Kalau bagian ini salah dipahami, tim sering menghabiskan energi pada gejala, sementara sumber risiko atau owner masalah tidak pernah disentuh. Mulailah dengan bertanya: apa asumsi yang dipakai, data apa yang tersedia, dan akibat apa yang ingin dicegah?` },
+    { heading: "Bedah konsepnya", body: `Santai dulu, ${label} bukan cuma istilah keren. Ini bagian dari rantai keputusan saat ${chapter.focus}. Kalau salah nangkep, tim bisa sibuk ngurus gejala sementara sumber risiko atau owner masalahnya nggak pernah disentuh. Jadi mulai dari tiga pertanyaan: asumsinya apa, datanya ada apa, dan dampak mana yang mau dicegah?` },
     { heading: "Mekanisme dan trade-off", body: `Jangan berhenti di definisi. Untuk ${unit.toLowerCase()}, pecah masalah menjadi boundary, identitas, perubahan, bukti, dan pemulihan. Kontrol yang terlalu longgar meningkatkan paparan; kontrol yang terlalu ketat bisa menghambat operasi. Keputusan yang baik menjelaskan trade-off itu, menetapkan owner, dan mempunyai jalan mundur bila asumsi awal ternyata keliru. Fokus teknis subbab ini: ${move}` },
     { heading: "Skenario tim", body: `Bayangkan tim kecil menerima sinyal yang tampak sederhana terkait ${unit.toLowerCase()}. Mereka tidak langsung menuduh atau menekan tombol besar. Mereka membuka ${chapter.artifact}, memisahkan fakta dari dugaan, menandai dampak potensial, lalu memilih langkah paling kecil yang menurunkan risiko tanpa merusak layanan. Dalam skenario ini, tindakan yang membedakan subbab ini adalah: ${move}` },
-    { heading: "Latihan lab berizin", body: `Buat atau perbarui ${chapter.artifact}. Kerjakan satu fokus berikut pada data fiktif atau aset sendiri: ${move} Tambahkan dua kolom: “apa yang belum diketahui” dan “bukti apa yang aman untuk dicari”. Target latihan bukan menjalankan tool sebanyak-banyaknya, melainkan menghasilkan artefak yang bisa dipahami dan dikritik orang lain.` },
-    { heading: "Batas aman dan pemeriksaan", body: `${chapter.guardrail} Jika sebuah langkah membutuhkan izin yang kamu belum punya, berhenti di tahap perencanaan dan tulis pertanyaan untuk owner. Dalam praktik profesional, menahan diri pada batas yang benar adalah bagian dari kompetensi, bukan tanda kurang jago.` },
+    { heading: "Latihan lab berizin", body: `Bikin atau perbarui ${chapter.artifact}. Kerjakan fokus ini pakai data fiktif atau aset sendiri: ${move} Tambahkan dua kolom: “apa yang belum diketahui” dan “bukti apa yang aman buat dicari”. Targetnya bukan ngejalanin tool sebanyak mungkin, tapi bikin artefak yang bisa dipahami dan dikritik orang lain.` },
+    { heading: "Batas aman dan pemeriksaan", body: `${chapter.guardrail} Kalau ada langkah yang butuh izin tapi kamu belum punya, berhenti di rencana saja lalu tulis pertanyaan buat owner. Di dunia profesional, punya rem di batas yang benar itu tanda kompeten, bukan kurang jago.` },
   ];
 }
 
