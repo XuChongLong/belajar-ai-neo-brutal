@@ -101,7 +101,7 @@
 .catalog-page .card-bookmark { top: auto; bottom: 15px; right: 0; border: 0; box-shadow:none; background:transparent; font-size:10px; }
 
 .lesson-article { max-width: 720px; }
-.detail-layout { grid-template-columns: 190px minmax(0,720px); gap: 64px; padding-top: 56px; }
+.detail-layout { grid-template-columns: minmax(0,720px) 190px; gap: 64px; padding-top: 56px; }
 .lesson-sidebar-inner { border-color: var(--editorial-rule); }
 .lesson-sidebar-label { color: var(--editorial-accent); }
 .lesson-list a { border-left-width: 2px; }
@@ -110,6 +110,30 @@
 .article-heading h1 { font-size: clamp(38px,4.5vw,57px); line-height: 1.02; }
 .article-heading p { max-width: 630px; font-family: Georgia, "Times New Roman", serif; color:#5e5a54; font-size: 18px; line-height: 1.65; }
 .article-number { color: transparent; -webkit-text-stroke: 1px #d6d1c8; opacity:.8; }
+.reader-preferences { margin: 20px 0 34px; border-top: 1px solid var(--editorial-rule); border-bottom: 1px solid var(--editorial-rule); }
+.reader-preferences-bar { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:12px 0; }
+.reader-preferences-bar p { margin:3px 0 0; color:var(--editorial-muted); font-size:12px; }
+.reader-preferences-trigger, .reader-reset { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 11px; border:1px solid var(--editorial-ink); background:var(--editorial-panel); color:var(--editorial-ink); font-family:var(--font-display); font-size:11px; cursor:pointer; }
+.reader-preferences-trigger:hover, .reader-reset:hover { background:#f0ece5; }
+.reader-preferences-panel { display:grid; grid-template-columns:repeat(3,1fr) auto; gap:14px; align-items:end; padding:14px 0 16px; border-top:1px solid var(--editorial-rule); }
+.reader-preferences-panel fieldset { min-width:0; margin:0; padding:0; border:0; }
+.reader-preferences-panel legend { margin-bottom:7px; color:var(--editorial-muted); font-family:var(--font-display); font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+.reader-preferences-panel fieldset>div { display:flex; flex-wrap:wrap; gap:5px; }
+.reader-preferences-panel fieldset button { padding:7px 8px; border:1px solid var(--editorial-rule); background:transparent; color:#56514b; font-size:11px; cursor:pointer; }
+.reader-preferences-panel fieldset button:hover { border-color:var(--editorial-ink); }
+.reader-preferences-panel .reader-choice-active { border-color:var(--editorial-ink); background:var(--pink); color:var(--editorial-ink); font-weight:700; }
+.reader-reset { align-self:end; border-color:var(--editorial-rule); font-size:10px; }
+.reader-scale-compact .chapter-lecture p, .reader-scale-compact .sublesson-book-context p, .reader-scale-compact .article-section p, .reader-scale-compact .case-study-narrative p { font-size:15px; line-height:1.68; }
+.reader-scale-comfortable .chapter-lecture p, .reader-scale-comfortable .sublesson-book-context p, .reader-scale-comfortable .article-section p, .reader-scale-comfortable .case-study-narrative p { font-size:17px; line-height:1.82; }
+.reader-scale-generous .chapter-lecture p, .reader-scale-generous .sublesson-book-context p, .reader-scale-generous .article-section p, .reader-scale-generous .case-study-narrative p { font-size:19px; line-height:1.88; }
+.reader-font-sans .chapter-lecture p, .reader-font-sans .sublesson-book-context p, .reader-font-sans .article-section p, .reader-font-sans .case-study-narrative p { font-family:var(--font-body); }
+.reader-font-serif .chapter-lecture p, .reader-font-serif .sublesson-book-context p, .reader-font-serif .article-section p, .reader-font-serif .case-study-narrative p { font-family:Georgia, "Times New Roman", serif; letter-spacing:.003em; }
+.reader-font-accessible .chapter-lecture p, .reader-font-accessible .sublesson-book-context p, .reader-font-accessible .article-section p, .reader-font-accessible .case-study-narrative p { font-family:"Atkinson Hyperlegible", var(--font-body); letter-spacing:.012em; }
+@supports selector(:has(*)) {
+  .detail-layout:has(.reader-width-narrow) { grid-template-columns:minmax(0,620px) 190px; }
+  .detail-layout:has(.reader-width-standard) { grid-template-columns:minmax(0,720px) 190px; }
+  .detail-layout:has(.reader-width-wide) { grid-template-columns:minmax(0,800px) 190px; }
+}
 .article-section { grid-template-columns: 44px 1fr; gap: 22px; margin-bottom: 40px; }
 .article-section .section-index { color: var(--editorial-accent); }
 .article-section h2 { font-size: 26px; }
@@ -156,6 +180,13 @@
   .detail-layout { display:block; padding-top:28px; }
   .lesson-article { max-width:100%; }
   .article-heading h1 { font-size:36px; }
+  .reader-preferences-bar { align-items:flex-start; }
+  .reader-preferences-bar p { max-width:220px; }
+  .reader-preferences-panel { grid-template-columns:1fr; gap:12px; }
+  .reader-reset { justify-self:start; }
+  .reader-scale-compact .chapter-lecture p, .reader-scale-compact .sublesson-book-context p, .reader-scale-compact .article-section p, .reader-scale-compact .case-study-narrative p { font-size:15px; }
+  .reader-scale-comfortable .chapter-lecture p, .reader-scale-comfortable .sublesson-book-context p, .reader-scale-comfortable .article-section p, .reader-scale-comfortable .case-study-narrative p { font-size:16px; }
+  .reader-scale-generous .chapter-lecture p, .reader-scale-generous .sublesson-book-context p, .reader-scale-generous .article-section p, .reader-scale-generous .case-study-narrative p { font-size:18px; }
   .article-section { grid-template-columns:1fr; gap:6px; margin-bottom:30px; }
   .article-section p { font-size:16px; line-height:1.76; }
   .lesson-visual-analogy { grid-template-columns:1fr; gap:13px; }

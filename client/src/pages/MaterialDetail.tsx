@@ -1,7 +1,7 @@
 // Style reminder: Paper Playground — reading view prioritizes calm paper space, strong article rhythm, and quiz feedback that feels encouraging.
 
-import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, ClipboardCheck, Clock3, Database, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Bookmark, Bot, BrainCircuit, Check, ChevronDown, ClipboardCheck, Clock3, Database, Lightbulb, Maximize2, Minus, Plus, RotateCcw, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useRoute } from "wouter";
 import { toast } from "sonner";
 import { getFocusedCatalogueHref, materials } from "@/lib/materials";
@@ -10,6 +10,7 @@ import { glossaryTerms } from "@/lib/glossary";
 import { aiEngineeringChapterQuizzes } from "@/lib/aiEngineeringChapterQuizzes";
 import { getChapterCompletedCount, getChapterReadCount, getChapterReadPercent } from "@/lib/chapterReading";
 import { getEvidenceChecklist, getEvidenceKey } from "@/lib/courseJourney";
+import { defaultReadingPreferences, loadReadingPreferences, normalizeReadingPreferences, readingPreferenceClassNames, saveReadingPreferences, type ReadingColumnWidth, type ReadingFont, type ReadingPreferences, type ReadingTextScale } from "@/lib/readingPreferences";
 
 const visualAnalogies = [
   { title: "AI belajar seperti melihat banyak contoh resep.", copy: "Bayangkan kamu belajar membedakan teh dan kopi dari banyak cangkir. Makin beragam contoh yang kamu lihat, makin baik kamu mengenali polanya—tetap perlu mengecek hasilnya." },
@@ -49,6 +50,17 @@ export default function MaterialDetail() {
   const [diagramZoom, setDiagramZoom] = useState(1);
   const [diagramAnswer, setDiagramAnswer] = useState<number | null>(null);
   const [diagramSubmitted, setDiagramSubmitted] = useState(false);
+  const [readingPreferences, setReadingPreferences] = useState<ReadingPreferences>(() => {
+    const stored = loadReadingPreferences();
+    if (typeof window === "undefined") return stored;
+    const query = new URLSearchParams(window.location.search);
+    return normalizeReadingPreferences({
+      textScale: query.get("reading-size") ?? stored.textScale,
+      font: query.get("reading-font") ?? stored.font,
+      columnWidth: query.get("reading-width") ?? stored.columnWidth,
+    });
+  });
+  const [readingSettingsOpen, setReadingSettingsOpen] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("reading-settings") === "open");
 
   const isAiEngineering = material.specialization === "ai-engineering";
   const isDone = completed.includes(material.id);
@@ -102,6 +114,8 @@ export default function MaterialDetail() {
     if (chapterNumber) markChapterLessonRead(chapterNumber, material.id);
   }, [chapterNumber, material.id, markChapterLessonRead]);
 
+  useEffect(() => { saveReadingPreferences(readingPreferences); }, [readingPreferences]);
+
   const chooseAnswer = (questionIndex: number, optionIndex: number) => {
     if (!submitted) setAnswers((previous) => ({ ...previous, [questionIndex]: optionIndex }));
   };
@@ -136,10 +150,13 @@ export default function MaterialDetail() {
     saveQuizAttempt(`${material.id}-diagram`, diagramAnswer === material.diagramQuiz.answer ? 1 : 0, 1);
     toast(diagramAnswer === material.diagramQuiz.answer ? "Diagram kebaca dengan mantap." : "Belum tepat. Coba lihat lagi arah panahnya.");
   };
+  const updateReadingPreference = <Key extends keyof ReadingPreferences>(key: Key, value: ReadingPreferences[Key]) => {
+    setReadingPreferences((current) => ({ ...current, [key]: value }));
+  };
 
   return <div className={`page material-detail-track-${material.specialization ?? "core"}`}>
     <div className="detail-layout page-wrap">
-      <article key={material.id} className="lesson-article lesson-article-enter">
+      <article key={material.id} className={`lesson-article lesson-article-enter ${readingPreferenceClassNames(readingPreferences)}`}>
         <div className="article-meta">
           <span className="sticker-label">{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</span>
           <span><Clock3 size={15} /> {material.minutes} menit baca</span>
@@ -152,6 +169,16 @@ export default function MaterialDetail() {
           <h1>{material.title}</h1>
           <p>{material.summary}</p>
         </div>
+
+        <section className="reader-preferences" aria-label="Pengaturan membaca">
+          <div className="reader-preferences-bar"><div><span className="eyebrow">TAMPILAN BACA</span><p>Atur agar materi terasa pas di matamu. Tersimpan di perangkat ini.</p></div><button type="button" className="reader-preferences-trigger" aria-expanded={readingSettingsOpen} onClick={() => setReadingSettingsOpen((open) => !open)}><SlidersHorizontal size={16} /> {readingSettingsOpen ? "Tutup pengaturan" : "Atur bacaan"}</button></div>
+          {readingSettingsOpen && <div className="reader-preferences-panel">
+            <fieldset><legend>Ukuran teks</legend><div>{([ ["compact", "Rapat"], ["comfortable", "Nyaman"], ["generous", "Lega"] ] as const).map(([value, label]) => <button type="button" key={value} className={readingPreferences.textScale === value ? "reader-choice-active" : ""} aria-pressed={readingPreferences.textScale === value} onClick={() => updateReadingPreference("textScale", value as ReadingTextScale)}>{label}</button>)}</div></fieldset>
+            <fieldset><legend>Jenis font</legend><div>{([ ["sans", "Sans modern"], ["serif", "Serif buku"], ["accessible", "Mudah baca"] ] as const).map(([value, label]) => <button type="button" key={value} className={readingPreferences.font === value ? "reader-choice-active" : ""} aria-pressed={readingPreferences.font === value} onClick={() => updateReadingPreference("font", value as ReadingFont)}>{label}</button>)}</div></fieldset>
+            <fieldset><legend>Lebar kolom</legend><div>{([ ["narrow", "Rapat"], ["standard", "Normal"], ["wide", "Lapang"] ] as const).map(([value, label]) => <button type="button" key={value} className={readingPreferences.columnWidth === value ? "reader-choice-active" : ""} aria-pressed={readingPreferences.columnWidth === value} onClick={() => updateReadingPreference("columnWidth", value as ReadingColumnWidth)}>{label}</button>)}</div></fieldset>
+            <button type="button" className="reader-reset" onClick={() => setReadingPreferences(defaultReadingPreferences)}>Kembalikan tampilan standar</button>
+          </div>}
+        </section>
 
         {chapterNumber && <section className="chapter-reading-progress" aria-label={`Progres membaca Bab ${chapterNumber}`}>
           <div><span className="eyebrow">PROGRES SUBBAB BAB {chapterNumber}</span><strong>{chapterCompletedCount} dari {chapterMaterials.length} subbab sudah selesai</strong></div>

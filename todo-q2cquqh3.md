@@ -105,3 +105,11 @@
 - [x] Tambahkan test regresi untuk interaksi navigasi yang berubah akibat redesign editorial.
 - [x] Lakukan QA visual desktop dan Android untuk keterbacaan serta fokus membaca pada layout baru.
 - [x] Tambahkan test integrasi AppShell pada rute course dan non-course untuk memastikan mode fokus, rail/header, drawer, serta pencarian tetap aman.
+- [x] Rancang preferensi membaca lokal untuk ukuran teks, jenis font, dan lebar kolom dengan fallback aman.
+- [x] Tambahkan panel pengaturan membaca pada pembaca materi dengan kontrol yang dapat diakses keyboard.
+- [x] Terapkan preferensi ukuran teks, font, dan lebar kolom hanya pada prose pembaca tanpa mengganggu UI course.
+- [x] Tambahkan test persistensi serta normalisasi preferensi membaca yang rusak atau lama.
+- [x] Verifikasi panel pengaturan membaca pada desktop dan Android, termasuk keterbacaan setiap preset.
+- [x] Tambahkan test integrasi MaterialDetail untuk perubahan class preset dan aksi reset pengaturan membaca.
+- [x] Catat QA eksplisit seluruh preset ukuran teks, font, dan lebar kolom pada desktop serta Android.
+- [x] Buka panel Tampilan Baca pada desktop dan Android lalu dokumentasikan pemeriksaan visual tiap preset tanpa overflow atau layout rusak.
