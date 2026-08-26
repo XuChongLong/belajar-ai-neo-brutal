@@ -152,3 +152,6 @@
 - [x] Audit struktur pembaca binder dan breakpoint laptop untuk mode buku terbuka dua halaman.
 - [x] Bangun mode dua halaman laptop dengan lipatan tengah, pasangan halaman, dan fallback pembaca tunggal di Android.
 - [x] Tambahkan regresi serta QA desktop-Android untuk mode buku terbuka.
+- [x] Audit pembagian isi materi agar spread laptop memuat konten baca berkelanjutan tanpa menduplikasi navigasi submateri.
+- [x] Ganti halaman kiri mode buku terbuka menjadi materi/penjelasan lanjutan dan pertahankan daftar isi hanya pada rail yang sudah ada.
+- [x] Tambahkan regresi serta QA laptop-Android untuk koreksi isi spread dua halaman.

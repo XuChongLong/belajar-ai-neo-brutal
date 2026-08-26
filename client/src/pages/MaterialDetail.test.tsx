@@ -59,6 +59,8 @@ describe("MaterialDetail reading settings", () => {
     render(<MaterialDetail />);
     expect(screen.getByLabelText("Buku terbuka dua halaman")).toBeTruthy();
     expect(screen.getByLabelText("Halaman kiri buku")).toBeTruthy();
+    expect(screen.getByText("MATERI DI HALAMAN KIRI")).toBeTruthy();
+    expect(screen.queryByLabelText("Preview daftar isi bab")).toBeNull();
     expect(screen.getByRole("navigation", { name: "Balik halaman materi" })).toBeTruthy();
     expect(screen.getByRole("button", { name: /lembar berikutnya/i })).toBeTruthy();
     expect(screen.getAllByText(/kutipan ilmuwan.*sumber nasa/i).length).toBeGreaterThan(0);

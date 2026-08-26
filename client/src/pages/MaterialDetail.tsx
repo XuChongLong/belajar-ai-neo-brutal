@@ -86,7 +86,7 @@ export default function MaterialDetail() {
   const evidence = projectEvidence[evidenceKey] ?? { checked: [], reflection: "", updatedAt: "" };
   const prev = materials.find((item) => item.id === material.id - 1);
   const next = materials.find((item) => item.id === material.id + 1);
-  const outlinePreview = (chapterMaterials.length ? chapterMaterials : materials.filter((item) => item.category === material.category)).slice(0, 5);
+  const spreadSectionCount = Math.max(1, Math.ceil(material.sections.length / 2));
   const score = useMemo(() => material.quiz.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0), [answers, material.quiz]);
   const chapterScore = useMemo(() => chapterQuiz?.questions.reduce((total, question, index) => total + (chapterAnswers[index] === question.answer ? 1 : 0), 0) ?? 0, [chapterAnswers, chapterQuiz]);
   const glossaryMatches = useMemo(() => glossaryTerms
@@ -165,7 +165,7 @@ export default function MaterialDetail() {
   return <div className={`page material-detail-track-${material.specialization ?? "core"}`}>
     <div className="detail-layout page-wrap">
       <div className="open-book-spread" aria-label="Buku terbuka dua halaman">
-      <aside className="open-book-left-page" aria-label="Halaman kiri buku"><span className="eyebrow">CATATAN SEBELUM LANJUT</span><h2>{isAiEngineering ? material.category.replace("AI Engineering · ", "") : material.category}</h2><p>Kamu lagi ada di lembar {visibleNumber}. Lihat dulu potongan daftar isi ini, lalu lanjut baca halaman kanan dengan santai.</p><nav className="open-book-outline" aria-label="Preview daftar isi bab">{outlinePreview.map((item) => <Link key={item.id} href={`/materi/${item.id}`} className={item.id === material.id ? "active" : ""} onClick={() => { markCurrent(item.id); if (chapterNumber) markChapterLessonRead(chapterNumber, item.id); }}><span>{String(item.displayNumber ?? item.id).padStart(2, "0")}</span><strong>{item.title}</strong>{completed.includes(item.id) && <Check size={14} />}</Link>)}</nav><WorkbookInspiration specialization={material.specialization} materialId={material.id} compact /><span className="open-book-page-number">{visibleNumber} · BUKU BELAJAR.AI</span></aside>
+      <aside className="open-book-left-page" aria-label="Halaman kiri buku"><span className="eyebrow">MATERI DI HALAMAN KIRI</span>{material.chapterLecture && <section className="spread-left-chapter-lecture"><span className="eyebrow">MULAI DARI BUKU</span><h2>{material.chapterLecture.title}</h2>{material.chapterLecture.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-lecture-${material.id}-${index}`}>{paragraph}</p>)}</section>}{material.bookContext && <section className="spread-left-context"><span className="eyebrow">KONTEKS SUBBAB</span><h2>{material.bookContext.title}</h2>{material.bookContext.body.split("\n\n").slice(0, 2).map((paragraph, index) => <p key={`spread-context-${material.id}-${index}`}>{paragraph}</p>)}</section>}<div className="spread-left-sections">{material.sections.slice(0, spreadSectionCount).map((section, index) => <section key={`spread-left-${section.heading}`}><span>{String(index + 1).padStart(2, "0")}</span><div><h2>{section.heading}</h2>{section.body.split("\n\n").slice(0, 2).map((paragraph, paragraphIndex) => <p key={`spread-left-${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}</div><span className="open-book-page-number">{visibleNumber} · BUKU BELAJAR.AI</span></aside>
       <article key={material.id} className={`lesson-article lesson-article-enter binder-sheet binder-turn-${pageTurnDirection} ${readingPreferenceClassNames(readingPreferences)}`}>
         <div className="binder-page-tabs" aria-hidden="true"><span>Bab {chapterNumber ?? "✦"}</span><span>Halaman {visibleNumber}</span><span>{material.level}</span></div>
         <div className="article-meta">
@@ -205,13 +205,13 @@ export default function MaterialDetail() {
           <b>{chapterCompletedPercent}%</b>
         </section>}
 
-        {material.chapterLecture && <section className="chapter-lecture" aria-labelledby={`chapter-lecture-${material.id}`}>
+        {material.chapterLecture && <section className="chapter-lecture spread-right-desktop-hidden" aria-labelledby={`chapter-lecture-${material.id}`}>
           <header><span className="eyebrow">MULAI DARI BUKU</span><h2 id={`chapter-lecture-${material.id}`}>{material.chapterLecture.title}</h2></header>
           <div>{material.chapterLecture.body.split("\n\n").map((paragraph, index) => <p key={`${material.id}-chapter-lecture-${index}`}>{paragraph}</p>)}</div>
           <aside><span className="eyebrow">PERTANYAAN KUNCI BAB INI</span><ol>{material.chapterLecture.questions.map((question) => <li key={question}>{question}</li>)}</ol></aside>
         </section>}
 
-        {material.bookContext && <section className="sublesson-book-context" aria-labelledby={`book-context-${material.id}`}>
+        {material.bookContext && <section className="sublesson-book-context spread-right-desktop-hidden" aria-labelledby={`book-context-${material.id}`}>
           <header><span className="eyebrow">MULAI DARI BUKU · KONTEKS SUBBAB</span><h2 id={`book-context-${material.id}`}>{material.bookContext.title}</h2></header>
           <div>{material.bookContext.body.split("\n\n").map((paragraph, index) => <p key={`${material.id}-book-context-${index}`}>{paragraph}</p>)}</div>
         </section>}
@@ -230,7 +230,7 @@ export default function MaterialDetail() {
           <div className="case-study-questions"><span className="eyebrow">PERTANYAAN BIMBINGAN</span><h3>Berhenti sejenak dan jawab sebelum melanjutkan.</h3><ol>{material.caseStudy.guidedQuestions.map((question) => <li key={question}>{question}</li>)}</ol></div>
         </section>}
 
-        {material.sections.map((section, index) => <section className="article-section" id={`section-${material.id}-${index + 1}`} key={section.heading}><span className="section-index">{String(index + 1).padStart(2, "0")}</span><div className="article-section-copy"><h2>{section.heading}</h2>{section.body.split("\n\n").map((paragraph, paragraphIndex) => <p key={`${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}
+        {material.sections.map((section, index) => <section className={`article-section ${index < spreadSectionCount ? "spread-right-desktop-hidden" : ""}`} id={`section-${material.id}-${index + 1}`} key={section.heading}><span className="section-index">{String(index + 1).padStart(2, "0")}</span><div className="article-section-copy"><h2>{section.heading}</h2>{section.body.split("\n\n").map((paragraph, paragraphIndex) => <p key={`${section.heading}-${paragraphIndex}`}>{paragraph}</p>)}</div></section>)}
 
         {material.deepDive && <section className="priority-deep-dive" aria-labelledby={`deep-dive-${material.id}`}><header><span className="eyebrow">CONTOH KERJA · MATERI PRIORITAS</span><h2 id={`deep-dive-${material.id}`}>{material.deepDive.exampleTitle}</h2></header><div className="deep-dive-example"><p>{material.deepDive.example}</p></div><div className="deep-dive-grid"><section><span className="eyebrow">KESALAHAN UMUM</span><p>{material.deepDive.commonMistake}</p></section><section><span className="eyebrow">RUBRIK ARTEFAK</span><ol>{material.deepDive.rubric.map((item) => <li key={item}>{item}</li>)}</ol></section></div></section>}
 
