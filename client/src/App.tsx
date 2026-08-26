@@ -23,6 +23,7 @@ import PrdMaker from "./pages/PrdMaker";
 import Login from "./pages/Login";
 import ProgressSettings from "./pages/ProgressSettings";
 import Portfolio from "./pages/Portfolio";
+import SavedMaterials from "./pages/SavedMaterials";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -39,6 +40,7 @@ function Router() {
       <Route path={"/profil"} component={Profile} />
       <Route path={"/pengaturan"} component={ProgressSettings} />
       <Route path={"/portfolio"} component={Portfolio} />
+      <Route path={"/tersimpan"} component={SavedMaterials} />
       <Route path={"/npc"} component={NpcPets} />
       <Route path={"/prd-maker"} component={PrdMaker} />
       <Route path={"/masuk"} component={Login} />

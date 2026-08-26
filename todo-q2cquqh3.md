@@ -134,3 +134,10 @@
 - [x] Tambahkan aturan eksplisit pada prose Creative sensitif dan Cyber agar batas consent, rights, provenance, izin, scope, serta lab sendiri tetap terlihat dalam bahasa santai.
 - [x] Tambahkan comparison guardrail dan latihan per track serta regresi terpisah untuk Creative Rights/Consent dan Creative Provenance.
 - [x] Perluas regresi integritas untuk memeriksa seluruh materi: resources identik, latihan tetap terpetakan, dan guardrail penting tetap ada setelah transformasi.
+- [x] Audit bookmark dan progres tersimpan yang sudah ada untuk menentukan titik akses Simpan Materi tanpa migrasi data.
+- [x] Rancang pengalaman Simpan Materi: tombol jelas, daftar tersimpan, status progres, dan aksi lanjut atau hapus.
+- [x] Tambahkan halaman atau panel Simpan Materi yang memuat materi tersimpan dari akun pengguna.
+- [x] Hubungkan bookmark ke pembaca dan navigasi utama dengan label yang mudah dipahami anak muda.
+- [x] Tambahkan test sinkronisasi bookmark serta QA desktop-Android untuk daftar Simpan Materi.
+- [x] Tambahkan regresi sinkronisasi bookmark pada LearningContext/snapshot yang membuktikan bookmark tersimpan, dimuat kembali, dan tetap kompatibel dengan sinkronisasi akun yang sudah ada.
+- [x] Tambahkan test integrasi yang memverifikasi status sinkronisasi bookmark di UI berubah sesuai state `syncStatus` setelah aksi simpan/hapus materi.

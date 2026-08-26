@@ -162,6 +162,7 @@ export default function MaterialDetail() {
           <span><Clock3 size={15} /> {material.minutes} menit baca</span>
           <span>·</span>
           <span>{material.level}</span>
+          <button type="button" className={`article-save-material ${isBookmarked ? "saved" : ""}`} onClick={() => toggleBookmark(material.id)} aria-pressed={isBookmarked}><Bookmark size={14} fill={isBookmarked ? "currentColor" : "none"} /> {isBookmarked ? "Tersimpan" : "Simpan materi"}</button>
         </div>
 
         <div className="article-heading">

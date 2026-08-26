@@ -1,6 +1,6 @@
 // Style reminder: Paper Playground — state should feel lightweight, friendly, and immediate like a workbook checklist.
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { materials } from "@/lib/materials";

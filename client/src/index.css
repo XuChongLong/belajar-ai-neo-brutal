@@ -3,6 +3,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./styles/editorialRedesign.css";
+@import "./styles/savedMaterials.css";
 
 :root {
   --paper: #fffdf9;
